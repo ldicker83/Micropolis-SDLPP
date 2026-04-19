@@ -57,6 +57,7 @@ public:
 	static constexpr auto ButtonAreaHeight{ 28 };
 
 	using MapCoordsDelegate = std::function<void(const Point<int>&)>;
+	using EffectMapButtonMapping = std::vector<std::tuple<ButtonId, const EffectMap&>>;
 
 public:
 	MiniMapWindow() = delete;
@@ -73,6 +74,7 @@ public:
 	void updateTilePointedAt(const Point<int>& tilePointedAt);
 
 	void linkEffectMap(ButtonId id, const EffectMap& map);
+	void linkEffectMaps(EffectMapButtonMapping maps);
 
 	void hide();
 	void show();

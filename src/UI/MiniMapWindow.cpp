@@ -263,6 +263,15 @@ void MiniMapWindow::linkEffectMap(ButtonId id, const EffectMap& map)
 }
 
 
+void MiniMapWindow::linkEffectMaps(MiniMapWindow::EffectMapButtonMapping maps)
+{
+    for(auto& [id, map] : maps)
+    {
+        linkEffectMap(id, map);
+	}
+}
+
+
 void MiniMapWindow::initTexture(Texture& texture, const Vector<int>& dimensions)
 {
     texture = {

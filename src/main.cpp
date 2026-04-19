@@ -1012,14 +1012,18 @@ void initUI()
     miniMapWindow->updateViewportSize(WindowSize);
     miniMapWindow->focusOnMapCoordBind(&minimapViewUpdated);
 
-    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::Crime, CrimeMap);
-    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::FireProtection, FireProtectionMap);
-    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::LandValue, LandValueMap);
-    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PoliceProtection, PoliceProtectionMap);
-    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::Pollution, PollutionMap);
-    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PopulationDensity, PopulationDensityMap);
-    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::PopulationGrowth, RateOfGrowthMap);
-    miniMapWindow->linkEffectMap(MiniMapWindow::ButtonId::TrafficDensity, TrafficDensityMap);
+    MiniMapWindow::EffectMapButtonMapping maps{
+        { MiniMapWindow::ButtonId::Crime, CrimeMap},
+        { MiniMapWindow::ButtonId::FireProtection, FireProtectionMap},
+        { MiniMapWindow::ButtonId::LandValue, LandValueMap },
+        { MiniMapWindow::ButtonId::PoliceProtection, PoliceProtectionMap },
+        { MiniMapWindow::ButtonId::Pollution, PollutionMap },
+        { MiniMapWindow::ButtonId::PopulationDensity, PopulationDensityMap },
+        { MiniMapWindow::ButtonId::PopulationGrowth, RateOfGrowthMap },
+        { MiniMapWindow::ButtonId::TrafficDensity, TrafficDensityMap }
+    };
+
+	miniMapWindow->linkEffectMaps(maps);
 
     stringRenderer = std::make_unique<StringRender>(MainWindowRenderer);
 
@@ -1113,8 +1117,8 @@ int main(int argc, char* argv[])
     
     std::cout << "Micropolis-SDL2 is not afiliated with Electronic Arts." << std::endl << std::endl;
 
-    try
-    {
+    //try
+    //{
         if (!SDL_Init(SDL_INIT_VIDEO))
         {
             throw std::runtime_error(std::string("Unable to initialize SDL: ") + SDL_GetError());
@@ -1134,7 +1138,8 @@ int main(int argc, char* argv[])
         cleanUp();
 
         SDL_Quit();
-    }
+    //}
+        /*
     catch(const std::exception& e)
     {
         std::string message(std::string(e.what()) + "\n\nMicropolis-SDL2PP will now close.");
@@ -1145,6 +1150,7 @@ int main(int argc, char* argv[])
         std::cout << message << std::endl;
         //#endif
     }
+    */
 
     return 0;
 }
