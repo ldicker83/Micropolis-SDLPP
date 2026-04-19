@@ -88,6 +88,9 @@ namespace
     constexpr auto MiniTileSize = 3;
     constexpr auto MiniMapTileMultiplier = (TileSize + MiniTileSize - 1) / MiniTileSize;
 
+	constexpr Point<int> DashboardWindowDefaultPosition{ 10, 10 };
+	constexpr Point<int> ToolPaletteDefaultPosition{ 10, 100 };
+
     SDL_FRect UiHeaderRect{ 10.0f, 10.0f, 0.0f, 0.0f };
     SDL_FRect FullMapViewRect{};
 
@@ -506,6 +509,9 @@ void windowResized(const Vector<int>& size)
         InterfaceManager::Window::Graph,
         InterfaceManager::Window::Options,
         InterfaceManager::Window::Query});
+
+    interfaceManager->positionWindow(InterfaceManager::Window::Dashboard, DashboardWindowDefaultPosition);
+    interfaceManager->positionWindow(InterfaceManager::Window::ToolPalette, ToolPaletteDefaultPosition);
 
     UiHeaderRect.w = static_cast<float>(WindowSize.x) - 20.0f;
 }
@@ -1019,13 +1025,8 @@ void initUI()
 
     interfaceManager = std::make_unique<InterfaceManager>(MainWindowRenderer, MainWindow, budget, currentRCI());
 
-    const Point<int> toolPalettePosition
-    {
-        static_cast<int>(UiHeaderRect.x),
-        static_cast<int>(UiHeaderRect.y + UiHeaderRect.h + 5)
-	};
-
-    interfaceManager->positionWindow(InterfaceManager::Window::ToolPalette, toolPalettePosition);
+    interfaceManager->positionWindow(InterfaceManager::Window::Dashboard, DashboardWindowDefaultPosition);
+    interfaceManager->positionWindow(InterfaceManager::Window::ToolPalette, ToolPaletteDefaultPosition);
 
     interfaceManager->optionsWindow().optionsChangedConnect(optionsChanged);
     interfaceManager->optionsWindow().newGameCallbackConnect(newGame);
