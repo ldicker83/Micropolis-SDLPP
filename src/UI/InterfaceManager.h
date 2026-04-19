@@ -65,6 +65,7 @@ public:
 	void showWindow(Window window);
 
 	BudgetWindow& budgetWindow() { return mBudgetWindow; }
+	DashboardWindow& dashboardWindow() { return mDashboardWindow; }
 	EvaluationWindow& evaluationWindow() { return mEvaluationWindow; }
 	FileIoDialog& fileIoDialog() { return mFileIo; }
 	OptionsWindow& optionsWindow() { return mOptionsWindow; }
