@@ -25,7 +25,7 @@ struct Texture final
 };
 
 
-Texture loadTexture(SDL_Renderer* renderer, const std::string& filename);
+Texture loadTexture(SDL_Renderer* renderer, std::string_view filename);
 Texture newTexture(SDL_Renderer* renderer, const Vector<int>& dimensions);
 Texture buildTexture(SDL_Texture* texture);
 void flushTexture(SDL_Renderer* renderer, Texture& texture);

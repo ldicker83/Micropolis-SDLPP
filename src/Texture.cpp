@@ -19,14 +19,16 @@
 #endif
 
 #include <iostream>
+#include <sstream>
 
-Texture loadTexture(SDL_Renderer* renderer, const std::string& filename)
+Texture loadTexture(SDL_Renderer* renderer, std::string_view filename)
 {
-    SDL_Surface* temp = IMG_Load(filename.c_str());
+    SDL_Surface* temp = IMG_Load(filename.data());
     if (!temp)
     {
-        std::cout << "loadTexture(): Unable to load '" + filename + "': " + SDL_GetError() << std::endl;
-        throw std::runtime_error("loadTexture(): Unable to load '" + filename + "': " + SDL_GetError());
+		std::stringstream msg = std::stringstream{} << "loadTexture(): Unable to load '" << filename << "': " << SDL_GetError();
+        std::cout << msg.str() << std::endl;
+        throw std::runtime_error(msg.str());
     }
 
     SDL_Texture* out = SDL_CreateTextureFromSurface(renderer, temp);
@@ -34,8 +36,9 @@ Texture loadTexture(SDL_Renderer* renderer, const std::string& filename)
 
     if (!out)
     {
-        std::cout << "loadTexture(): Unable to load '" + filename + "': " + SDL_GetError() << std::endl;
-        throw std::runtime_error("loadTexture(): Unable to load '" + filename + "': " + SDL_GetError());
+		std::stringstream msg = std::stringstream{} << "loadTexture(): Unable to load '" << filename << "': " << SDL_GetError();
+        std::cout << msg.str() << std::endl;
+        throw std::runtime_error(msg.str());
     }
 
     return buildTexture(out);
