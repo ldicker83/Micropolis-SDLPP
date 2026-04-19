@@ -206,6 +206,7 @@ MiniMapWindow::MiniMapWindow(const Point<int>& position, const Vector<int>& size
     resetButtonsToNormal(mButtons);
 
     initOverlayTextures();
+    fillButtonHandlerTable();
 }
 
 
