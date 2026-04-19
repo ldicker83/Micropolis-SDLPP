@@ -76,7 +76,6 @@ uint32_t MainWindowId{};
 Texture MainMapTexture{};
 
 Texture BigTileset{};
-Texture RCI_Indicator{};
 
 
 int InitSimLoad;
@@ -85,18 +84,12 @@ int ScenarioID;
 
 namespace
 {
-    constexpr auto RciValveHeight = 20;
     constexpr auto TileSize = 16;
     constexpr auto MiniTileSize = 3;
     constexpr auto MiniMapTileMultiplier = (TileSize + MiniTileSize - 1) / MiniTileSize;
 
     SDL_FRect UiHeaderRect{ 10.0f, 10.0f, 0.0f, 0.0f };
-    SDL_FRect RciDestination{};
     SDL_FRect FullMapViewRect{};
-
-    SDL_FRect ResidentialValveRect{ 0.0f, 0.0f, 4.0f, 0.0f };
-    SDL_FRect CommercialValveRect{ 0.0f, 0.0f, 4.0f, 0.0f };
-    SDL_FRect IndustrialValveRect{ 0.0f, 0.0f, 4.0f, 0.0f };
 
     Vector<int> WindowSize{};
     Vector<int> DraggableToolVector{};
@@ -445,7 +438,6 @@ void buildBigTileset()
 void loadGraphics()
 {
     buildBigTileset();
-    RCI_Indicator = loadTexture(MainWindowRenderer, "images/demandg.xpm");
 }
 
 
@@ -886,45 +878,7 @@ void initViewParamters()
     MainMapTexture.dimensions = { SimWidth * 16, SimHeight * 16 };
 
     UiHeaderRect.w = static_cast<float>(WindowSize.x) - 20.0f;
-    UiHeaderRect.h = static_cast<float>(RCI_Indicator.dimensions.y) + 10.0f + static_cast<float>(MainFont->height()) + 10.0f;
-
-    RciDestination = {
-        UiHeaderRect.x + 5,
-        UiHeaderRect.y + MainFont->height() + 10,
-        static_cast<float>(RCI_Indicator.dimensions.x),
-        static_cast<float>(RCI_Indicator.dimensions.y)
-    };
-
-    ResidentialValveRect = { RciDestination.x + 9, RciDestination.y + 24, 4, 0 };
-    CommercialValveRect = { RciDestination.x + 18, RciDestination.y + 24, 4, 0 };
-    IndustrialValveRect = { RciDestination.x + 27, RciDestination.y + 24, 4, 0 };
-}
-
-
-void drawValve()
-{
-    const auto& rci = currentRCI();
-    const auto residentialPercent = static_cast<float>(rci.residentialDemand()) / 2000.0f;
-    const auto commercialPercent = static_cast<float>(rci.commercialDemand()) / 1500.0f;
-    const auto industrialPercent = static_cast<float>(rci.industrialDemand()) / 1500.0f;
-
-    ResidentialValveRect.h = -(RciValveHeight * residentialPercent);
-    CommercialValveRect.h = -(RciValveHeight * commercialPercent);
-    IndustrialValveRect.h = -(RciValveHeight * industrialPercent);
-
-    SDL_SetRenderDrawColor(MainWindowRenderer, Colors::Green.r, Colors::Green.g, Colors::Green.b, 255);
-    SDL_RenderFillRect(MainWindowRenderer, &ResidentialValveRect);
-
-    SDL_SetRenderDrawColor(MainWindowRenderer, Colors::MediumBlue.r, Colors::MediumBlue.g, Colors::MediumBlue.b, 255);
-    SDL_RenderFillRect(MainWindowRenderer, &CommercialValveRect);
-
-    SDL_SetRenderDrawColor(MainWindowRenderer, Colors::Gold.r, Colors::Gold.g, Colors::Gold.b, 255);
-    SDL_RenderFillRect(MainWindowRenderer, &IndustrialValveRect);
-
-    // not a huge fan of this
-    SDL_FRect rciSrc{ 4.0f, 19.0f, 32.0f, 11.0f };
-    SDL_FRect rciDst{ RciDestination.x + 4.0f, RciDestination.y + 19.0f, 32.0f, 11.0f };
-    SDL_RenderTexture(MainWindowRenderer, RCI_Indicator.texture, &rciSrc, &rciDst);
+    UiHeaderRect.h = 47.0f + 10.0f + static_cast<float>(MainFont->height()) + 10.0f; // 47 is height of rci indicator graphic
 }
 
 
@@ -935,10 +889,6 @@ void drawTopUi()
     SDL_RenderFillRect(MainWindowRenderer, &UiHeaderRect);
     SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 255);
     SDL_RenderRect(MainWindowRenderer, &UiHeaderRect);
-
-    // RCI
-    SDL_RenderTexture(MainWindowRenderer, RCI_Indicator.texture, nullptr, &RciDestination);
-    drawValve();
 
     stringRenderer->drawString(*MainFont, monthString(static_cast<Month>(lastCityMonth())), {static_cast<int>(UiHeaderRect.x) + 5, static_cast<int>(UiHeaderRect.y) + 5});
     stringRenderer->drawString(*MainFont, std::to_string(currentYear()), { static_cast<int>(UiHeaderRect.x) + 35, static_cast<int>(UiHeaderRect.y) + 5});
@@ -1099,7 +1049,6 @@ void cleanUp()
     MainFont.reset(nullptr);
 
     SDL_DestroyTexture(BigTileset.texture);
-    SDL_DestroyTexture(RCI_Indicator.texture);
 
     SDL_DestroyRenderer(MainWindowRenderer);
     SDL_DestroyWindow(MainWindow);
