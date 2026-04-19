@@ -1117,8 +1117,8 @@ int main(int argc, char* argv[])
     
     std::cout << "Micropolis-SDL2 is not afiliated with Electronic Arts." << std::endl << std::endl;
 
-    //try
-    //{
+    try
+    {
         if (!SDL_Init(SDL_INIT_VIDEO))
         {
             throw std::runtime_error(std::string("Unable to initialize SDL: ") + SDL_GetError());
@@ -1138,8 +1138,7 @@ int main(int argc, char* argv[])
         cleanUp();
 
         SDL_Quit();
-    //}
-        /*
+    }
     catch(const std::exception& e)
     {
         std::string message(std::string(e.what()) + "\n\nMicropolis-SDL2PP will now close.");
@@ -1150,7 +1149,6 @@ int main(int argc, char* argv[])
         std::cout << message << std::endl;
         //#endif
     }
-    */
 
     return 0;
 }
