@@ -13,9 +13,12 @@
 #include "WindowBase.h"
 
 #include "../RCI.h"
+#include "../StringRender.h"
 #include "../Texture.h"
 
 #include <SDL3/SDL.h>
+
+#include <string>
 
 class DashboardWindow : public WindowBase
 {
@@ -23,6 +26,7 @@ public:
 	DashboardWindow(SDL_Renderer* renderer, const RCI& rci);
 
 public:
+	void cityName(const std::string& name);
 
 	void draw() override;
 	void update() override;
@@ -40,7 +44,13 @@ private:
 	
 	const RCI& mRci;
 
+	int mTitleHalfWidth{ 0 };
+
 	SDL_FRect mResidentialValveRect{ 0.0f, 0.0f, 4.0f, 0.0f };
 	SDL_FRect mCommercialValveRect{ 0.0f, 0.0f, 4.0f, 0.0f };
 	SDL_FRect mIndustrialValveRect{ 0.0f, 0.0f, 4.0f, 0.0f };
+
+	std::string mCityName;
+
+	StringRender mStringRenderer;
 };

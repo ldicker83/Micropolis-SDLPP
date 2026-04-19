@@ -12,24 +12,72 @@
 
 
 #include "../Colors.h"
+#include "../Font.h"
 #include "../Util.h"
 
+#include <memory>
 
 namespace
 {
     const SDL_FRect BackgroundArtRect{ 0.0f, 0.0f, 512.0f, 82.0f };
     constexpr auto RciValveHeight = 20;
+
+	constexpr int WindowMiddleX = 254;
+    constexpr int WindowTitleBuffer = 20;
+
+    std::unique_ptr<Font> TitleFont;
+
+
+    void renderTitleBackground(SDL_Renderer* renderer, const SDL_FRect& area, int mTitleHalfWidth)
+    {
+        const SDL_FRect titleBarRect{
+            area.x + static_cast<float>(WindowMiddleX - mTitleHalfWidth - WindowTitleBuffer),
+            area.y + 3.0f,
+            static_cast<float>((mTitleHalfWidth + WindowTitleBuffer) * 2),
+            15.0f
+        };
+
+        SDL_SetRenderDrawColor(renderer, 214, 214, 214, 255);
+        SDL_RenderFillRect(renderer, &titleBarRect);
+    }
+
+
+    void drawTitle(SDL_Renderer* renderer, StringRender& stringRenderer, const Rectangle<int>& area, int titleHalfWidth, const std::string& cityName)
+    {
+        const Point<int> titlePosition{
+            area.position.x + WindowMiddleX - titleHalfWidth,
+            area.position.y + 4
+        };
+
+        stringRenderer.drawString(*TitleFont, cityName, titlePosition);
+    }
 }
 
 
 DashboardWindow::DashboardWindow(SDL_Renderer* renderer, const RCI& rci) :
 	mRenderer{ renderer },
 	mTexture(loadTexture(renderer, "images/DashboardWindow.png")),
-	mRci{ rci }
+	mRci{ rci },
+    mStringRenderer{ renderer }
 {
 	size({ 512, 82 });
 	alwaysVisible(true);
 	show();
+
+    if (!TitleFont)
+    {
+		TitleFont = std::make_unique<Font>("res/virtue.ttf", 12);
+        SDL_SetTextureColorMod(TitleFont->texture(), 0, 0, 0);
+    }
+}
+
+
+void DashboardWindow::cityName(const std::string& name)
+{
+	mCityName = name;
+	const auto titleWidth = TitleFont->width(mCityName);
+
+    mTitleHalfWidth = TitleFont->width(mCityName) / 2;
 }
 
 
@@ -37,6 +85,11 @@ void DashboardWindow::draw()
 {
 	const auto rect = fRectFromRect({ area().position.x, area().position.y, area().size.x, area().size.y });
 	SDL_RenderTexture(mRenderer, mTexture.texture, &BackgroundArtRect, &rect);
+	
+    renderTitleBackground(mRenderer, rect, mTitleHalfWidth);
+    
+	drawTitle(mRenderer, mStringRenderer, area(), mTitleHalfWidth, mCityName);
+    
     drawValve();
 }
 
