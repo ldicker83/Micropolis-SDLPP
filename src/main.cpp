@@ -128,7 +128,7 @@ namespace
 
     std::unique_ptr<Font> MainFont;
 
-	std::unique_ptr<InterfaceManager> interfaceManager;
+	std::shared_ptr<InterfaceManager> interfaceManager;
 
     unsigned int speedModifier()
     {
@@ -1000,7 +1000,8 @@ void initUI()
 
     stringRenderer = std::make_unique<StringRender>(MainWindowRenderer);
 
-    interfaceManager = std::make_unique<InterfaceManager>(MainWindowRenderer, MainWindow, budget, currentRCI());
+    interfaceManager = std::make_shared<InterfaceManager>(MainWindowRenderer, MainWindow, budget, currentRCI());
+	shareInterfaceManager(interfaceManager);
 
     interfaceManager->positionWindow(InterfaceManager::Window::Dashboard, DashboardWindowDefaultPosition);
     interfaceManager->positionWindow(InterfaceManager::Window::ToolPalette, ToolPaletteDefaultPosition);
@@ -1018,7 +1019,7 @@ void cleanUp()
 
     miniMapWindow.reset(nullptr);
     
-    interfaceManager.reset(nullptr);
+    interfaceManager.reset();
 
     stringRenderer.reset(nullptr);
 

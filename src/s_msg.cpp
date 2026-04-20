@@ -8,13 +8,12 @@
 // Micropolis-SDL2PP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
 // file, included in this distribution, for details.
-#include "main.h"
+#include "s_msg.h"
 
 #include "Budget.h"
 #include "Evaluation.h"
-
+#include "main.h"
 #include "s_sim.h"
-
 #include "w_resrc.h"
 #include "w_sound.h"
 #include "w_tk.h"
@@ -22,7 +21,10 @@
 
 #include "Math/Point.h"
 
+#include "UI/InterfaceManager.h"
+
 #include <algorithm>
+#include <memory>
 #include <string>
 
 
@@ -44,12 +46,20 @@ namespace
 
     int messageDisplayTime{ DefaultMessageDisplayTime };
 
+	std::weak_ptr<InterfaceManager> interfaceManager;
+
     int TickCount()
     {
         return static_cast<int>(SDL_GetTicks());
     }
 
 };
+
+
+void shareInterfaceManager(std::weak_ptr<InterfaceManager> manager)
+{
+	interfaceManager = manager;
+}
 
 
 void MessageDisplayTime(int time)
