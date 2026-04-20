@@ -37,3 +37,6 @@ void lastCityYear(int year);
 
 void registerNewMonthCallback(IntDelegate callback);
 void clearNewMonthCallbacks();
+
+void registerNewYearCallback(IntDelegate callback);
+void clearNewYearCallbacks();

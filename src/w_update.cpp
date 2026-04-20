@@ -39,6 +39,7 @@ namespace
     bool NewMonth{ false };
 
     std::vector<IntDelegate> NewMonthCallbacks;
+    std::vector<IntDelegate> NewYearCallbacks;
 }
 
 
@@ -116,6 +117,18 @@ void clearNewMonthCallbacks()
 }
 
 
+void registerNewYearCallback(IntDelegate callback)
+{
+	NewYearCallbacks.push_back(callback);
+}
+
+
+void clearNewYearCallbacks()
+{
+	NewYearCallbacks.clear();
+}
+
+
 void updateDate()
 {
     constexpr auto megaannum = 1000000; // wierd place for this
@@ -145,6 +158,11 @@ void updateDate()
 		for (const auto& callback : NewMonthCallbacks)
 		{
 			callback(static_cast<int>(month));
+		}
+
+        for (const auto& callback : NewYearCallbacks)
+        {
+            callback(CurrentCityYear);
 		}
 
 		// \fixme   This is inelegant. Find a better way to do this without
