@@ -10,8 +10,6 @@
 
 #include "Point.h"
 
-namespace NAS2D
-{
-	template struct Point<int>;
-	template struct Point<float>;
-}
+
+template struct Point<int>;
+template struct Point<float>;
