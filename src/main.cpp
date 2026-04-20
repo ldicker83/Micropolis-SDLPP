@@ -636,6 +636,10 @@ void handleKeyEvent(SDL_Event& event)
         break;
 
     case SDLK_F5:
+        showEvaluationWindow();
+        break;
+
+    case SDLK_F6:
         //generateMonster();
         //generateTornado();
         //MakeFlood();
@@ -653,10 +657,6 @@ void handleKeyEvent(SDL_Event& event)
 
     case SDLK_F10:
 		interfaceManager->showWindow(InterfaceManager::Window::Budget);
-        break;
-
-    case SDLK_F1:
-        showEvaluationWindow();
         break;
 
     default:
