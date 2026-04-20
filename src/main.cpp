@@ -118,7 +118,6 @@ namespace
     std::string currentBudget{};
 
     std::vector<SDL_TimerID> Timers;
-    std::vector<const SDL_FRect*> UiRects{};
 
     Budget budget{};
     CityProperties cityProperties{};
@@ -540,14 +539,6 @@ void calculateMouseToWorld()
 
 bool IgnoreToolMouseUp(Point<int>& mousePosition)
 {
-    for (auto rect : UiRects)
-    {
-        if (pointInFRect(mousePosition, *rect))
-        {
-            return true;
-        }
-    }
-
     if (interfaceManager->pointInWindow(EventHandling::MousePosition))
     {
         return true;
@@ -717,14 +708,6 @@ void handleMouseEvent(SDL_Event& event)
         {
             EventHandling::MouseLeftDown = true;
             EventHandling::MouseDownPosition = { static_cast<int>(event.motion.x), static_cast<int>(event.motion.y) };
-
-            for (auto rect : UiRects)
-            {
-                if (pointInFRect(mousePosition, *rect))
-                {
-                    return;
-                }
-            }
 
             if (interfaceManager->injectMouseDown(EventHandling::MousePosition))
             {
@@ -1036,8 +1019,6 @@ void initUI()
     interfaceManager->optionsWindow().newGameCallbackConnect(newGame);
     interfaceManager->optionsWindow().saveGameCallbackConnect(saveGame);
     interfaceManager->optionsWindow().openGameCallbackConnect(openGame);
-
-    UiRects.push_back(&UiHeaderRect);
 }
 
 
