@@ -10,6 +10,7 @@
         "png"
       ]
     },
-    "nativefiledialog-extended"
+    "nativefiledialog-extended",
+    "nlohmann-json"
   ]
 }
