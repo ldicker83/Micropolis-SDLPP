@@ -134,7 +134,7 @@ void ClearMes()
 }
 
 
-int SendMes(NotificationId id)
+void SendMes(NotificationId id)
 {
     MessageId(id);
 
@@ -144,14 +144,14 @@ int SendMes(NotificationId id)
     }
 
     LastMessageTime(TickCount());
-
-    return 0;
 }
 
 
 void SendMesAt(NotificationId id, int x, int y)
 {
-    if (SendMes(id))
+    SendMes(id);
+
+    if (id != NotificationId::None)
     {
         MessageLocation({ x, y });
     }
