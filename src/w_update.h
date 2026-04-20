@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #pragma once
 
+#include "Delegate.h"
 #include "Month.h"
 
 #include <string>
@@ -29,6 +30,10 @@ void lastCityTime(int time);
 Month::Enum lastCityMonth();
 void lastCityMonth(Month::Enum month);
 
+int currentYear();
+void setYear(int year);
 int lastCityYear();
 void lastCityYear(int year);
 
+void registerNewMonthCallback(IntDelegate callback);
+void clearNewMonthCallbacks();

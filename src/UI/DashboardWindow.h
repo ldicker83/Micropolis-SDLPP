@@ -12,6 +12,7 @@
 
 #include "WindowBase.h"
 
+#include "../Month.h"
 #include "../RCI.h"
 #include "../StringRender.h"
 #include "../Texture.h"
@@ -32,6 +33,8 @@ public:
 
 	void draw() override;
 	void update() override;
+
+	void onNewMonth(int);
 
 private:
 	void drawValve();
@@ -54,6 +57,8 @@ private:
 
 	std::string mCityName;
 	std::string mMessage;
+
+	Month::Enum mCurrentMonth{ Month::Enum::Jan };
 
 	StringRender mStringRenderer;
 };

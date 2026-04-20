@@ -192,26 +192,6 @@ void setGameLevelFunds(int level, CityProperties& properties, Budget& budget)
 }
 
 
-void setYear(int year)
-{
-    // Must prevent year from going negative, since it screws up the non-floored modulo arithmetic.
-    if (year < StartingYear)
-    {
-        year = StartingYear;
-    }
-
-    year = (year - StartingYear) - (CityTime / 48);
-    CityTime += year * 48;
-    updateDate();
-}
-
-
-int currentYear()
-{
-    return (CityTime / 48 + StartingYear);
-}
-
-
 static std::random_device RandomDevice;
 static std::mt19937 PseudoRandomNumberGenerator(RandomDevice());
 

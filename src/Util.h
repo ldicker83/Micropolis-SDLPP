@@ -61,8 +61,6 @@ void resume();
 
 bool paused();
 
-int currentYear();
-void setYear(int year);
 void setGameLevelFunds(int level, CityProperties& properties, Budget&);
 bool coordinatesValid(const Point<int>& position);
 Point<int> positionToCell(const Point<int>& position, const Point<int>& offset);

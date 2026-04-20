@@ -103,14 +103,27 @@ void DashboardWindow::draw()
     
 	drawTitle(mRenderer, mStringRenderer, area(), mTitleHalfWidth, mCityName);
 
-    mStringRenderer.drawString(*MessageFont, mMessage, { area().position.x + 54, area().position.y + 27 });
-    
+    const std::string currentDate = Month::toString(mCurrentMonth) + " 19XX";
+    const Point<int> datePosition{ area().position.x + 54, area().position.y + 27 };
+
+    mStringRenderer.drawString(*MessageFont, currentDate, datePosition);
+
+    mStringRenderer.drawString(*MessageFont, mMessage, { area().position.x + 54, area().position.y + 69 - MessageFont->height()});
+
     drawValve();
 }
 
 
 void DashboardWindow::update()
 {}
+
+
+void DashboardWindow::onNewMonth(int monthId)
+{
+	mCurrentMonth = static_cast<Month::Enum>(monthId);
+	const auto& monthString = Month::toString(mCurrentMonth);
+
+}
 
 
 void DashboardWindow::drawValve()

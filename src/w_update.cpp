@@ -26,15 +26,19 @@
 #include <algorithm>
 #include <limits>
 #include <string>
+#include <vector>
 
 
 namespace
 {
     int LastCityTime{};
     int LastCityYear{};
+    int CurrentCityYear{};
     Month::Enum LastCityMonth{};
 
     bool NewMonth{ false };
+
+    std::vector<IntDelegate> NewMonthCallbacks;
 }
 
 
@@ -80,38 +84,75 @@ void lastCityYear(int year)
 }
 
 
+void setYear(int year)
+{
+    // Must prevent year from going negative, since it screws up the non-floored modulo arithmetic.
+    if (year < StartingYear)
+    {
+        year = StartingYear;
+    }
+
+    year = (year - StartingYear) - (CityTime / 48);
+    CityTime += year * 48;
+    updateDate();
+}
+
+
+int currentYear()
+{
+    return CurrentCityYear;
+}
+
+
+void registerNewMonthCallback(IntDelegate callback)
+{
+    NewMonthCallbacks.push_back(callback);
+}
+
+
+void clearNewMonthCallbacks()
+{
+    NewMonthCallbacks.clear();
+}
+
+
 void updateDate()
 {
     constexpr auto megaannum = 1000000; // wierd place for this
 
     LastCityTime = CityTime / 4;
 
-    int year = (CityTime / 48) + StartingYear;
+    CurrentCityYear = (CityTime / 48) + StartingYear;
     Month::Enum month = static_cast<Month::Enum>((CityTime % 48) / 4);
 
-    if (year >= megaannum)
+    if (CurrentCityYear >= megaannum)
     {
         setYear(StartingYear);
-        year = StartingYear;
+        CurrentCityYear = StartingYear;
         SendMes(NotificationId::BrownoutsReported);
     }
 
     doMessage();
 
     NewMonth = false;
-    if ((lastCityYear() != year) || (lastCityMonth() != month))
+    if ((lastCityYear() != CurrentCityYear) || (lastCityMonth() != month))
     {
-        LastCityYear = year;
-        LastCityMonth = month;
+        LastCityYear = CurrentCityYear;
+		LastCityMonth = month;
 
-        NewMonth = true;
+		NewMonth = true;
+
+		for (const auto& callback : NewMonthCallbacks)
+		{
+			callback(static_cast<int>(month));
+		}
 
 		// \fixme   This is inelegant. Find a better way to do this without
 		//          having to call back into a global function from here.
-        if (month == Month::Enum::Jan && !gameplayOptions().autoBudget && !newMap())
-        {
-            showBudgetWindow();
-        }
+		if (month == Month::Enum::Jan && !gameplayOptions().autoBudget && !newMap())
+		{
+			showBudgetWindow();
+		}
     }
 }
 

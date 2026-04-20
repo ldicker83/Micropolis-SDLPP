@@ -13,3 +13,4 @@
 #include <functional>
 
 using VoidDelegate = std::function<void(void)>;
+using IntDelegate = std::function<void(int)>;

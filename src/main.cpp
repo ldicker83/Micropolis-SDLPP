@@ -1011,6 +1011,8 @@ void initUI()
     interfaceManager->optionsWindow().newGameCallbackConnect(newGame);
     interfaceManager->optionsWindow().saveGameCallbackConnect(saveGame);
     interfaceManager->optionsWindow().openGameCallbackConnect(openGame);
+
+    registerNewMonthCallback([](int month) { interfaceManager->dashboardWindow().onNewMonth(month); });
 }
 
 
@@ -1030,6 +1032,8 @@ void cleanUp()
 
     SDL_DestroyRenderer(MainWindowRenderer);
     SDL_DestroyWindow(MainWindow);
+
+    clearNewMonthCallbacks();
 }
 
 
