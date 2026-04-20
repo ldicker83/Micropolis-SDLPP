@@ -10,9 +10,7 @@
 // file, included in this distribution, for details.
 #pragma once
 
-#include "../Math/Point.h"
 #include "../Math/Rectangle.h"
-#include "../Math/Vector.h"
 
 
 class WindowBase
