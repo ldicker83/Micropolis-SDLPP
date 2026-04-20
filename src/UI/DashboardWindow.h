@@ -28,6 +28,8 @@ public:
 public:
 	void cityName(const std::string& name);
 
+	void setMessage(const std::string& message);
+
 	void draw() override;
 	void update() override;
 
@@ -51,6 +53,7 @@ private:
 	SDL_FRect mIndustrialValveRect{ 0.0f, 0.0f, 4.0f, 0.0f };
 
 	std::string mCityName;
+	std::string mMessage;
 
 	StringRender mStringRenderer;
 };

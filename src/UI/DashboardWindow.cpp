@@ -26,6 +26,7 @@ namespace
     constexpr int WindowTitleBuffer = 20;
 
     std::unique_ptr<Font> TitleFont;
+	std::unique_ptr<Font> MessageFont;
 
 
     void renderTitleBackground(SDL_Renderer* renderer, const SDL_FRect& area, int mTitleHalfWidth)
@@ -69,6 +70,12 @@ DashboardWindow::DashboardWindow(SDL_Renderer* renderer, const RCI& rci) :
 		TitleFont = std::make_unique<Font>("res/virtue.ttf", 12);
         SDL_SetTextureColorMod(TitleFont->texture(), 0, 0, 0);
     }
+
+    if(!MessageFont)
+    {
+        MessageFont = std::make_unique<Font>("res/Raleway-Medium.ttf", 10);
+        SDL_SetTextureColorMod(MessageFont->texture(), 0, 0, 0);
+	}
 }
 
 
@@ -81,6 +88,12 @@ void DashboardWindow::cityName(const std::string& name)
 }
 
 
+void DashboardWindow::setMessage(const std::string& message)
+{
+	mMessage = message;
+}
+
+
 void DashboardWindow::draw()
 {
 	const auto rect = fRectFromRect({ area().position.x, area().position.y, area().size.x, area().size.y });
@@ -89,6 +102,8 @@ void DashboardWindow::draw()
     renderTitleBackground(mRenderer, rect, mTitleHalfWidth);
     
 	drawTitle(mRenderer, mStringRenderer, area(), mTitleHalfWidth, mCityName);
+
+    mStringRenderer.drawString(*MessageFont, mMessage, { area().position.x + 54, area().position.y + 27 });
     
     drawValve();
 }

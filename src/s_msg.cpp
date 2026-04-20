@@ -141,6 +141,7 @@ void ClearMes()
     LastPictureId = 0;
     LastMessageTime(0);
     LastMessage("");
+    interfaceManager.lock()->dashboardWindow().setMessage("");
 }
 
 
@@ -173,6 +174,7 @@ void SetMessageField(const std::string& msg)
     if (LastMessage() != msg)
     {
         LastMessage(msg);
+		interfaceManager.lock()->dashboardWindow().setMessage(msg);
     }
 }
 
