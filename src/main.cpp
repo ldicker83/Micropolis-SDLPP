@@ -655,10 +655,6 @@ void handleKeyEvent(SDL_Event& event)
 		interfaceManager->showWindow(InterfaceManager::Window::Budget);
         break;
 
-    case SDLK_F11:
-        interfaceManager->showWindow(InterfaceManager::Window::Query);
-        break;
-
     case SDLK_F1:
         showEvaluationWindow();
         break;
