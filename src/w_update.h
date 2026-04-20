@@ -10,26 +10,11 @@
 // file, included in this distribution, for details.
 #pragma once
 
+#include "Month.h"
+
 #include <string>
 
 class Budget;
-
-enum class Month
-{
-	Jan,
-	Feb,
-	Mar,
-	Apr,
-	May,
-	Jun,
-	Jul,
-	Aug,
-	Sep,
-	Oct,
-	Nov,
-	Dec
-};
-
 
 bool newMonth();
 
@@ -41,10 +26,9 @@ extern const std::string dateStr[12];
 int lastCityTime();
 void lastCityTime(int time);
 
-int lastCityMonth();
-void lastCityMonth(int month);
+Month::Enum lastCityMonth();
+void lastCityMonth(Month::Enum month);
 
 int lastCityYear();
 void lastCityYear(int year);
 
-const std::string& monthString(Month month);

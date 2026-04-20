@@ -21,6 +21,7 @@
 #include "GameOptions.h"
 #include "Graph.h"
 #include "Map.h"
+#include "Month.h"
 #include "s_alloc.h"
 #include "s_disast.h"
 #include "s_gen.h"
@@ -275,7 +276,7 @@ void initWillStuff()
     cityPopulation(-1);
     lastCityTime(-1);
     lastCityYear(1);
-    lastCityMonth(0);
+    lastCityMonth(Month::Enum::Jan);
     pendingTool(Tool::None);
     MessageId(NotificationId::None);
     destroyAllSprites();
@@ -869,7 +870,7 @@ void drawTopUi()
     SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 255);
     SDL_RenderRect(MainWindowRenderer, &UiHeaderRect);
 
-    stringRenderer->drawString(*MainFont, monthString(static_cast<Month>(lastCityMonth())), {static_cast<int>(UiHeaderRect.x) + 5, static_cast<int>(UiHeaderRect.y) + 5});
+    stringRenderer->drawString(*MainFont, Month::toString(lastCityMonth()), {static_cast<int>(UiHeaderRect.x) + 5, static_cast<int>(UiHeaderRect.y) + 5});
     stringRenderer->drawString(*MainFont, std::to_string(currentYear()), { static_cast<int>(UiHeaderRect.x) + 35, static_cast<int>(UiHeaderRect.y) + 5});
 
     stringRenderer->drawString(*MainFont, LastMessage(), { 100, static_cast<int>(UiHeaderRect.y) + 5 });
@@ -1083,10 +1084,12 @@ void GameLoop()
 
 int main(int argc, char* argv[])
 {
+    setLocale();
+
     std::cout << "Starting Micropolis-SDL2 version " << MicropolisVersion << " originally by Will Wright and Don Hopkins." << std::endl;
     std::cout << "Original code Copyright (C) 2002 by Electronic Arts, Maxis. Released under the GPL v3" << std::endl;
     std::cout << "Modifications Copyright (C) 2022 - 2024 by Leeor Dicker. Available under the terms of the GPL v3" << std::endl << std::endl;
-    
+
     std::cout << "Micropolis-SDL2 is not afiliated with Electronic Arts." << std::endl << std::endl;
 
     try

@@ -32,37 +32,15 @@ namespace
 {
     int LastCityTime{};
     int LastCityYear{};
-    int LastCityMonth{};
+    Month::Enum LastCityMonth{};
 
     bool NewMonth{ false };
-
-    const std::string MonthTable[12] =
-    {
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    };
 }
 
 
 bool newMonth()
 {
     return NewMonth;
-}
-
-
-const std::string& monthString(Month month)
-{
-    return MonthTable[static_cast<int>(month)];
 }
 
 
@@ -78,13 +56,13 @@ void lastCityTime(int tick)
 }
 
 
-int lastCityMonth()
+Month::Enum lastCityMonth()
 {
     return LastCityMonth;
 }
 
 
-void lastCityMonth(int month)
+void lastCityMonth(Month::Enum month)
 {
     LastCityMonth = month;
 }
@@ -109,7 +87,7 @@ void updateDate()
     LastCityTime = CityTime / 4;
 
     int year = (CityTime / 48) + StartingYear;
-    int month = (CityTime % 48) / 4;
+    Month::Enum month = static_cast<Month::Enum>((CityTime % 48) / 4);
 
     if (year >= megaannum)
     {
@@ -130,7 +108,7 @@ void updateDate()
 
 		// \fixme   This is inelegant. Find a better way to do this without
 		//          having to call back into a global function from here.
-        if (month == 0 && !gameplayOptions().autoBudget && !newMap())
+        if (month == Month::Enum::Jan && !gameplayOptions().autoBudget && !newMap())
         {
             showBudgetWindow();
         }
