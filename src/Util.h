@@ -45,6 +45,7 @@ static const std::unordered_map<SearchDirection, Vector<int>> SearchDirectionVec
 	{ SearchDirection::Left, { -1, 0 } }
 };
 
+void setLocale();
 
 Vector<int> adjacentVector(SearchDirection direction);
 

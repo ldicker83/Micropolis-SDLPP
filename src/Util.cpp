@@ -23,6 +23,8 @@
 
 #include <algorithm>
 #include <array>
+#include <format>
+#include <locale>
 #include <random>
 #include <string>
 
@@ -45,6 +47,28 @@ namespace
         { -1,  0 },
 	} };
 };
+
+
+/**
+ * Set the locale for consistent number formatting.
+ */
+void setLocale()
+{
+    try
+    {
+        std::locale::global(std::locale("en_US.UTF-8"));
+    }
+    catch (const std::runtime_error&)
+    {
+        try
+        {
+            std::locale::global(std::locale("C"));
+        }
+        catch (...)
+        {
+        }
+    }
+}
 
 
 const Vector<int> vectorFromPoints(const Point<int>& start, const Point<int>& end)
@@ -91,20 +115,7 @@ bool coordinatesValid(const Point<int>& position)
 
 std::string numberToDollarDecimal(int value)
 {
-    auto outString = std::to_string(value);
-
-    int n = static_cast<int>(outString.length() - 3);
-    const int end = (value >= 0) ? 0 : 1;
-
-    while (n > end)
-    {
-        outString.insert(n, ",");
-        n -= 3;
-    }
-
-    outString.insert(0, "$");
-
-    return outString;
+    return std::format("${:L}", value);
 }
 
 
