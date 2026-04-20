@@ -870,10 +870,10 @@ void drawTopUi()
     SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 255);
     SDL_RenderRect(MainWindowRenderer, &UiHeaderRect);
 
-    stringRenderer->drawString(*MainFont, Month::toString(lastCityMonth()), {static_cast<int>(UiHeaderRect.x) + 5, static_cast<int>(UiHeaderRect.y) + 5});
-    stringRenderer->drawString(*MainFont, std::to_string(currentYear()), { static_cast<int>(UiHeaderRect.x) + 35, static_cast<int>(UiHeaderRect.y) + 5});
+	const std::string currentDate = Month::toString(lastCityMonth()) + " " + std::to_string(currentYear());
 
-    stringRenderer->drawString(*MainFont, LastMessage(), { 100, static_cast<int>(UiHeaderRect.y) + 5 });
+    stringRenderer->drawString(*MainFont, currentDate, { static_cast<int>(UiHeaderRect.x) + 5, static_cast<int>(UiHeaderRect.y) + 5 });
+    stringRenderer->drawString(*MainFont, LastMessage(), { static_cast<int>(UiHeaderRect.x) + 5, static_cast<int>(UiHeaderRect.y) + 5 + MainFont->height() });
 
     const Point<int> budgetPosition{
         static_cast<int>(UiHeaderRect.x + UiHeaderRect.w - 5 - MainFont->width(currentBudget)),
