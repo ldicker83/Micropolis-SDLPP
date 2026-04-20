@@ -60,7 +60,7 @@ bool canSpreadFloodTo(const int tile)
 bool tileIsVulnerable(const int tile)
 {
     const unsigned int unmasked = tile & LowerMask;
-    return !(unmasked < ResidentialBase) || (unmasked > ZoneLast) || (tile & ZonedBit);
+    return (unmasked >= ResidentialBase && unmasked <= ZoneLast) || (tile & ZonedBit);
 }
 
 
@@ -106,27 +106,21 @@ void MakeEarthquake()
     DoEarthQuake();
     SendMesAt(NotificationId::EarthquakeReported, cityCenterOfMass().x, cityCenterOfMass().y);
 
-    int time = randomRange(0, 700) + 300;
+    const auto damageAttempts = randomRange(300, 1000);
 
-    for (int z = 0; z < time; z++)
+    for (size_t attempt = 0; attempt < damageAttempts; attempt++)
     {
-        int x = randomRange(0, SimWidth - 1);
-        int y = randomRange(0, SimHeight - 1);
+		const Point<int> position{ randomRange(0, SimWidth - 1), randomRange(0, SimHeight - 1) };
 
-        if ((x < 0) || (x > (SimWidth - 1)) || (y < 0) || (y > (SimHeight - 1)))
+        if (tileIsVulnerable(tileValue(position)))
         {
-            continue;
-        }
-
-        if (tileIsVulnerable(tileValue(x, y)))
-        {
-            if (z & 0x3)
+            if (randomRange(0, 3) != 0)
             {
-                tileValue(x, y) = (Rubble + BulldozableBit) + (rand16() & 3);
+                tileValue(position) = (Rubble + BulldozableBit) + randomRange(0, 3);
             }
             else
             {
-                tileValue(x, y) = (FireBase + AnimatedBit) + (rand16() & 7);
+                tileValue(position) = (FireBase + AnimatedBit) + randomRange(0, 7);
             }
         }
     }
