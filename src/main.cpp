@@ -640,14 +640,6 @@ void handleKeyEvent(SDL_Event& event)
         showEvaluationWindow();
         break;
 
-    case SDLK_F6:
-        //generateMonster();
-        //generateTornado();
-        //MakeFlood();
-        //MakeMeltdown();
-        //MakeFire();
-        break;
-
     case SDLK_F7:
         newGame();
         break;
@@ -945,6 +937,13 @@ void optionsChanged(const GameOptions& options)
 }
 
 
+void registerCallbacks()
+{
+    registerNewMonthCallback([](int month) { interfaceManager->dashboardWindow().onNewMonth(month); });
+    registerNewYearCallback([](int year) { interfaceManager->dashboardWindow().onNewYear(year); });
+}
+
+
 void initUI()
 {
     Point<int> mainWindowPosition{};
@@ -993,8 +992,7 @@ void initUI()
     interfaceManager->optionsWindow().saveGameCallbackConnect(saveGame);
     interfaceManager->optionsWindow().openGameCallbackConnect(openGame);
 
-    registerNewMonthCallback([](int month) { interfaceManager->dashboardWindow().onNewMonth(month); });
-	registerNewYearCallback([](int year) { interfaceManager->dashboardWindow().onNewYear(year); });
+    registerCallbacks();
 }
 
 
