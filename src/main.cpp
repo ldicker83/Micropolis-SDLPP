@@ -941,6 +941,15 @@ void registerCallbacks()
 {
     registerNewMonthCallback([](int month) { interfaceManager->dashboardWindow().onNewMonth(month); });
     registerNewYearCallback([](int year) { interfaceManager->dashboardWindow().onNewYear(year); });
+
+	auto& dashboard = interfaceManager->dashboardWindow();
+
+	dashboard.registerButtonHandler(DashboardWindow::ButtonId::Budget, []() { showBudgetWindow(); });
+	dashboard.registerButtonHandler(DashboardWindow::ButtonId::Evaluation, []() { showEvaluationWindow(); });
+	dashboard.registerButtonHandler(DashboardWindow::ButtonId::MiniMap, []() { ToggleMiniMapVisibility(); });
+	dashboard.registerButtonHandler(DashboardWindow::ButtonId::Graph, []() { interfaceManager->showWindow(InterfaceManager::Window::Graph); });
+	dashboard.registerButtonHandler(DashboardWindow::ButtonId::Save, []() { saveGame(); });
+	dashboard.registerButtonHandler(DashboardWindow::ButtonId::System, []() { showSystemWindow(); });
 }
 
 
