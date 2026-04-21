@@ -92,7 +92,6 @@ namespace
 	constexpr Point<int> DashboardWindowDefaultPosition{ 10, 10 };
 	constexpr Point<int> ToolPaletteDefaultPosition{ 10, 100 };
 
-    SDL_FRect UiHeaderRect{ 10.0f, 10.0f, 0.0f, 0.0f };
     SDL_FRect FullMapViewRect{};
 
     Vector<int> WindowSize{};
@@ -115,8 +114,6 @@ namespace
     SDL_Rect TileHighlight{ 0, 0, TileSize, TileSize };
 
     std::array<unsigned int, 5> SpeedModifierTable{ 0, 0, 50, 75, 95 };
-
-    std::string currentBudget{};
 
     std::vector<SDL_TimerID> Timers;
 
@@ -506,8 +503,6 @@ void windowResized(const Vector<int>& size)
 
     interfaceManager->positionWindow(InterfaceManager::Window::Dashboard, DashboardWindowDefaultPosition);
     interfaceManager->positionWindow(InterfaceManager::Window::ToolPalette, ToolPaletteDefaultPosition);
-
-    UiHeaderRect.w = static_cast<float>(WindowSize.x) - 20.0f;
 }
 
 
@@ -856,31 +851,6 @@ void initViewParamters()
 
     MainMapTexture.texture = SDL_CreateTexture(MainWindowRenderer, SDL_PIXELFORMAT_ARGB32, SDL_TEXTUREACCESS_TARGET, SimWidth * 16, SimHeight * 16);
     MainMapTexture.dimensions = { SimWidth * 16, SimHeight * 16 };
-
-    UiHeaderRect.w = static_cast<float>(WindowSize.x) - 20.0f;
-    UiHeaderRect.h = 47.0f + 10.0f + static_cast<float>(MainFont->height()) + 10.0f; // 47 is height of rci indicator graphic
-}
-
-
-void drawTopUi()
-{
-    // Background
-    SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 150);
-    SDL_RenderFillRect(MainWindowRenderer, &UiHeaderRect);
-    SDL_SetRenderDrawColor(MainWindowRenderer, 0, 0, 0, 255);
-    SDL_RenderRect(MainWindowRenderer, &UiHeaderRect);
-
-	const std::string currentDate = Month::toString(lastCityMonth()) + " " + std::to_string(currentYear());
-
-    stringRenderer->drawString(*MainFont, currentDate, { static_cast<int>(UiHeaderRect.x) + 5, static_cast<int>(UiHeaderRect.y) + 5 });
-    stringRenderer->drawString(*MainFont, LastMessage(), { static_cast<int>(UiHeaderRect.x) + 5, static_cast<int>(UiHeaderRect.y) + 5 + MainFont->height() });
-
-    const Point<int> budgetPosition{
-        static_cast<int>(UiHeaderRect.x + UiHeaderRect.w - 5 - MainFont->width(currentBudget)),
-        static_cast<int>(UiHeaderRect.y + 5)
-    };
-    
-    stringRenderer->drawString(*MainFont, currentBudget, budgetPosition);
 }
 
 
@@ -1050,8 +1020,6 @@ void GameLoop()
         SDL_RenderClear(MainWindowRenderer);
         SDL_RenderTexture(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
 
-        currentBudget = numberToDollarDecimal(budget.CurrentFunds());
-
         pendingTool(interfaceManager->toolPalette().tool());
         drawSprites();
 
@@ -1062,8 +1030,6 @@ void GameLoop()
                 DrawPendingTool(interfaceManager->toolPalette());
                 drawDraggableToolVector();
             }
-
-            drawTopUi();
 
             if (currentEvaluation().needsAttention)
             {
