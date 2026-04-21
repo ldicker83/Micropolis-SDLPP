@@ -37,6 +37,8 @@
 #include "w_tk.h"
 #include "w_update.h"
 
+#include "Math/Rectangle.h"
+
 #include "UI/InterfaceManager.h"
 #include "UI/MiniMapWindow.h"
 
@@ -521,6 +523,7 @@ void calculateMouseToWorld()
        std::clamp(screenCell.y + (MapViewOffset.y / TileSize), 0, SimHeight - 1)
     };
 
+
     TileHighlight =
     {
         (screenCell.x * TileSize) - MapViewOffset.x % TileSize,
@@ -857,13 +860,22 @@ void initViewParamters()
 }
 
 
+void drawToolRect(const SDL_FRect& rect)
+{
+    SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
+    SDL_RenderFillRect(MainWindowRenderer, &rect);
+
+    SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 255);
+    SDL_RenderRect(MainWindowRenderer, &rect);
+}
+
+
 void DrawPendingTool(const ToolPalette& palette)
 {
     if (palette.tool() == Tool::None || (pendingToolProperties().draggable && EventHandling::MouseLeftDown))
     {
         return;
     }
-
 
     const auto toolRect = fRectFromRect({
         TileHighlight.x - (pendingToolProperties().offset * TileSize),
@@ -878,11 +890,7 @@ void DrawPendingTool(const ToolPalette& palette)
         return;
     }
 
-    SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 100);
-    SDL_RenderFillRect(MainWindowRenderer, &toolRect);
-
-    SDL_SetRenderDrawColor(MainWindowRenderer, 255, 255, 255, 255);
-    SDL_RenderRect(MainWindowRenderer, &toolRect);
+    drawToolRect(toolRect);
 }
 
 
