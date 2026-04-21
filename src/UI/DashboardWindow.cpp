@@ -94,6 +94,18 @@ void DashboardWindow::setMessage(const std::string& message)
 }
 
 
+void DashboardWindow::onNewMonth(int monthId)
+{
+    mCurrentMonth = static_cast<Month::Enum>(monthId);
+}
+
+
+void DashboardWindow::onNewYear(int year)
+{
+    mCurrentYear = year;
+}
+
+
 void DashboardWindow::draw()
 {
 	const auto rect = fRectFromRect({ area().position.x, area().position.y, area().size.x, area().size.y });
@@ -116,18 +128,6 @@ void DashboardWindow::draw()
 
 void DashboardWindow::update()
 {}
-
-
-void DashboardWindow::onNewMonth(int monthId)
-{
-	mCurrentMonth = static_cast<Month::Enum>(monthId);
-}
-
-
-void DashboardWindow::onNewYear(int year)
-{
-    mCurrentYear = year;
-}
 
 
 void DashboardWindow::drawValve()

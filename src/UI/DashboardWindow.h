@@ -31,11 +31,11 @@ public:
 
 	void setMessage(const std::string& message);
 
-	void draw() override;
-	void update() override;
-
 	void onNewMonth(int);
 	void onNewYear(int);
+
+	void draw() override;
+	void update() override;
 
 private:
 	void drawValve();
