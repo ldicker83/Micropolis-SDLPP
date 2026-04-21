@@ -59,7 +59,7 @@
 #include <SDL3_image/SDL_Image.h>
 #endif
 
-#if defined(WIN32)
+#if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <Windows.h>
@@ -1050,9 +1050,6 @@ void GameLoop()
 }
 
 
-#include <Windows.h>
-
-
 int main(int argc, char* argv[])
 {
     setLocale();
@@ -1089,11 +1086,11 @@ int main(int argc, char* argv[])
     {
         std::string message(std::string(e.what()) + "\n\nMicropolis-SDL2PP will now close.");
         
-        //#if defined(WIN32)
+        #if defined(_WIN32)
         MessageBoxA(nullptr, message.c_str(), "Micropolis-SDL2PP", MB_ICONERROR | MB_OK);
-        //#else
+        #else
         std::cout << message << std::endl;
-        //#endif
+        #endif
     }
 
     return 0;
