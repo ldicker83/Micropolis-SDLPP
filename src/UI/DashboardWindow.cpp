@@ -19,7 +19,7 @@
 
 namespace
 {
-    const SDL_FRect BackgroundArtRect{ 0.0f, 0.0f, 512.0f, 82.0f };
+    const SDL_FRect BackgroundArtRect{ 0.0f, 0.0f, 750.0f, 82.0f };
     constexpr auto RciValveHeight = 20;
 
 	constexpr int WindowMiddleX = 254;
@@ -61,7 +61,7 @@ DashboardWindow::DashboardWindow(SDL_Renderer* renderer, const RCI& rci) :
 	mRci{ rci },
     mStringRenderer{ renderer }
 {
-	size({ 512, 82 });
+	size({ 750, 82 });
 	alwaysVisible(true);
 	show();
 
