@@ -889,6 +889,8 @@ void DrawPendingTool(const ToolPalette& palette)
 void drawDraggableToolVector()
 {
     if (!EventHandling::MouseLeftDown) { return; }
+	if (!pendingToolProperties().draggable) { return; }
+
     if (interfaceManager->pointInWindow(EventHandling::MouseDownPosition))
     {
         return;
