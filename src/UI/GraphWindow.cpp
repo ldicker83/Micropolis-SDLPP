@@ -115,13 +115,7 @@ GraphWindow::GraphWindow(SDL_Renderer* renderer) :
 
 void GraphWindow::onMoved(const Vector<int>& movement)
 {
-	GraphPosition = { GraphLayout.x + area().position.x, GraphLayout.y + area().position.y, GraphLayout.w, GraphLayout.h };
-
-	for (auto& button : Buttons)
-	{
-		button.area = { ButtonLayout.at(button.id).x + area().position.x, ButtonLayout.at(button.id).y + area().position.y, 36, 36 };
-		button.iconPosition = { button.area.x + 6, button.area.y + 6, 22, 22 };
-	}
+	onPositionChanged({});
 }
 
 
