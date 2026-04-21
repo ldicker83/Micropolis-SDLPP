@@ -89,7 +89,6 @@ namespace
     constexpr auto MiniTileSize = 3;
     constexpr auto MiniMapTileMultiplier = (TileSize + MiniTileSize - 1) / MiniTileSize;
 
-	constexpr Point<int> DashboardWindowDefaultPosition{ 10, 10 };
 	constexpr Point<int> ToolPaletteDefaultPosition{ 10, 100 };
 
     SDL_FRect FullMapViewRect{};
@@ -179,6 +178,12 @@ namespace
         {
 			interfaceManager->showWindow(InterfaceManager::Window::Budget);
         }
+    }
+
+    void positionDashboardWindow()
+    {
+        const Point<int> dashboardPosition{ WindowSize.x / 2 - interfaceManager->dashboardWindow().size().x / 2, 10 };
+        interfaceManager->positionWindow(InterfaceManager::Window::Dashboard, dashboardPosition);
     }
 };
 
@@ -501,7 +506,7 @@ void windowResized(const Vector<int>& size)
         InterfaceManager::Window::Options,
         InterfaceManager::Window::Query});
 
-    interfaceManager->positionWindow(InterfaceManager::Window::Dashboard, DashboardWindowDefaultPosition);
+    positionDashboardWindow();
     interfaceManager->positionWindow(InterfaceManager::Window::ToolPalette, ToolPaletteDefaultPosition);
 }
 
@@ -974,7 +979,7 @@ void initUI()
     interfaceManager = std::make_shared<InterfaceManager>(MainWindowRenderer, MainWindow, budget, currentRCI());
 	shareInterfaceManager(interfaceManager);
 
-    interfaceManager->positionWindow(InterfaceManager::Window::Dashboard, DashboardWindowDefaultPosition);
+    positionDashboardWindow();
     interfaceManager->positionWindow(InterfaceManager::Window::ToolPalette, ToolPaletteDefaultPosition);
 
     interfaceManager->optionsWindow().optionsChangedConnect(optionsChanged);
@@ -1005,6 +1010,7 @@ void cleanUp()
     SDL_DestroyWindow(MainWindow);
 
     clearNewMonthCallbacks();
+	clearNewYearCallbacks();
 }
 
 
