@@ -1013,6 +1013,7 @@ void initUI()
     interfaceManager->optionsWindow().openGameCallbackConnect(openGame);
 
     registerNewMonthCallback([](int month) { interfaceManager->dashboardWindow().onNewMonth(month); });
+	registerNewYearCallback([](int year) { interfaceManager->dashboardWindow().onNewYear(year); });
 }
 
 

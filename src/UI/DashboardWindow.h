@@ -35,6 +35,7 @@ public:
 	void update() override;
 
 	void onNewMonth(int);
+	void onNewYear(int);
 
 private:
 	void drawValve();
@@ -59,6 +60,7 @@ private:
 	std::string mMessage;
 
 	Month::Enum mCurrentMonth{ Month::Enum::Jan };
+	int mCurrentYear{ 1900 };
 
 	StringRender mStringRenderer;
 };
