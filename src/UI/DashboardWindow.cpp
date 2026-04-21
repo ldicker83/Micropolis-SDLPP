@@ -53,6 +53,13 @@ namespace
 
         stringRenderer.drawString(*TitleFont, cityName, titlePosition);
     }
+
+
+    void drawValveRect(SDL_Renderer* renderer, const SDL_Color c, SDL_FRect& rect)
+    {
+        SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 255);
+        SDL_RenderFillRect(renderer, &rect);
+    }
 }
 
 
@@ -150,14 +157,9 @@ void DashboardWindow::drawValve()
     mCommercialValveRect.h = -(RciValveHeight * commercialPercent);
     mIndustrialValveRect.h = -(RciValveHeight * industrialPercent);
 
-    SDL_SetRenderDrawColor(mRenderer, Colors::Green.r, Colors::Green.g, Colors::Green.b, 255);
-    SDL_RenderFillRect(mRenderer, &mResidentialValveRect);
-
-    SDL_SetRenderDrawColor(mRenderer, Colors::MediumBlue.r, Colors::MediumBlue.g, Colors::MediumBlue.b, 255);
-    SDL_RenderFillRect(mRenderer, &mCommercialValveRect);
-
-    SDL_SetRenderDrawColor(mRenderer, Colors::Gold.r, Colors::Gold.g, Colors::Gold.b, 255);
-    SDL_RenderFillRect(mRenderer, &mIndustrialValveRect);
+	drawValveRect(mRenderer, Colors::Green, mResidentialValveRect);
+    drawValveRect(mRenderer, Colors::MediumBlue, mCommercialValveRect);
+    drawValveRect(mRenderer, Colors::Gold, mIndustrialValveRect);
 
 	const SDL_FPoint rciSrcPoint{ area().position.x + 9.0f + 4.0f, area().position.y + 44.0f };
     const SDL_FRect rciDst{ rciSrcPoint.x, rciSrcPoint.y, 32.0f, 11.0f };
