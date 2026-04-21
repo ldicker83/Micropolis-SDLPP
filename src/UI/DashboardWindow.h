@@ -12,6 +12,7 @@
 
 #include "WindowBase.h"
 
+#include "../Budget.h"
 #include "../Month.h"
 #include "../RCI.h"
 #include "../StringRender.h"
@@ -24,7 +25,7 @@
 class DashboardWindow : public WindowBase
 {
 public:
-	DashboardWindow(SDL_Renderer* renderer, const RCI& rci);
+	DashboardWindow(SDL_Renderer* renderer, const Budget& budget, const RCI& rci);
 
 public:
 	void cityName(const std::string& name);
@@ -38,6 +39,7 @@ public:
 	void update() override;
 
 private:
+	void drawBudget();
 	void drawDate();
 	void drawMessage();
 	void drawValve();
@@ -50,6 +52,7 @@ private:
 	
 	Texture mTexture;
 	
+	const Budget& mBudget;
 	const RCI& mRci;
 
 	int mTitleHalfWidth{ 0 };

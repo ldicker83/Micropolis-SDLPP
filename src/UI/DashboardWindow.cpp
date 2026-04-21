@@ -63,9 +63,10 @@ namespace
 }
 
 
-DashboardWindow::DashboardWindow(SDL_Renderer* renderer, const RCI& rci) :
+DashboardWindow::DashboardWindow(SDL_Renderer* renderer, const Budget& budget, const RCI& rci) :
 	mRenderer{ renderer },
 	mTexture(loadTexture(renderer, "images/DashboardWindow.png")),
+	mBudget{ budget },
 	mRci{ rci },
     mStringRenderer{ renderer }
 {
@@ -81,7 +82,7 @@ DashboardWindow::DashboardWindow(SDL_Renderer* renderer, const RCI& rci) :
 
     if(!MessageFont)
     {
-        MessageFont = std::make_unique<Font>("res/Raleway-Medium.ttf", 10);
+        MessageFont = std::make_unique<Font>("res/Raleway-Medium.ttf", 12);
         SDL_SetTextureColorMod(MessageFont->texture(), 0, 0, 0);
 	}
 }
@@ -123,6 +124,7 @@ void DashboardWindow::draw()
     
 	drawTitle(mRenderer, mStringRenderer, area(), mTitleHalfWidth, mCityName);
     drawDate();
+    drawBudget();
     drawMessage();
 
     drawValve();
@@ -131,6 +133,18 @@ void DashboardWindow::draw()
 
 void DashboardWindow::update()
 {}
+
+
+void DashboardWindow::drawBudget()
+{
+    const std::string currentBudget = numberToDollarDecimal(mBudget.CurrentFunds());
+    const Point<int> budgetPosition{
+        area().position.x + 662 - MessageFont->width(currentBudget),
+        area().position.y + 27
+    };
+
+    mStringRenderer.drawString(*MessageFont, currentBudget, budgetPosition);
+}
 
 
 void DashboardWindow::drawDate()

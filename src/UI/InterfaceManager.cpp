@@ -42,7 +42,7 @@ InterfaceManager::InterfaceManager(SDL_Renderer* renderer, SDL_Window* window, B
 	mRenderer{ renderer },
 	mWindow{ window },
 	mBudgetWindow{ renderer, budget },
-	mDashboardWindow{ renderer, rci },
+	mDashboardWindow{ renderer, budget, rci },
 	mGraphWindow{ renderer },
 	mEvaluationWindow{ renderer },
 	mToolPalette{ renderer },
