@@ -870,6 +870,19 @@ void drawToolRect(const SDL_FRect& rect)
 }
 
 
+SDL_FRect pendingToolRect()
+{
+    const SDL_Rect rect{
+        TileHighlight.x - (pendingToolProperties().offset * TileSize),
+        TileHighlight.y - (pendingToolProperties().offset * TileSize),
+        pendingToolProperties().size * TileSize,
+        pendingToolProperties().size * TileSize
+    };
+
+    return fRectFromRect(rect);
+}
+
+
 void DrawPendingTool(const ToolPalette& palette)
 {
     if (palette.tool() == Tool::None || (pendingToolProperties().draggable && EventHandling::MouseLeftDown))
@@ -877,20 +890,15 @@ void DrawPendingTool(const ToolPalette& palette)
         return;
     }
 
-    const auto toolRect = fRectFromRect({
-        TileHighlight.x - (pendingToolProperties().offset * TileSize),
-        TileHighlight.y - (pendingToolProperties().offset * TileSize),
-        pendingToolProperties().size * TileSize,
-        pendingToolProperties().size * TileSize
-        });
+    const auto rect = pendingToolRect();
 
     if (palette.toolGost().texture)
     {
-        SDL_RenderTexture(MainWindowRenderer, palette.toolGost().texture, &palette.toolGost().area, &toolRect);
+        SDL_RenderTexture(MainWindowRenderer, palette.toolGost().texture, &palette.toolGost().area, &rect);
         return;
     }
 
-    drawToolRect(toolRect);
+    drawToolRect(rect);
 }
 
 
