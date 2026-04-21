@@ -580,6 +580,14 @@ void showEvaluationWindow()
 }
 
 
+void showSystemWindow()
+{
+    interfaceManager->hideAllWindows();
+    interfaceManager->optionsWindow().setOptions(gameOptions);
+    interfaceManager->optionsWindow().show();
+}
+
+
 void handleKeyEvent(SDL_Event& event)
 {
     if (interfaceManager->optionsWindow().visible())
@@ -591,9 +599,7 @@ void handleKeyEvent(SDL_Event& event)
     switch (event.key.key)
     {
     case SDLK_ESCAPE:
-        interfaceManager->hideAllWindows();
-        interfaceManager->optionsWindow().setOptions(gameOptions);
-        interfaceManager->optionsWindow().show();
+        showSystemWindow();
         break;
 
     case SDLK_0:
