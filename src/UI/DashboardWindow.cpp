@@ -15,6 +15,8 @@
 #include "../Font.h"
 #include "../Util.h"
 
+#include <array>
+#include <iostream>
 #include <memory>
 
 namespace
@@ -29,6 +31,44 @@ namespace
     std::unique_ptr<Font> TitleFont;
 	std::unique_ptr<Font> MessageFont;
 
+
+    const std::unordered_map<DashboardWindow::ButtonId, Vector<int>> ButtonPositionOffset
+    {
+        { DashboardWindow::ButtonId::Budget, { 692, 24 } },
+        { DashboardWindow::ButtonId::Evaluation, { 692, 49 } },
+        { DashboardWindow::ButtonId::MiniMap, { 717, 49 } },
+        { DashboardWindow::ButtonId::Graph, { 667, 24 } },
+        { DashboardWindow::ButtonId::Save, { 667, 49 } },
+        { DashboardWindow::ButtonId::System, { 717, 24 } }
+    };
+
+
+    void fillButtonRects(std::unordered_map<DashboardWindow::ButtonId, Rectangle<int>>& buttonRects)
+    {
+        for (const auto& [buttonId, offset] : ButtonPositionOffset)
+        {
+            buttonRects[buttonId] = { Point<int>{ 0, 0 } + offset, { 24, 24 } };
+        }
+	}
+
+
+	void updateButtonRects(const Point<int>& position, std::unordered_map<DashboardWindow::ButtonId, Rectangle<int>>& buttonRects)
+    {
+        for (auto& [buttonId, buttonRect] : buttonRects)
+        {
+            const auto offset = ButtonPositionOffset.at(buttonId);
+            buttonRect.position = position + offset;
+        }
+    }
+
+
+    void fillButtonHandlersWithStubs(std::unordered_map<DashboardWindow::ButtonId, VoidDelegate>& buttonHandlers)
+    {
+        for (const auto& [buttonId, _] : ButtonPositionOffset)
+        {
+            buttonHandlers[buttonId] = [buttonId]() {};
+        }
+	}
 
     void renderTitleBackground(SDL_Renderer* renderer, const SDL_FRect& area, int mTitleHalfWidth)
     {
@@ -74,6 +114,9 @@ DashboardWindow::DashboardWindow(SDL_Renderer* renderer, const Budget& budget, c
 	alwaysVisible(true);
 	show();
 
+	fillButtonRects(mButtonRects);
+    fillButtonHandlersWithStubs(mButtonHandlers);
+
     if (!TitleFont)
     {
 		TitleFont = std::make_unique<Font>("res/virtue.ttf", 12);
@@ -112,6 +155,12 @@ void DashboardWindow::onNewMonth(int monthId)
 void DashboardWindow::onNewYear(int year)
 {
     mCurrentYear = year;
+}
+
+
+void DashboardWindow::registerButtonHandler(ButtonId buttonId, VoidDelegate handler)
+{
+    mButtonHandlers[buttonId] = handler;
 }
 
 
@@ -195,4 +244,19 @@ void DashboardWindow::onPositionChanged(const Point<int>& pos)
 	mCommercialValveRect.y = static_cast<float>(pos.y + 10 + 39);
 	mIndustrialValveRect.x = static_cast<float>(pos.x + 36);
 	mIndustrialValveRect.y = static_cast<float>(pos.y + 10 + 39);
+
+	updateButtonRects(pos, mButtonRects);
+}
+
+
+void DashboardWindow::onMouseDown(const Point<int>& position)
+{
+
+    for (const auto& [buttonId, buttonRect] : mButtonRects)
+    {
+        if (buttonRect.contains(position))
+        {
+			mButtonHandlers[buttonId]();
+        }
+	}
 }

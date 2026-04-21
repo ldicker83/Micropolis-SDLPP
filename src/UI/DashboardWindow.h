@@ -12,7 +12,10 @@
 
 #include "WindowBase.h"
 
+#include "Button.h"
+
 #include "../Budget.h"
+#include "../Delegate.h"
 #include "../Month.h"
 #include "../RCI.h"
 #include "../StringRender.h"
@@ -21,9 +24,21 @@
 #include <SDL3/SDL.h>
 
 #include <string>
+#include <unordered_map>
 
 class DashboardWindow : public WindowBase
 {
+public:
+	enum class ButtonId
+	{
+		Budget,
+		Evaluation,
+		MiniMap,
+		Graph,
+		Save,
+		System
+	};
+
 public:
 	DashboardWindow(SDL_Renderer* renderer, const Budget& budget, const RCI& rci);
 
@@ -34,6 +49,8 @@ public:
 
 	void onNewMonth(int);
 	void onNewYear(int);
+
+	void registerButtonHandler(ButtonId buttonId, VoidDelegate handler);
 
 	void draw() override;
 	void update() override;
@@ -46,6 +63,8 @@ private:
 	
 	void onMoved(const Vector<int>&) override;
 	void onPositionChanged(const Point<int>& pos) override;
+
+	void onMouseDown(const Point<int>&) override;
 
 private:
 	SDL_Renderer* mRenderer{ nullptr };
@@ -63,6 +82,9 @@ private:
 
 	std::string mCityName;
 	std::string mMessage;
+
+	std::unordered_map<ButtonId, VoidDelegate> mButtonHandlers;
+	std::unordered_map<ButtonId, Rectangle<int>> mButtonRects;
 
 	Month::Enum mCurrentMonth{ Month::Enum::Jan };
 	int mCurrentYear{ 1900 };
