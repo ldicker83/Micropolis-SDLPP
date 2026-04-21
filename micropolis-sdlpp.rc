@@ -87,8 +87,8 @@ BEGIN
         BEGIN
             VALUE "FileDescription", "Micropolis"
             VALUE "FileVersion", "1.0.0.1"
-            VALUE "InternalName", "micropolis-sdl2pp.exe"
-            VALUE "LegalCopyright", "Copyright © 1989 - 2007 Electronic Arts Inc., 2022 Leeor Dicker"
+            VALUE "InternalName", "Micropolis-SDLPP.exe"
+            VALUE "LegalCopyright", "Copyright © 1989 - 2007 Electronic Arts Inc., 2022 - 2026 Leeor Dicker"
             VALUE "OriginalFilename", "micropolis-sdl2.exe"
             VALUE "ProductName", "Micropolis-SDLPP"
             VALUE "ProductVersion", "1.0.0.1"
