@@ -38,6 +38,8 @@ public:
 	void update() override;
 
 private:
+	void drawDate();
+	void drawMessage();
 	void drawValve();
 	
 	void onMoved(const Vector<int>&) override;

@@ -20,6 +20,7 @@
 namespace
 {
     const SDL_FRect BackgroundArtRect{ 0.0f, 0.0f, 750.0f, 82.0f };
+    const SDL_FRect RCISrc{ 0.0f, 83.0f, 32.0f, 11.0f };
     constexpr auto RciValveHeight = 20;
 
 	constexpr int WindowMiddleX = 254;
@@ -114,13 +115,8 @@ void DashboardWindow::draw()
     renderTitleBackground(mRenderer, rect, mTitleHalfWidth);
     
 	drawTitle(mRenderer, mStringRenderer, area(), mTitleHalfWidth, mCityName);
-
-    const std::string currentDate = Month::toString(mCurrentMonth) + " " + std::to_string(mCurrentYear);
-    const Point<int> datePosition{ area().position.x + 54, area().position.y + 27 };
-
-    mStringRenderer.drawString(*MessageFont, currentDate, datePosition);
-
-    mStringRenderer.drawString(*MessageFont, mMessage, { area().position.x + 54, area().position.y + 69 - MessageFont->height()});
+    drawDate();
+    drawMessage();
 
     drawValve();
 }
@@ -128,6 +124,20 @@ void DashboardWindow::draw()
 
 void DashboardWindow::update()
 {}
+
+
+void DashboardWindow::drawDate()
+{
+    const std::string currentDate = Month::toString(mCurrentMonth) + " " + std::to_string(mCurrentYear);
+    const Point<int> datePosition{ area().position.x + 54, area().position.y + 27 };
+    mStringRenderer.drawString(*MessageFont, currentDate, datePosition);
+}
+
+
+void DashboardWindow::drawMessage()
+{
+    mStringRenderer.drawString(*MessageFont, mMessage, { area().position.x + 54, area().position.y + 69 - MessageFont->height() });
+}
 
 
 void DashboardWindow::drawValve()
@@ -149,11 +159,9 @@ void DashboardWindow::drawValve()
     SDL_SetRenderDrawColor(mRenderer, Colors::Gold.r, Colors::Gold.g, Colors::Gold.b, 255);
     SDL_RenderFillRect(mRenderer, &mIndustrialValveRect);
 
-    // not a huge fan of this
 	const SDL_FPoint rciSrcPoint{ area().position.x + 9.0f + 4.0f, area().position.y + 44.0f };
-    SDL_FRect rciSrc{ 0.0f, 83.0f, 32.0f, 11.0f };
-    SDL_FRect rciDst{ rciSrcPoint.x, rciSrcPoint.y, 32.0f, 11.0f };
-    SDL_RenderTexture(mRenderer, mTexture.texture, &rciSrc, &rciDst);
+    const SDL_FRect rciDst{ rciSrcPoint.x, rciSrcPoint.y, 32.0f, 11.0f };
+    SDL_RenderTexture(mRenderer, mTexture.texture, &RCISrc, &rciDst);
 }
 
 
