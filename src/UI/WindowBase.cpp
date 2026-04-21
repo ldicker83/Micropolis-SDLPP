@@ -76,6 +76,7 @@ void WindowBase::position(const Point<int>& point)
     mArea.startPoint(point);
     mTitleBarArea.startPoint(point);
     mClientArea.startPoint(point + Vector<int>{ClientAreaPadding, TitleBarHeight});
+	mCloseButtonArea.startPoint(point + CloseButtonPosition);
     onPositionChanged(point);
 }
 
