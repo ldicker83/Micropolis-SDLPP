@@ -62,7 +62,7 @@ namespace
 
     std::vector<_Tool> _Tools =
     {
-        { _Tool::Type::None, 0, 0, 0, false, "none" },
+        {},
         { _Tool::Type::Residential, 100, 3, 1, false, "Residential" },
         { _Tool::Type::Commercial, 100, 3, 1, false, "Commercial" },
         { _Tool::Type::Industrial, 100, 3, 1, false, "Industrial" },
