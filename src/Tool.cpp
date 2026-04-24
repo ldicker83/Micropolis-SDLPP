@@ -111,9 +111,10 @@ const _Tool& tool(_Tool::Type requested)
 }
 
 
-Tool pendingTool()
+const _Tool& pendingTool()
 {
-    return PendingTool;
+    // cast is temporary while infrastructure for new type is put in place
+    return tool(static_cast<_Tool::Type>(PendingTool));
 }
 
 
@@ -1080,7 +1081,7 @@ void executeDraggableTool(const Vector<int>& toolVector, const Point<int>& tileP
         for (int i = 0; std::abs(i) <= std::abs(toolVector.x); i += step)
         {
             // note: Type cast is temporary
-            ConnectTile(toolStart().x + i, toolStart().y, tool(static_cast<_Tool::Type>(pendingTool())), budget);
+            ConnectTile(toolStart().x + i, toolStart().y, pendingTool(), budget);
         }
     }
     else
@@ -1088,7 +1089,7 @@ void executeDraggableTool(const Vector<int>& toolVector, const Point<int>& tileP
         for (int i = 0; std::abs(i) <= std::abs(toolVector.y); i += step)
         {
             // note: Type cast is temporary
-            ConnectTile(toolStart().x, toolStart().y + i, tool(static_cast<_Tool::Type>(pendingTool())), budget);
+            ConnectTile(toolStart().x, toolStart().y + i, pendingTool(), budget);
         }
     }
 }

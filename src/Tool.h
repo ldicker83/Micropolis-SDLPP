@@ -113,7 +113,7 @@ const ToolProperties& pendingToolProperties();
 
 const ZoneStats& queryResult();
 
-Tool pendingTool();
+const _Tool& pendingTool();
 void pendingTool(const Tool);
 
 void toolStart(const Point<int>&);

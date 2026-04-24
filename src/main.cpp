@@ -713,7 +713,7 @@ void handleMouseEvent(SDL_Event& event)
                 ToolDown(TilePointedAt, budget);
             }
 
-            if (pendingTool() == Tool::Query)
+            if (pendingTool().type == _Tool::Type::Query)
             {
                 interfaceManager->queryWindow().setQueryResult(queryResult());
                 interfaceManager->showWindow(InterfaceManager::Window::Query);
