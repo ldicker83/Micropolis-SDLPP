@@ -60,7 +60,30 @@ namespace
     };
 
 
-    std::map<ToolResult, std::string> ToolResultStringTable =
+    std::vector<_Tool> _Tools =
+    {
+        { _Tool::Type::None, 0, 0, 0, false, "none" },
+        { _Tool::Type::Residential, 100, 3, 1, false, "Residential" },
+        { _Tool::Type::Commercial, 100, 3, 1, false, "Commercial" },
+        { _Tool::Type::Industrial, 100, 3, 1, false, "Industrial" },
+        { _Tool::Type::Fire, 500, 3, 1, false, "Fire Department" },
+        { _Tool::Type::Query, 0, 1, 0, false, "Query" },
+        { _Tool::Type::Police, 500, 3, 1, false, "Police Department" },
+        { _Tool::Type::Wire, 5, 1, 0, true, "Power Line" },
+        { _Tool::Type::Bulldoze, 1, 1, 0, false, "Bulldoze" },
+        { _Tool::Type::Rail, 20, 1, 0, true, "Rail" },
+        { _Tool::Type::Road, 10, 1, 0, true, "Roads" },
+        { _Tool::Type::Stadium, 5000, 4, 1, false, "Stadium" },
+        { _Tool::Type::Park, 10, 1, 0, false , "Park" },
+        { _Tool::Type::Seaport, 3000, 4, 1, false, "Seaport" },
+        { _Tool::Type::Coal, 3000, 4, 1, false, "Coal Power" },
+        { _Tool::Type::Nuclear, 5000, 4, 1, false, "Nuclear Power" },
+        { _Tool::Type::Airport, 10000, 6, 1, false, "Airport" },
+        { _Tool::Type::Network, 100, 1, 0, false, "Network" }
+    };
+
+
+    const std::map<ToolResult, std::string> ToolResultStringTable =
     {
         { ToolResult::CannotBulldoze, "Cannot Bulldoze" },
         { ToolResult::InsufficientFunds, "Insufficient Funds" },
@@ -77,6 +100,15 @@ namespace
 
     ZoneStats QueryResult{};
 };
+
+
+const _Tool& tool(_Tool::Type requested)
+{
+	return *std::find_if(_Tools.begin(), _Tools.end(), [requested](const _Tool& tool)
+        {
+            return tool.type == requested;
+        });
+}
 
 
 Tool pendingTool()
@@ -358,7 +390,7 @@ void doConnectTile(const int x, const int y, const int w, const int h, Budget& b
 {
     if (coordinatesValid({ x, y }))
     {
-        ConnectTile(x, y, Tool::None, budget);
+        ConnectTile(x, y, {}, budget);
     }
 }
 
@@ -735,7 +767,7 @@ ToolResult bulldozer_tool(int x, int y, Budget& budget)
         {
             if (budget.CanAfford(5)) /// \fixme Magic Number
             {
-                result = ConnectTile(x, y, Tool::Bulldoze, budget);
+                result = ConnectTile(x, y, tool(_Tool::Type::Bulldoze), budget);
                 if (temp != (tileValue(x, y) & LowerMask))
                 {
                     budget.Spend(5);
@@ -748,7 +780,7 @@ ToolResult bulldozer_tool(int x, int y, Budget& budget)
         }
         else
         {
-            result = ConnectTile(x, y, Tool::Bulldoze, budget);
+            result = ConnectTile(x, y, tool(_Tool::Type::Bulldoze), budget);
         }
     }
     updateFunds(budget);
@@ -763,7 +795,7 @@ ToolResult road_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnectTile(x, y, Tool::Road, budget);
+    ToolResult result = ConnectTile(x, y, tool(_Tool::Type::Road), budget);
     updateFunds(budget);
     return result;
 }
@@ -776,7 +808,7 @@ ToolResult rail_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnectTile(x, y, Tool::Rail, budget);
+    ToolResult result = ConnectTile(x, y, tool(_Tool::Type::Rail), budget);
     updateFunds(budget);
     return result;
 }
@@ -789,7 +821,7 @@ ToolResult wire_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnectTile(x, y, Tool::Wire, budget);
+    ToolResult result = ConnectTile(x, y, tool(_Tool::Type::Wire), budget);
     updateFunds(budget);
     return result;
 }
@@ -1047,14 +1079,16 @@ void executeDraggableTool(const Vector<int>& toolVector, const Point<int>& tileP
     {
         for (int i = 0; std::abs(i) <= std::abs(toolVector.x); i += step)
         {
-            ConnectTile(toolStart().x + i, toolStart().y, pendingTool(), budget);
+            // note: Type cast is temporary
+            ConnectTile(toolStart().x + i, toolStart().y, tool(static_cast<_Tool::Type>(pendingTool())), budget);
         }
     }
     else
     {
         for (int i = 0; std::abs(i) <= std::abs(toolVector.y); i += step)
         {
-            ConnectTile(toolStart().x, toolStart().y + i, pendingTool(), budget);
+            // note: Type cast is temporary
+            ConnectTile(toolStart().x, toolStart().y + i, tool(static_cast<_Tool::Type>(pendingTool())), budget);
         }
     }
 }

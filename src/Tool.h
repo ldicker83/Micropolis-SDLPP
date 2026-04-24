@@ -90,6 +90,8 @@ struct _Tool
         None
     };
 
+    Type type{ Type::None };
+
     size_t cost{ 0 };
     size_t size{ 0 };
     size_t offset{ 0 };
@@ -97,9 +99,10 @@ struct _Tool
     bool draggable{ false };
 
     const std::string name{};
-
-    Type type{ Type::None };
 };
+
+
+const _Tool& tool(_Tool::Type);
 
 
 void ToolDown(const Point<int> location, Budget& budget);
