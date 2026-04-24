@@ -124,12 +124,6 @@ void pendingTool(const _Tool::Type tool)
 }
 
 
-const ToolProperties& toolProperties(const Tool tool)
-{
-    return Tools.at(tool);
-}
-
-
 const ZoneStats& queryResult()
 {
     return QueryResult;
