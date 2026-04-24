@@ -35,7 +35,7 @@ int specialBase = Church;
 
 namespace
 {
-    _Tool::Type PendingTool{ _Tool::Type::None };
+    _Tool::Type PendingToolType{ _Tool::Type::None };
 
     std::map<Tool, ToolProperties> Tools =
     {
@@ -114,13 +114,13 @@ const _Tool& tool(_Tool::Type requested)
 const _Tool& pendingTool()
 {
     // cast is temporary while infrastructure for new type is put in place
-    return tool(static_cast<_Tool::Type>(PendingTool));
+    return tool(static_cast<_Tool::Type>(PendingToolType));
 }
 
 
 void pendingTool(const _Tool::Type tool)
 {
-    PendingTool = tool;
+    PendingToolType = tool;
 }
 
 
@@ -979,12 +979,12 @@ std::map<_Tool::Type, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
  */
 void ToolDown(const Point<int> location, Budget& budget)
 {
-    if (PendingTool == _Tool::Type::None)
+    if (PendingToolType == _Tool::Type::None)
     {
         return;
     }
 
-    ToolResult result = ToolFunctionTable.at(PendingTool)(location.x, location.y, budget);
+    ToolResult result = ToolFunctionTable.at(PendingToolType)(location.x, location.y, budget);
 
     if (result == ToolResult::RequiresBulldozing)
     {
