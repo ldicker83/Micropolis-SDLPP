@@ -20,29 +20,6 @@
 
 class Budget;
 
-enum class Tool
-{
-    Residential,
-    Commercial,
-    Industrial,
-    Fire,
-    Query,
-    Police,
-    Wire,
-    Bulldoze,
-    Rail,
-    Road,
-    Stadium,
-    Park,
-    Seaport,
-    Coal,
-    Nuclear,
-    Airport,
-    Network,
-    None
-};
-
-
 struct ToolProperties
 {
     int cost{};
