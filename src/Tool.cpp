@@ -35,6 +35,8 @@ int specialBase = Church;
 
 namespace
 {
+    const _Tool* PendingTool{ nullptr };
+
     _Tool::Type PendingToolType{ _Tool::Type::None };
 
     std::map<Tool, ToolProperties> Tools =
@@ -113,14 +115,14 @@ const _Tool& tool(_Tool::Type requested)
 
 const _Tool& pendingTool()
 {
-    // cast is temporary while infrastructure for new type is put in place
-    return tool(PendingToolType);
+    return *PendingTool;
 }
 
 
-void pendingTool(const _Tool::Type tool)
+void pendingTool(const _Tool::Type requestedTool)
 {
-    PendingToolType = tool;
+    PendingToolType = requestedTool;
+    PendingTool = &tool(requestedTool);
 }
 
 
