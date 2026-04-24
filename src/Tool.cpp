@@ -114,7 +114,7 @@ const _Tool& tool(_Tool::Type requested)
 const _Tool& pendingTool()
 {
     // cast is temporary while infrastructure for new type is put in place
-    return tool(static_cast<_Tool::Type>(PendingToolType));
+    return tool(PendingToolType);
 }
 
 
