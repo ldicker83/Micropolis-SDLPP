@@ -51,7 +51,7 @@ namespace
         { Tool::Type::Rail, 20, 1, 0, true, "Rail" },
         { Tool::Type::Road, 10, 1, 0, true, "Roads" },
         { Tool::Type::Stadium, 5000, 4, 1, false, "Stadium" },
-        { Tool::Type::Park, 10, 1, 0, false , "Park" },
+        { Tool::Type::Park, 10, 1, 0, false, "Park" },
         { Tool::Type::Seaport, 3000, 4, 1, false, "Seaport" },
         { Tool::Type::Coal, 3000, 4, 1, false, "Coal Power" },
         { Tool::Type::Nuclear, 5000, 4, 1, false, "Nuclear Power" },
@@ -398,7 +398,7 @@ void checkBorder(const int mapX, const int mapY, const int count, Budget& budget
 }
 
 
-ToolResult checkArea(const Point<int> location, const int base, const bool animate, const Tool& tool, Budget& budget)
+ToolResult checkArea(const Point<int> location, const int base, const Tool& tool, Budget& budget)
 {
     if (!pointInRect({ location.x - 1, location.y - 1 }, { 0, 0, SimWidth - tool.size, SimHeight - tool.size }))
     {
@@ -473,7 +473,7 @@ ToolResult checkArea(const Point<int> location, const int base, const bool anima
                 tileValue(mapX, mapY) = tileBase + BNCNBIT + ZonedBit;
             }
             // special case to get nuclear plant animation working
-            else if (animate && col == 1 && row == 2)
+            else if (tool.type == Tool::Type::Nuclear && col == 1 && row == 2)
             {
                 tileValue(mapX, mapY) = tileBase + BNCNBIT + AnimatedBit;
             }
@@ -810,7 +810,7 @@ ToolResult residential_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, ResidentialBase, false, *PendingTool, budget);
+    return checkArea({ x, y }, ResidentialBase, *PendingTool, budget);
 }
 
 
@@ -821,7 +821,7 @@ ToolResult commercial_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, CommercialBase, false, *PendingTool, budget);
+    return checkArea({ x, y }, CommercialBase, *PendingTool, budget);
 }
 
 
@@ -832,7 +832,7 @@ ToolResult industrial_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, IndustryBase, false, *PendingTool, budget);
+    return checkArea({ x, y }, IndustryBase, *PendingTool, budget);
 }
 
 
@@ -843,7 +843,7 @@ ToolResult police_dept_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, PoliceStationBase, false, *PendingTool, budget);
+    return checkArea({ x, y }, PoliceStationBase, *PendingTool, budget);
 }
 
 
@@ -854,7 +854,7 @@ ToolResult fire_dept_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, FireStationBase, false , *PendingTool, budget);
+    return checkArea({ x, y }, FireStationBase, *PendingTool, budget);
 }
 
 
@@ -865,7 +865,7 @@ ToolResult stadium_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, StadiumBase, false, *PendingTool, budget);
+    return checkArea({ x, y }, StadiumBase, *PendingTool, budget);
 }
 
 
@@ -876,7 +876,7 @@ ToolResult coal_power_plant_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, CoalPowerBase, false, *PendingTool, budget);
+    return checkArea({ x, y }, CoalPowerBase, *PendingTool, budget);
 }
 
 
@@ -887,7 +887,7 @@ ToolResult nuclear_power_plant_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, NuclearPowerBase, true, *PendingTool, budget);
+    return checkArea({ x, y }, NuclearPowerBase, *PendingTool, budget);
 }
 
 
@@ -898,7 +898,7 @@ ToolResult seaport_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, PortBase, false, *PendingTool, budget);
+    return checkArea({ x, y }, PortBase, *PendingTool, budget);
 }
 
 
@@ -909,7 +909,7 @@ ToolResult airport_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, AirportBase, false, *PendingTool, budget);
+    return checkArea({ x, y }, AirportBase, *PendingTool, budget);
 }
 
 
