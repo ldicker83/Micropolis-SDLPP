@@ -31,8 +31,6 @@
 #include <string>
 #include <stdexcept>
 
-int specialBase = Church;
-
 namespace
 {
     const Tool* PendingTool{ nullptr };
