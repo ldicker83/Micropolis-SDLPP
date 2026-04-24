@@ -578,9 +578,9 @@ void _FixZone(int x, int y)
 }
 
 
-ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
+ToolResult CanConnectTile(int x, int y, const _Tool& tool, Budget& budget)
 {
-    if (budget.CurrentFunds() < toolProperties(tool).cost)
+    if (budget.CurrentFunds() < tool.cost)
     {
         return ToolResult::InsufficientFunds;
     }
@@ -622,7 +622,7 @@ ToolResult CanConnectTile(int x, int y, Tool tool, Budget& budget)
 }
 
 
-ToolResult ConnectTile(int x, int y, _Tool tool, Budget& budget)
+ToolResult ConnectTile(int x, int y, const _Tool& tool, Budget& budget)
 {
     int Tile = tileValue(x, y);
 
