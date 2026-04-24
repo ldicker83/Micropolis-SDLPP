@@ -37,29 +37,6 @@ namespace
 {
     const _Tool* PendingTool{ nullptr };
 
-    std::map<Tool, ToolProperties> Tools =
-    {
-        { Tool::Residential, { 100, 3, 1, false, "Residential" }},
-        { Tool::Commercial, { 100, 3, 1, false, "Commercial" }},
-        { Tool::Industrial, { 100, 3, 1, false, "Industrial" }},
-        { Tool::Fire, { 500, 3, 1, false, "Fire Department" }},
-        { Tool::Query, { 0, 1, 0, false, "Query" }},
-        { Tool::Police, { 500, 3, 1, false, "Police Department" }},
-        { Tool::Wire, { 5, 1, 0, true, "Power Line" }},
-        { Tool::Bulldoze, { 1, 1, 0, false, "Bulldoze" }},
-        { Tool::Rail, { 20, 1, 0, true, "Rail" }},
-        { Tool::Road, { 10, 1, 0, true, "Roads" }},
-        { Tool::Stadium, { 5000, 4, 1, false, "Stadium" }},
-        { Tool::Park, { 10, 1, 0, false, "Park" }},
-        { Tool::Seaport, { 3000, 4, 1, false, "Seaport" }},
-        { Tool::Coal, { 3000, 4, 1, false, "Coal Power" }},
-        { Tool::Nuclear, { 5000, 4, 1, false, "Nuclear Power" }},
-        { Tool::Airport, { 10000, 6, 1, false, "Airport" }},
-        { Tool::Network, { 100, 1, 0, false, "Network" }},
-        { Tool::None, { 0, 0, 0, false, "No Tool" } }
-    };
-
-
     std::vector<_Tool> _Tools =
     {
         {},
@@ -157,7 +134,7 @@ ToolResult putDownPark(int mapH, int mapV, Budget& budget)
 {
     int tile{};
 
-    if (budget.CanAfford(Tools.at(Tool::Park).cost))
+    if (budget.CanAfford(tool(_Tool::Type::Park).cost))
     {
         int value = randomRange(0, 4);
 
@@ -172,7 +149,7 @@ ToolResult putDownPark(int mapH, int mapV, Budget& budget)
 
         if (tileValue(mapH, mapV) == 0)
         {
-            budget.Spend(Tools.at(Tool::Park).cost);
+            budget.Spend(tool(_Tool::Type::Park).cost);
             updateFunds(budget);
             tileValue(mapH, mapV) = tile;
             return ToolResult::Success;
@@ -201,10 +178,10 @@ ToolResult putDownNetwork(int mapH, int mapV, Budget& budget)
         return ToolResult::RequiresBulldozing;
     }
 
-    if (budget.CanAfford(Tools.at(Tool::Network).cost))
+    if (budget.CanAfford(tool(_Tool::Type::Network).cost))
     {
         tileValue(mapH, mapV) = TELEBASE | ConductiveBit | BurnableBit | BurnableBit | AnimatedBit;
-        budget.Spend(Tools.at(Tool::Network).cost);
+        budget.Spend(tool(_Tool::Type::Network).cost);
         return ToolResult::Success;
     }
     else
@@ -421,7 +398,7 @@ void checkBorder(const int mapX, const int mapY, const int count, Budget& budget
 }
 
 
-ToolResult checkArea(const int mapH, const int mapV, const int base, const int size, const bool animate, const Tool tool, Budget& budget)
+ToolResult checkArea(const int mapH, const int mapV, const int base, const int size, const bool animate, _Tool::Type toolType, Budget& budget)
 {
     if (!pointInRect({ mapH - 1, mapV - 1 }, { 0, 0, SimWidth - size, SimHeight - size }))
     {
@@ -430,7 +407,7 @@ ToolResult checkArea(const int mapH, const int mapV, const int base, const int s
 
     bool needsBulldozing{ false };
 
-    int totalCost{ Tools.at(tool).cost };
+    int totalCost{ tool(toolType).cost };
 
     int mapY{ mapV - 1 };
     for (int row = 0; row < size; ++row)
@@ -833,7 +810,7 @@ ToolResult residential_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, ResidentialBase, 3, false, Tool::Residential, budget);
+    return checkArea(x, y, ResidentialBase, 3, false, _Tool::Type::Residential, budget);
 }
 
 
@@ -844,7 +821,7 @@ ToolResult commercial_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, CommercialBase, 3, false, Tool::Commercial, budget);
+    return checkArea(x, y, CommercialBase, 3, false, _Tool::Type::Commercial, budget);
 }
 
 
@@ -855,7 +832,7 @@ ToolResult industrial_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, IndustryBase, 3, false, Tool::Industrial, budget);
+    return checkArea(x, y, IndustryBase, 3, false, _Tool::Type::Industrial, budget);
 }
 
 
@@ -866,7 +843,7 @@ ToolResult police_dept_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, PoliceStationBase, 3, false, Tool::Police, budget);
+    return checkArea(x, y, PoliceStationBase, 3, false, _Tool::Type::Police, budget);
 }
 
 
@@ -877,7 +854,7 @@ ToolResult fire_dept_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, FireStationBase, 3, false , Tool::Fire, budget);
+    return checkArea(x, y, FireStationBase, 3, false , _Tool::Type::Fire, budget);
 }
 
 
@@ -888,7 +865,7 @@ ToolResult stadium_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, StadiumBase, 4, false, Tool::Stadium, budget);
+    return checkArea(x, y, StadiumBase, 4, false, _Tool::Type::Stadium, budget);
 }
 
 
@@ -899,7 +876,7 @@ ToolResult coal_power_plant_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, CoalPowerBase, 4, false, Tool::Coal, budget);
+    return checkArea(x, y, CoalPowerBase, 4, false, _Tool::Type::Coal, budget);
 }
 
 
@@ -910,7 +887,7 @@ ToolResult nuclear_power_plant_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, NuclearPowerBase, 4, true, Tool::Nuclear, budget);
+    return checkArea(x, y, NuclearPowerBase, 4, true, _Tool::Type::Nuclear, budget);
 }
 
 
@@ -921,7 +898,7 @@ ToolResult seaport_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, PortBase, 4, false, Tool::Seaport, budget);
+    return checkArea(x, y, PortBase, 4, false, _Tool::Type::Seaport, budget);
 }
 
 
@@ -932,7 +909,7 @@ ToolResult airport_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, AirportBase, 6, false, Tool::Airport, budget);
+    return checkArea(x, y, AirportBase, 6, false, _Tool::Type::Airport, budget);
 }
 
 
