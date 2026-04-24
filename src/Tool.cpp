@@ -37,8 +37,6 @@ namespace
 {
     const _Tool* PendingTool{ nullptr };
 
-    _Tool::Type PendingToolType{ _Tool::Type::None };
-
     std::map<Tool, ToolProperties> Tools =
     {
         { Tool::Residential, { 100, 3, 1, false, "Residential" }},
@@ -121,7 +119,6 @@ const _Tool& pendingTool()
 
 void pendingTool(const _Tool::Type requestedTool)
 {
-    PendingToolType = requestedTool;
     PendingTool = &tool(requestedTool);
 }
 
@@ -981,12 +978,12 @@ std::map<_Tool::Type, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
  */
 void ToolDown(const Point<int> location, Budget& budget)
 {
-    if (PendingToolType == _Tool::Type::None)
+    if (pendingTool().type == _Tool::Type::None)
     {
         return;
     }
 
-    ToolResult result = ToolFunctionTable.at(PendingToolType)(location.x, location.y, budget);
+    ToolResult result = ToolFunctionTable.at(pendingTool().type)(location.x, location.y, budget);
 
     if (result == ToolResult::RequiresBulldozing)
     {
