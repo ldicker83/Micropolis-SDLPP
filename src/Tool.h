@@ -109,12 +109,11 @@ void ToolDown(const Point<int> location, Budget& budget);
 bool tally(int tileValue);
 
 const ToolProperties& toolProperties(const Tool);
-const ToolProperties& pendingToolProperties();
 
 const ZoneStats& queryResult();
 
 const _Tool& pendingTool();
-void pendingTool(const Tool);
+void pendingTool(const _Tool::Type);
 
 void toolStart(const Point<int>&);
 const Point<int>& toolStart();

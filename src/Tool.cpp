@@ -35,7 +35,7 @@ int specialBase = Church;
 
 namespace
 {
-    Tool PendingTool{ Tool::None };
+    _Tool::Type PendingTool{ _Tool::Type::None };
 
     std::map<Tool, ToolProperties> Tools =
     {
@@ -118,7 +118,7 @@ const _Tool& pendingTool()
 }
 
 
-void pendingTool(const Tool tool)
+void pendingTool(const _Tool::Type tool)
 {
     PendingTool = tool;
 }
@@ -127,12 +127,6 @@ void pendingTool(const Tool tool)
 const ToolProperties& toolProperties(const Tool tool)
 {
     return Tools.at(tool);
-}
-
-
-const ToolProperties& pendingToolProperties()
-{
-    return Tools.at(PendingTool);
 }
 
 
@@ -960,26 +954,26 @@ ToolResult network_tool(int x, int y, Budget& budget)
 }
 
 
-std::map<Tool, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
+std::map<_Tool::Type, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
 {
-    { Tool::Residential, &residential_tool },
-    { Tool::Commercial, &commercial_tool },
-    { Tool::Industrial, &industrial_tool },
-    { Tool::Fire, &fire_dept_tool },
-    { Tool::Query, &query_tool },
-    { Tool::Police, &police_dept_tool },
-    { Tool::Wire, &wire_tool },
-    { Tool::Bulldoze, &bulldozer_tool },
-    { Tool::Rail, &rail_tool },
-    { Tool::Road, &road_tool },
-    { Tool::Stadium, &stadium_tool },
-    { Tool::Park, &park_tool },
-    { Tool::Seaport, &seaport_tool },
-    { Tool::Coal, &coal_power_plant_tool },
-    { Tool::Nuclear, &nuclear_power_plant_tool },
-    { Tool::Airport, &airport_tool },
-    { Tool::Network, &network_tool },
-    { Tool::None, nullptr }
+    { _Tool::Type::Residential, &residential_tool },
+    { _Tool::Type::Commercial, &commercial_tool },
+    { _Tool::Type::Industrial, &industrial_tool },
+    { _Tool::Type::Fire, &fire_dept_tool },
+    { _Tool::Type::Query, &query_tool },
+    { _Tool::Type::Police, &police_dept_tool },
+    { _Tool::Type::Wire, &wire_tool },
+    { _Tool::Type::Bulldoze, &bulldozer_tool },
+    { _Tool::Type::Rail, &rail_tool },
+    { _Tool::Type::Road, &road_tool },
+    { _Tool::Type::Stadium, &stadium_tool },
+    { _Tool::Type::Park, &park_tool },
+    { _Tool::Type::Seaport, &seaport_tool },
+    { _Tool::Type::Coal, &coal_power_plant_tool },
+    { _Tool::Type::Nuclear, &nuclear_power_plant_tool },
+    { _Tool::Type::Airport, &airport_tool },
+    { _Tool::Type::Network, &network_tool },
+    { _Tool::Type::None, nullptr }
 };
 
 
@@ -991,7 +985,7 @@ std::map<Tool, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
  */
 void ToolDown(const Point<int> location, Budget& budget)
 {
-    if (PendingTool == Tool::None)
+    if (PendingTool == _Tool::Type::None)
     {
         return;
     }
