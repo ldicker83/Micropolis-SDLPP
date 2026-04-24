@@ -885,7 +885,7 @@ SDL_FRect pendingToolRect()
 
 void DrawPendingTool(const ToolPalette& palette)
 {
-    if (palette.tool() == Tool::None || (pendingTool().draggable && EventHandling::MouseLeftDown))
+    if (palette.tool() == _Tool::Type::None || (pendingTool().draggable && EventHandling::MouseLeftDown))
     {
         return;
     }
