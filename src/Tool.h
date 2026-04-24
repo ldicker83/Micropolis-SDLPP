@@ -92,9 +92,9 @@ struct _Tool
 
     Type type{ Type::None };
 
-    size_t cost{ 0 };
-    size_t size{ 0 };
-    size_t offset{ 0 };
+    int cost{ 0 };
+    int size{ 0 };
+    int offset{ 0 };
 
     bool draggable{ false };
 
