@@ -35,7 +35,7 @@ namespace
 {
     const Tool* PendingTool{ nullptr };
 
-    std::vector<Tool> _Tools =
+    const std::vector<Tool> Tools =
     {
         {},
         { Tool::Type::Residential, 100, 3, 1, false, "Residential" },
@@ -79,7 +79,7 @@ namespace
 
 const Tool& tool(Tool::Type requested)
 {
-	return *std::find_if(_Tools.begin(), _Tools.end(), [requested](const Tool& tool)
+	return *std::find_if(Tools.begin(), Tools.end(), [requested](const Tool& tool)
         {
             return tool.type == requested;
         });
