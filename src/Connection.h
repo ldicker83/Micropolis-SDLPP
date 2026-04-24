@@ -21,5 +21,5 @@ enum class ToolOperation
 	Wire
 };
 
-ToolResult ConnectTile(int x, int y, const _Tool&, Budget&);
-ToolResult CanConnectTile(int x, int y, const _Tool&, Budget&);
+ToolResult ConnectTile(int x, int y, const Tool&, Budget&);
+ToolResult CanConnectTile(int x, int y, const Tool&, Budget&);

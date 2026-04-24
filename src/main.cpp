@@ -281,7 +281,7 @@ void initWillStuff()
     lastCityTime(-1);
     lastCityYear(1);
     lastCityMonth(Month::Enum::Jan);
-    pendingTool(_Tool::Type::None);
+    pendingTool(Tool::Type::None);
     MessageId(NotificationId::None);
     destroyAllSprites();
     DisasterEvent = 0;
@@ -713,7 +713,7 @@ void handleMouseEvent(SDL_Event& event)
                 ToolDown(TilePointedAt, budget);
             }
 
-            if (pendingTool().type == _Tool::Type::Query)
+            if (pendingTool().type == Tool::Type::Query)
             {
                 interfaceManager->queryWindow().setQueryResult(queryResult());
                 interfaceManager->showWindow(InterfaceManager::Window::Query);
@@ -744,7 +744,7 @@ void handleMouseEvent(SDL_Event& event)
         {
             if (!RightButtonDrag)
             {
-                pendingTool(_Tool::Type::None);
+                pendingTool(Tool::Type::None);
                 interfaceManager->toolPalette().cancelTool();
             }
 
@@ -885,7 +885,7 @@ SDL_FRect pendingToolRect()
 
 void DrawPendingTool(const ToolPalette& palette)
 {
-    if (palette.tool() == _Tool::Type::None || (pendingTool().draggable && EventHandling::MouseLeftDown))
+    if (palette.tool() == Tool::Type::None || (pendingTool().draggable && EventHandling::MouseLeftDown))
     {
         return;
     }
@@ -1057,7 +1057,7 @@ void GameLoop()
         SDL_RenderClear(MainWindowRenderer);
         SDL_RenderTexture(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
 
-        pendingTool(static_cast<_Tool::Type>(interfaceManager->toolPalette().tool()));
+        pendingTool(static_cast<Tool::Type>(interfaceManager->toolPalette().tool()));
         drawSprites();
 
         if (!interfaceManager->modalWindowVisible())

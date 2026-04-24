@@ -35,28 +35,28 @@ int specialBase = Church;
 
 namespace
 {
-    const _Tool* PendingTool{ nullptr };
+    const Tool* PendingTool{ nullptr };
 
-    std::vector<_Tool> _Tools =
+    std::vector<Tool> _Tools =
     {
         {},
-        { _Tool::Type::Residential, 100, 3, 1, false, "Residential" },
-        { _Tool::Type::Commercial, 100, 3, 1, false, "Commercial" },
-        { _Tool::Type::Industrial, 100, 3, 1, false, "Industrial" },
-        { _Tool::Type::Fire, 500, 3, 1, false, "Fire Department" },
-        { _Tool::Type::Query, 0, 1, 0, false, "Query" },
-        { _Tool::Type::Police, 500, 3, 1, false, "Police Department" },
-        { _Tool::Type::Wire, 5, 1, 0, true, "Power Line" },
-        { _Tool::Type::Bulldoze, 1, 1, 0, false, "Bulldoze" },
-        { _Tool::Type::Rail, 20, 1, 0, true, "Rail" },
-        { _Tool::Type::Road, 10, 1, 0, true, "Roads" },
-        { _Tool::Type::Stadium, 5000, 4, 1, false, "Stadium" },
-        { _Tool::Type::Park, 10, 1, 0, false , "Park" },
-        { _Tool::Type::Seaport, 3000, 4, 1, false, "Seaport" },
-        { _Tool::Type::Coal, 3000, 4, 1, false, "Coal Power" },
-        { _Tool::Type::Nuclear, 5000, 4, 1, false, "Nuclear Power" },
-        { _Tool::Type::Airport, 10000, 6, 1, false, "Airport" },
-        { _Tool::Type::Network, 100, 1, 0, false, "Network" }
+        { Tool::Type::Residential, 100, 3, 1, false, "Residential" },
+        { Tool::Type::Commercial, 100, 3, 1, false, "Commercial" },
+        { Tool::Type::Industrial, 100, 3, 1, false, "Industrial" },
+        { Tool::Type::Fire, 500, 3, 1, false, "Fire Department" },
+        { Tool::Type::Query, 0, 1, 0, false, "Query" },
+        { Tool::Type::Police, 500, 3, 1, false, "Police Department" },
+        { Tool::Type::Wire, 5, 1, 0, true, "Power Line" },
+        { Tool::Type::Bulldoze, 1, 1, 0, false, "Bulldoze" },
+        { Tool::Type::Rail, 20, 1, 0, true, "Rail" },
+        { Tool::Type::Road, 10, 1, 0, true, "Roads" },
+        { Tool::Type::Stadium, 5000, 4, 1, false, "Stadium" },
+        { Tool::Type::Park, 10, 1, 0, false , "Park" },
+        { Tool::Type::Seaport, 3000, 4, 1, false, "Seaport" },
+        { Tool::Type::Coal, 3000, 4, 1, false, "Coal Power" },
+        { Tool::Type::Nuclear, 5000, 4, 1, false, "Nuclear Power" },
+        { Tool::Type::Airport, 10000, 6, 1, false, "Airport" },
+        { Tool::Type::Network, 100, 1, 0, false, "Network" }
     };
 
 
@@ -79,22 +79,22 @@ namespace
 };
 
 
-const _Tool& tool(_Tool::Type requested)
+const Tool& tool(Tool::Type requested)
 {
-	return *std::find_if(_Tools.begin(), _Tools.end(), [requested](const _Tool& tool)
+	return *std::find_if(_Tools.begin(), _Tools.end(), [requested](const Tool& tool)
         {
             return tool.type == requested;
         });
 }
 
 
-const _Tool& pendingTool()
+const Tool& pendingTool()
 {
     return *PendingTool;
 }
 
 
-void pendingTool(const _Tool::Type requestedTool)
+void pendingTool(const Tool::Type requestedTool)
 {
     PendingTool = &tool(requestedTool);
 }
@@ -134,7 +134,7 @@ ToolResult putDownPark(int mapH, int mapV, Budget& budget)
 {
     int tile{};
 
-    if (budget.CanAfford(tool(_Tool::Type::Park).cost))
+    if (budget.CanAfford(tool(Tool::Type::Park).cost))
     {
         int value = randomRange(0, 4);
 
@@ -149,7 +149,7 @@ ToolResult putDownPark(int mapH, int mapV, Budget& budget)
 
         if (tileValue(mapH, mapV) == 0)
         {
-            budget.Spend(tool(_Tool::Type::Park).cost);
+            budget.Spend(tool(Tool::Type::Park).cost);
             updateFunds(budget);
             tileValue(mapH, mapV) = tile;
             return ToolResult::Success;
@@ -178,10 +178,10 @@ ToolResult putDownNetwork(int mapH, int mapV, Budget& budget)
         return ToolResult::RequiresBulldozing;
     }
 
-    if (budget.CanAfford(tool(_Tool::Type::Network).cost))
+    if (budget.CanAfford(tool(Tool::Type::Network).cost))
     {
         tileValue(mapH, mapV) = TELEBASE | ConductiveBit | BurnableBit | BurnableBit | AnimatedBit;
-        budget.Spend(tool(_Tool::Type::Network).cost);
+        budget.Spend(tool(Tool::Type::Network).cost);
         return ToolResult::Success;
     }
     else
@@ -398,7 +398,7 @@ void checkBorder(const int mapX, const int mapY, const int count, Budget& budget
 }
 
 
-ToolResult checkArea(const int mapH, const int mapV, const int base, const int size, const bool animate, _Tool::Type toolType, Budget& budget)
+ToolResult checkArea(const int mapH, const int mapV, const int base, const int size, const bool animate, Tool::Type toolType, Budget& budget)
 {
     if (!pointInRect({ mapH - 1, mapV - 1 }, { 0, 0, SimWidth - size, SimHeight - size }))
     {
@@ -732,7 +732,7 @@ ToolResult bulldozer_tool(int x, int y, Budget& budget)
         {
             if (budget.CanAfford(5)) /// \fixme Magic Number
             {
-                result = ConnectTile(x, y, tool(_Tool::Type::Bulldoze), budget);
+                result = ConnectTile(x, y, tool(Tool::Type::Bulldoze), budget);
                 if (temp != (tileValue(x, y) & LowerMask))
                 {
                     budget.Spend(5);
@@ -745,7 +745,7 @@ ToolResult bulldozer_tool(int x, int y, Budget& budget)
         }
         else
         {
-            result = ConnectTile(x, y, tool(_Tool::Type::Bulldoze), budget);
+            result = ConnectTile(x, y, tool(Tool::Type::Bulldoze), budget);
         }
     }
     updateFunds(budget);
@@ -760,7 +760,7 @@ ToolResult road_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnectTile(x, y, tool(_Tool::Type::Road), budget);
+    ToolResult result = ConnectTile(x, y, tool(Tool::Type::Road), budget);
     updateFunds(budget);
     return result;
 }
@@ -773,7 +773,7 @@ ToolResult rail_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnectTile(x, y, tool(_Tool::Type::Rail), budget);
+    ToolResult result = ConnectTile(x, y, tool(Tool::Type::Rail), budget);
     updateFunds(budget);
     return result;
 }
@@ -786,7 +786,7 @@ ToolResult wire_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    ToolResult result = ConnectTile(x, y, tool(_Tool::Type::Wire), budget);
+    ToolResult result = ConnectTile(x, y, tool(Tool::Type::Wire), budget);
     updateFunds(budget);
     return result;
 }
@@ -810,7 +810,7 @@ ToolResult residential_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, ResidentialBase, 3, false, _Tool::Type::Residential, budget);
+    return checkArea(x, y, ResidentialBase, 3, false, Tool::Type::Residential, budget);
 }
 
 
@@ -821,7 +821,7 @@ ToolResult commercial_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, CommercialBase, 3, false, _Tool::Type::Commercial, budget);
+    return checkArea(x, y, CommercialBase, 3, false, Tool::Type::Commercial, budget);
 }
 
 
@@ -832,7 +832,7 @@ ToolResult industrial_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, IndustryBase, 3, false, _Tool::Type::Industrial, budget);
+    return checkArea(x, y, IndustryBase, 3, false, Tool::Type::Industrial, budget);
 }
 
 
@@ -843,7 +843,7 @@ ToolResult police_dept_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, PoliceStationBase, 3, false, _Tool::Type::Police, budget);
+    return checkArea(x, y, PoliceStationBase, 3, false, Tool::Type::Police, budget);
 }
 
 
@@ -854,7 +854,7 @@ ToolResult fire_dept_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, FireStationBase, 3, false , _Tool::Type::Fire, budget);
+    return checkArea(x, y, FireStationBase, 3, false , Tool::Type::Fire, budget);
 }
 
 
@@ -865,7 +865,7 @@ ToolResult stadium_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, StadiumBase, 4, false, _Tool::Type::Stadium, budget);
+    return checkArea(x, y, StadiumBase, 4, false, Tool::Type::Stadium, budget);
 }
 
 
@@ -876,7 +876,7 @@ ToolResult coal_power_plant_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, CoalPowerBase, 4, false, _Tool::Type::Coal, budget);
+    return checkArea(x, y, CoalPowerBase, 4, false, Tool::Type::Coal, budget);
 }
 
 
@@ -887,7 +887,7 @@ ToolResult nuclear_power_plant_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, NuclearPowerBase, 4, true, _Tool::Type::Nuclear, budget);
+    return checkArea(x, y, NuclearPowerBase, 4, true, Tool::Type::Nuclear, budget);
 }
 
 
@@ -898,7 +898,7 @@ ToolResult seaport_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, PortBase, 4, false, _Tool::Type::Seaport, budget);
+    return checkArea(x, y, PortBase, 4, false, Tool::Type::Seaport, budget);
 }
 
 
@@ -909,7 +909,7 @@ ToolResult airport_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea(x, y, AirportBase, 6, false, _Tool::Type::Airport, budget);
+    return checkArea(x, y, AirportBase, 6, false, Tool::Type::Airport, budget);
 }
 
 
@@ -924,26 +924,26 @@ ToolResult network_tool(int x, int y, Budget& budget)
 }
 
 
-std::map<_Tool::Type, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
+std::map<Tool::Type, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
 {
-    { _Tool::Type::Residential, &residential_tool },
-    { _Tool::Type::Commercial, &commercial_tool },
-    { _Tool::Type::Industrial, &industrial_tool },
-    { _Tool::Type::Fire, &fire_dept_tool },
-    { _Tool::Type::Query, &query_tool },
-    { _Tool::Type::Police, &police_dept_tool },
-    { _Tool::Type::Wire, &wire_tool },
-    { _Tool::Type::Bulldoze, &bulldozer_tool },
-    { _Tool::Type::Rail, &rail_tool },
-    { _Tool::Type::Road, &road_tool },
-    { _Tool::Type::Stadium, &stadium_tool },
-    { _Tool::Type::Park, &park_tool },
-    { _Tool::Type::Seaport, &seaport_tool },
-    { _Tool::Type::Coal, &coal_power_plant_tool },
-    { _Tool::Type::Nuclear, &nuclear_power_plant_tool },
-    { _Tool::Type::Airport, &airport_tool },
-    { _Tool::Type::Network, &network_tool },
-    { _Tool::Type::None, nullptr }
+    { Tool::Type::Residential, &residential_tool },
+    { Tool::Type::Commercial, &commercial_tool },
+    { Tool::Type::Industrial, &industrial_tool },
+    { Tool::Type::Fire, &fire_dept_tool },
+    { Tool::Type::Query, &query_tool },
+    { Tool::Type::Police, &police_dept_tool },
+    { Tool::Type::Wire, &wire_tool },
+    { Tool::Type::Bulldoze, &bulldozer_tool },
+    { Tool::Type::Rail, &rail_tool },
+    { Tool::Type::Road, &road_tool },
+    { Tool::Type::Stadium, &stadium_tool },
+    { Tool::Type::Park, &park_tool },
+    { Tool::Type::Seaport, &seaport_tool },
+    { Tool::Type::Coal, &coal_power_plant_tool },
+    { Tool::Type::Nuclear, &nuclear_power_plant_tool },
+    { Tool::Type::Airport, &airport_tool },
+    { Tool::Type::Network, &network_tool },
+    { Tool::Type::None, nullptr }
 };
 
 
@@ -955,7 +955,7 @@ std::map<_Tool::Type, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
  */
 void ToolDown(const Point<int> location, Budget& budget)
 {
-    if (pendingTool().type == _Tool::Type::None)
+    if (pendingTool().type == Tool::Type::None)
     {
         return;
     }

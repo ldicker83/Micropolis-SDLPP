@@ -33,7 +33,7 @@ enum class ToolResult
 };
 
 
-struct _Tool
+struct Tool
 {
     enum class Type
     {
@@ -69,7 +69,7 @@ struct _Tool
 };
 
 
-const _Tool& tool(_Tool::Type);
+const Tool& tool(Tool::Type);
 
 
 void ToolDown(const Point<int> location, Budget& budget);
@@ -77,8 +77,8 @@ bool tally(int tileValue);
 
 const ZoneStats& queryResult();
 
-const _Tool& pendingTool();
-void pendingTool(const _Tool::Type);
+const Tool& pendingTool();
+void pendingTool(const Tool::Type);
 
 void toolStart(const Point<int>&);
 const Point<int>& toolStart();

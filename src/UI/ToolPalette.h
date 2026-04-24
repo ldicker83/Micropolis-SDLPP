@@ -40,7 +40,7 @@ public:
 public:
     ToolPalette(SDL_Renderer* renderer);
 
-    _Tool::Type tool() const;
+    Tool::Type tool() const;
     const Texture& toolGost() const;
 
     void draw() override;
@@ -52,7 +52,7 @@ private:
     struct ButtonMeta
     {
         SDL_FRect rect{};
-        _Tool::Type tool{ _Tool::Type::None };
+        Tool::Type tool{ Tool::Type::None };
 
         int state{};
 
@@ -85,5 +85,5 @@ private:
     Texture mBackground{};
 
     int mSelectedIndex{ NoSelection };
-    _Tool::Type mTool{ _Tool::Type::None };
+    Tool::Type mTool{ Tool::Type::None };
 };
