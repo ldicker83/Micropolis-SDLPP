@@ -13,6 +13,35 @@
       "October",
       "November",
       "December"
-    ]
+    ],
+    "tools": {
+      "residential": "Residential",
+      "commercial": "Commercial",
+      "industrial": "Industrial",
+      "fire": "Fire Department",
+      "query": "Query",
+      "police": "Police Department",
+      "wire": "Power Line",
+      "bulldoze": "Bulldoze",
+      "rail": "Rail",
+      "road": "Roads",
+      "stadium": "Stadium",
+      "park": "Park",
+      "seaport": "Seaport",
+      "coal": "Coal Power",
+      "nuclear": "Nuclear Power",
+      "airport": "Airport",
+      "network": "Network"
+    },
+    "tool_result": {
+      "cannot_bulldoze": "Cannot Bulldoze",
+      "insufficient_funds": "Insufficient Funds",
+      "invalid_location": "Invalid Location",
+      "invalid_operation": "Invalid Operation",
+      "network_voted_no": "Other players vetoed action",
+      "out_of_bounds": "Out of Bounds",
+      "requires_bulldozing": "Bulldozing Required",
+      "success": "Success!"
+    }
   }
 }
