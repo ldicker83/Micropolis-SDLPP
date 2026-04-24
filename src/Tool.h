@@ -20,16 +20,6 @@
 
 class Budget;
 
-struct ToolProperties
-{
-    int cost{};
-    int size{};
-    int offset{};
-    bool draggable{ false };
-    const std::string name{};
-};
-
-
 enum class ToolResult
 {
     Success,
