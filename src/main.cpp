@@ -281,7 +281,7 @@ void initWillStuff()
     lastCityTime(-1);
     lastCityYear(1);
     lastCityMonth(Month::Enum::Jan);
-    pendingTool(Tool::None);
+    pendingTool(Tool::Type::None);
     MessageId(NotificationId::None);
     destroyAllSprites();
     DisasterEvent = 0;
@@ -676,7 +676,7 @@ void handleMouseEvent(SDL_Event& event)
         mouseMotionDelta = { static_cast<int>(event.motion.xrel), static_cast<int>(event.motion.yrel) };
 
         DraggableToolVector = {};
-        if (pendingToolProperties().draggable && EventHandling::MouseLeftDown && toolStart() != TilePointedAt)
+        if (pendingTool().draggable && EventHandling::MouseLeftDown && toolStart() != TilePointedAt)
         {
             DraggableToolVector = vectorFromPoints(toolStart(), TilePointedAt);
             validateDraggableToolVector(DraggableToolVector, budget);
@@ -708,12 +708,12 @@ void handleMouseEvent(SDL_Event& event)
 
             toolStart(TilePointedAt);
             
-            if (!interfaceManager->budgetWindow().visible() && !pendingToolProperties().draggable)
+            if (!interfaceManager->budgetWindow().visible() && !pendingTool().draggable)
             {
                 ToolDown(TilePointedAt, budget);
             }
 
-            if (pendingTool() == Tool::Query)
+            if (pendingTool().type == Tool::Type::Query)
             {
                 interfaceManager->queryWindow().setQueryResult(queryResult());
                 interfaceManager->showWindow(InterfaceManager::Window::Query);
@@ -735,7 +735,7 @@ void handleMouseEvent(SDL_Event& event)
 
             toolEnd(TilePointedAt);
             
-            if (pendingToolProperties().draggable)
+            if (pendingTool().draggable)
             {
                 executeDraggableTool(DraggableToolVector, TilePointedAt, budget);
             }
@@ -744,7 +744,7 @@ void handleMouseEvent(SDL_Event& event)
         {
             if (!RightButtonDrag)
             {
-                pendingTool(Tool::None);
+                pendingTool(Tool::Type::None);
                 interfaceManager->toolPalette().cancelTool();
             }
 
@@ -873,10 +873,10 @@ void drawToolRect(const SDL_FRect& rect)
 SDL_FRect pendingToolRect()
 {
     const SDL_Rect rect{
-        TileHighlight.x - (pendingToolProperties().offset * TileSize),
-        TileHighlight.y - (pendingToolProperties().offset * TileSize),
-        pendingToolProperties().size * TileSize,
-        pendingToolProperties().size * TileSize
+        TileHighlight.x - (pendingTool().offset * TileSize),
+        TileHighlight.y - (pendingTool().offset * TileSize),
+        pendingTool().size * TileSize,
+        pendingTool().size * TileSize
     };
 
     return fRectFromRect(rect);
@@ -885,7 +885,7 @@ SDL_FRect pendingToolRect()
 
 void DrawPendingTool(const ToolPalette& palette)
 {
-    if (palette.tool() == Tool::None || (pendingToolProperties().draggable && EventHandling::MouseLeftDown))
+    if (palette.tool() == Tool::Type::None || (pendingTool().draggable && EventHandling::MouseLeftDown))
     {
         return;
     }
@@ -905,7 +905,7 @@ void DrawPendingTool(const ToolPalette& palette)
 void drawDraggableToolVector()
 {
     if (!EventHandling::MouseLeftDown) { return; }
-	if (!pendingToolProperties().draggable) { return; }
+	if (!pendingTool().draggable) { return; }
 
     if (interfaceManager->pointInWindow(EventHandling::MouseDownPosition))
     {
@@ -1057,7 +1057,7 @@ void GameLoop()
         SDL_RenderClear(MainWindowRenderer);
         SDL_RenderTexture(MainWindowRenderer, MainMapTexture.texture, &FullMapViewRect, nullptr);
 
-        pendingTool(interfaceManager->toolPalette().tool());
+        pendingTool(static_cast<Tool::Type>(interfaceManager->toolPalette().tool()));
         drawSprites();
 
         if (!interfaceManager->modalWindowVisible())

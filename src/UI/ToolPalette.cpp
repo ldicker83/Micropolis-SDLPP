@@ -69,7 +69,7 @@ void ToolPalette::draw()
 
     for (size_t i = 0; i < 20; ++i)
     {
-        if (mToolButtons[i].tool == Tool::None) { continue; }
+        if (mToolButtons[i].tool == Tool::Type::None) { continue; }
         SDL_RenderTexture(mRenderer, mIcons.texture, &mToolButtonUV[i + (mToolButtons[i].state * 20)], &mToolButtons[i].rect);
     }
 }
@@ -110,7 +110,7 @@ void ToolPalette::toolIndex(const int toolIndex)
     if (mSelectedIndex != NoSelection)
     {
         setButtonState(mSelectedIndex, NormalState);
-        mTool = Tool::None;
+        mTool = Tool::Type::None;
     }
 
     setButtonState(toolIndex, PressedState);
@@ -126,7 +126,7 @@ int ToolPalette::toolIndex() const
 
 
 
-Tool ToolPalette::tool() const
+Tool::Type ToolPalette::tool() const
 {
     return mTool;
 }
@@ -212,26 +212,26 @@ void ToolPalette::loadToolGhosts()
 
 void ToolPalette::setToolValues()
 {
-    mToolButtons[0].tool = Tool::Residential;
-    mToolButtons[1].tool = Tool::Commercial;
-    mToolButtons[2].tool = Tool::Industrial;
-    mToolButtons[3].tool = Tool::Fire;
-    mToolButtons[4].tool = Tool::Query;
-    mToolButtons[5].tool = Tool::Police;
-    mToolButtons[6].tool = Tool::Wire;
-    mToolButtons[7].tool = Tool::Bulldoze;
-    mToolButtons[8].tool = Tool::Rail;
-    mToolButtons[9].tool = Tool::Road;
-    mToolButtons[10].tool = Tool::None; // Unused
-    mToolButtons[11].tool = Tool::None; // Unused
-    mToolButtons[12].tool = Tool::Stadium;
-    mToolButtons[13].tool = Tool::Park;
-    mToolButtons[14].tool = Tool::Seaport;
-    mToolButtons[15].tool = Tool::Coal;
-    mToolButtons[16].tool = Tool::Nuclear;
-    mToolButtons[17].tool = Tool::Airport;
-    mToolButtons[18].tool = Tool::None;
-    mToolButtons[19].tool = Tool::None; // Unused
+    mToolButtons[0].tool = Tool::Type::Residential;
+    mToolButtons[1].tool = Tool::Type::Commercial;
+    mToolButtons[2].tool = Tool::Type::Industrial;
+    mToolButtons[3].tool = Tool::Type::Fire;
+    mToolButtons[4].tool = Tool::Type::Query;
+    mToolButtons[5].tool = Tool::Type::Police;
+    mToolButtons[6].tool = Tool::Type::Wire;
+    mToolButtons[7].tool = Tool::Type::Bulldoze;
+    mToolButtons[8].tool = Tool::Type::Rail;
+    mToolButtons[9].tool = Tool::Type::Road;
+    mToolButtons[10].tool = Tool::Type::None; // Unused
+    mToolButtons[11].tool = Tool::Type::None; // Unused
+    mToolButtons[12].tool = Tool::Type::Stadium;
+    mToolButtons[13].tool = Tool::Type::Park;
+    mToolButtons[14].tool = Tool::Type::Seaport;
+    mToolButtons[15].tool = Tool::Type::Coal;
+    mToolButtons[16].tool = Tool::Type::Nuclear;
+    mToolButtons[17].tool = Tool::Type::Airport;
+    mToolButtons[18].tool = Tool::Type::None;
+    mToolButtons[19].tool = Tool::Type::None; // Unused
 }
 
 
@@ -263,5 +263,5 @@ void ToolPalette::cancelTool()
     }
 
     mSelectedIndex = NoSelection;
-    mTool = Tool::None;
+    mTool = Tool::Type::None;
 }

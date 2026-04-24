@@ -20,39 +20,6 @@
 
 class Budget;
 
-enum class Tool
-{
-    Residential,
-    Commercial,
-    Industrial,
-    Fire,
-    Query,
-    Police,
-    Wire,
-    Bulldoze,
-    Rail,
-    Road,
-    Stadium,
-    Park,
-    Seaport,
-    Coal,
-    Nuclear,
-    Airport,
-    Network,
-    None
-};
-
-
-struct ToolProperties
-{
-    int cost{};
-    int size{};
-    int offset{};
-    bool draggable{ false };
-    const std::string name{};
-};
-
-
 enum class ToolResult
 {
     Success,
@@ -66,16 +33,52 @@ enum class ToolResult
 };
 
 
+struct Tool
+{
+    enum class Type
+    {
+        Residential,
+        Commercial,
+        Industrial,
+        Fire,
+        Query,
+        Police,
+        Wire,
+        Bulldoze,
+        Rail,
+        Road,
+        Stadium,
+        Park,
+        Seaport,
+        Coal,
+        Nuclear,
+        Airport,
+        Network,
+        None
+    };
+
+    Type type{ Type::None };
+
+    int cost{ 0 };
+    int size{ 0 };
+    int offset{ 0 };
+
+    bool draggable{ false };
+
+    const std::string name{};
+};
+
+
+const Tool& tool(Tool::Type);
+
+
 void ToolDown(const Point<int> location, Budget& budget);
 bool tally(int tileValue);
 
-const ToolProperties& toolProperties(const Tool);
-const ToolProperties& pendingToolProperties();
-
 const ZoneStats& queryResult();
 
-Tool pendingTool();
-void pendingTool(const Tool);
+const Tool& pendingTool();
+void pendingTool(const Tool::Type);
 
 void toolStart(const Point<int>&);
 const Point<int>& toolStart();
