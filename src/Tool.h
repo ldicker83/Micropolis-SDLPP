@@ -66,6 +66,42 @@ enum class ToolResult
 };
 
 
+struct _Tool
+{
+    enum class Type
+    {
+        Residential,
+        Commercial,
+        Industrial,
+        Fire,
+        Query,
+        Police,
+        Wire,
+        Bulldoze,
+        Rail,
+        Road,
+        Stadium,
+        Park,
+        Seaport,
+        Coal,
+        Nuclear,
+        Airport,
+        Network,
+        None
+    };
+
+    size_t cost{ 0 };
+    size_t size{ 0 };
+    size_t offset{ 0 };
+
+    bool draggable{ false };
+
+    const std::string name{};
+
+    Type type{ Type::None };
+};
+
+
 void ToolDown(const Point<int> location, Budget& budget);
 bool tally(int tileValue);
 
