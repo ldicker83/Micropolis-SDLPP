@@ -398,7 +398,7 @@ void checkBorder(const int mapX, const int mapY, const int count, Budget& budget
 }
 
 
-ToolResult checkArea(const Point<int> location, const int base, const int size, const bool animate, Tool::Type toolType, Budget& budget)
+ToolResult checkArea(const Point<int> location, const int base, const int size, const bool animate, const Tool& tool, Budget& budget)
 {
     if (!pointInRect({ location.x - 1, location.y - 1 }, { 0, 0, SimWidth - size, SimHeight - size }))
     {
@@ -407,7 +407,7 @@ ToolResult checkArea(const Point<int> location, const int base, const int size, 
 
     bool needsBulldozing{ false };
 
-    int totalCost{ tool(toolType).cost };
+    int totalCost{ tool.cost };
 
     int mapY{ location.y - 1 };
     for (int row = 0; row < size; ++row)
@@ -810,7 +810,7 @@ ToolResult residential_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, ResidentialBase, 3, false, Tool::Type::Residential, budget);
+    return checkArea({ x, y }, ResidentialBase, 3, false, *PendingTool, budget);
 }
 
 
@@ -821,7 +821,7 @@ ToolResult commercial_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, CommercialBase, 3, false, Tool::Type::Commercial, budget);
+    return checkArea({ x, y }, CommercialBase, 3, false, *PendingTool, budget);
 }
 
 
@@ -832,7 +832,7 @@ ToolResult industrial_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, IndustryBase, 3, false, Tool::Type::Industrial, budget);
+    return checkArea({ x, y }, IndustryBase, 3, false, *PendingTool, budget);
 }
 
 
@@ -843,7 +843,7 @@ ToolResult police_dept_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, PoliceStationBase, 3, false, Tool::Type::Police, budget);
+    return checkArea({ x, y }, PoliceStationBase, 3, false, *PendingTool, budget);
 }
 
 
@@ -854,7 +854,7 @@ ToolResult fire_dept_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, FireStationBase, 3, false , Tool::Type::Fire, budget);
+    return checkArea({ x, y }, FireStationBase, 3, false , *PendingTool, budget);
 }
 
 
@@ -865,7 +865,7 @@ ToolResult stadium_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, StadiumBase, 4, false, Tool::Type::Stadium, budget);
+    return checkArea({ x, y }, StadiumBase, 4, false, *PendingTool, budget);
 }
 
 
@@ -876,7 +876,7 @@ ToolResult coal_power_plant_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, CoalPowerBase, 4, false, Tool::Type::Coal, budget);
+    return checkArea({ x, y }, CoalPowerBase, 4, false, *PendingTool, budget);
 }
 
 
@@ -887,7 +887,7 @@ ToolResult nuclear_power_plant_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, NuclearPowerBase, 4, true, Tool::Type::Nuclear, budget);
+    return checkArea({ x, y }, NuclearPowerBase, 4, true, *PendingTool, budget);
 }
 
 
@@ -898,7 +898,7 @@ ToolResult seaport_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, PortBase, 4, false, Tool::Type::Seaport, budget);
+    return checkArea({ x, y }, PortBase, 4, false, *PendingTool, budget);
 }
 
 
@@ -909,7 +909,7 @@ ToolResult airport_tool(int x, int y, Budget& budget)
         return ToolResult::OutOfBounds;
     }
 
-    return checkArea({ x, y }, AirportBase, 6, false, Tool::Type::Airport, budget);
+    return checkArea({ x, y }, AirportBase, 6, false, *PendingTool, budget);
 }
 
 
