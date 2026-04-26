@@ -4,6 +4,7 @@
 
 #include <fstream>
 
+
 namespace
 {
     auto loadJsonFile(const std::string& filePath)
@@ -18,10 +19,43 @@ namespace
         return file;
     }
 
+
     nlohmann::json loadJsonFromFile(const std::string& filePath)
     {
         auto file = loadJsonFile(filePath);
         return nlohmann::json::parse(file);
+    }
+
+
+    void assertJsonContainsKey(const nlohmann::json& jsonData, const std::string& key, const std::string& errorMessage)
+    {
+        if (!jsonData.contains(key))
+        {
+            throw std::runtime_error(errorMessage);
+        }
+    }
+
+
+    void assertJsonDataIsArray(const nlohmann::json& jsonData, const std::string& errorMessage)
+    {
+        if (!jsonData.is_array())
+        {
+            throw std::runtime_error(errorMessage);
+        }
+    }
+
+
+    MonthStringArray loadMonthStringsFromJson(const nlohmann::json& monthsArray)
+    {
+        assertJsonDataIsArray(monthsArray, Constants::ErrorMessages::StringsFileMissingMonths);
+
+        MonthStringArray monthStrings;
+        for (size_t i = 0; i < Constants::MonthCount; ++i)
+        {
+            monthStrings[i] = monthsArray[i].get<std::string>();
+        }
+
+        return monthStrings;
     }
 }
 
@@ -36,28 +70,10 @@ nlohmann::json GameDataLoader::loadStrings()
 MonthStringArray GameDataLoader::loadMonthStrings()
 {
     auto data = loadJsonFromFile(Constants::FilePaths::Strings);
+	assertJsonContainsKey(data, Constants::JsonKeys::Strings, Constants::ErrorMessages::StringsFileMissingMonths);
+	assertJsonContainsKey(data[Constants::JsonKeys::Strings], Constants::JsonKeys::Months, Constants::ErrorMessages::StringsFileMissingMonths);
 
-    if (!data.contains(Constants::JsonKeys::Strings) || 
-        !data[Constants::JsonKeys::Strings].contains(Constants::JsonKeys::Months))
-    {
-        throw std::runtime_error(Constants::ErrorMessages::StringsFileMissingMonths);
-    }
-
-    const auto& monthsArray = data[Constants::JsonKeys::Strings][Constants::JsonKeys::Months];
-
-    if (!monthsArray.is_array() || monthsArray.size() != Constants::MonthCount)
-    {
-        throw std::runtime_error(Constants::ErrorMessages::ExpectedTwelveMonths);
-    }
-
-    std::array<std::string, Constants::MonthCount> monthStrings;
-
-    for (size_t i = 0; i < Constants::MonthCount; ++i)
-    {
-        monthStrings[i] = monthsArray[i].get<std::string>();
-    }
-
-    return monthStrings;
+    return loadMonthStringsFromJson(data[Constants::JsonKeys::Strings][Constants::JsonKeys::Months]);
 }
 
 
@@ -65,4 +81,3 @@ nlohmann::json GameDataLoader::loadTools()
 {
     return nlohmann::json();
 }
-
