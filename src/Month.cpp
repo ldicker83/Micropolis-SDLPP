@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #include "Month.h"
 
+#include "Constants.h"
 #include "GameDataLoader.h"
 
 #include <array>
@@ -22,7 +23,7 @@ using json = nlohmann::json;
 
 namespace
 {
-	std::array<std::string, 12> MonthStrings;
+	std::array<std::string, Constants::MonthCount> MonthStrings;
 }
 
 const std::string& Month::toString(Month::Enum month)

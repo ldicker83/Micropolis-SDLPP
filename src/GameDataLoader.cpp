@@ -33,7 +33,7 @@ nlohmann::json GameDataLoader::loadStrings()
 }
 
 
-std::array<std::string, 12> GameDataLoader::loadMonthStrings()
+std::array<std::string, Constants::MonthCount> GameDataLoader::loadMonthStrings()
 {
     auto data = loadJsonFromFile(Constants::FilePaths::Strings);
 
@@ -45,14 +45,14 @@ std::array<std::string, 12> GameDataLoader::loadMonthStrings()
 
     const auto& monthsArray = data[Constants::JsonKeys::Strings][Constants::JsonKeys::Months];
 
-    if (!monthsArray.is_array() || monthsArray.size() != 12)
+    if (!monthsArray.is_array() || monthsArray.size() != Constants::MonthCount)
     {
         throw std::runtime_error(Constants::ErrorMessages::ExpectedTwelveMonths);
     }
 
-    std::array<std::string, 12> monthStrings;
+    std::array<std::string, Constants::MonthCount> monthStrings;
 
-    for (size_t i = 0; i < 12; ++i)
+    for (size_t i = 0; i < Constants::MonthCount; ++i)
     {
         monthStrings[i] = monthsArray[i].get<std::string>();
     }

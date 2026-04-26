@@ -12,6 +12,8 @@
 
 namespace Constants
 {
+    constexpr int MonthCount = 12;
+
     namespace FilePaths
     {
         constexpr const char* Strings = "res/strings.json";

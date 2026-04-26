@@ -12,6 +12,7 @@
 
 #include "Budget.h"
 #include "CityProperties.h"
+#include "Constants.h"
 #include "Evaluation.h"
 
 #include "Map.h"
@@ -1281,7 +1282,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         {
             TakeCensus(budget);
         }
-        if (!(CityTime % (CensusRate * 12)))
+        if (!(CityTime % (CensusRate * Constants::MonthCount)))
         {
             Take2Census();
         }

@@ -10,6 +10,7 @@
 // file, included in this distribution, for details.
 #pragma once
 
+#include "Constants.h"
 
 #include <nlohmann/json.hpp>
 
@@ -18,7 +19,7 @@ class GameDataLoader
 {
 public:
 	static nlohmann::json loadStrings();
-	static std::array<std::string, 12> loadMonthStrings();
+	static std::array<std::string, Constants::MonthCount> loadMonthStrings();
 	static nlohmann::json loadTools();
 };
 
