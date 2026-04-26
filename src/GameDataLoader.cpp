@@ -22,7 +22,15 @@ namespace
     nlohmann::json loadJsonFromFile(const std::string& filePath)
     {
         auto file = loadJsonFile(filePath);
-        return nlohmann::json::parse(file);
+
+        try
+        {
+            return nlohmann::json::parse(file);
+        }
+        catch (const nlohmann::json::parse_error& e)
+        {
+            throw std::runtime_error(std::format(Constants::ErrorMessages::JsonParseError, filePath, e.what()));
+        }
     }
 
 
@@ -80,7 +88,7 @@ nlohmann::json GameDataLoader::loadStrings()
 MonthStringArray GameDataLoader::loadMonthStrings()
 {
     auto data = loadJsonFromFile(Constants::FilePaths::Strings);
-	assertJsonContainsKey(data, Constants::JsonKeys::Strings, Constants::ErrorMessages::StringsFileMissingMonths);
+	assertJsonContainsKey(data, Constants::JsonKeys::Strings, Constants::ErrorMessages::StringsFileMissingStrings);
 	assertJsonContainsKey(data[Constants::JsonKeys::Strings], Constants::JsonKeys::Months, Constants::ErrorMessages::StringsFileMissingMonths);
 
     return loadMonthStringsFromJson(data[Constants::JsonKeys::Strings][Constants::JsonKeys::Months]);
