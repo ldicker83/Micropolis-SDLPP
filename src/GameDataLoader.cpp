@@ -33,7 +33,7 @@ nlohmann::json GameDataLoader::loadStrings()
 }
 
 
-std::array<std::string, Constants::MonthCount> GameDataLoader::loadMonthStrings()
+MonthStringArray GameDataLoader::loadMonthStrings()
 {
     auto data = loadJsonFromFile(Constants::FilePaths::Strings);
 

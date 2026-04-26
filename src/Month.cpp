@@ -23,7 +23,7 @@ using json = nlohmann::json;
 
 namespace
 {
-	std::array<std::string, Constants::MonthCount> MonthStrings;
+    MonthStringArray MonthStrings;
 }
 
 const std::string& Month::toString(Month::Enum month)

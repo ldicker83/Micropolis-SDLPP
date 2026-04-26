@@ -12,14 +12,19 @@
 
 #include "Constants.h"
 
+#include <array>
+#include <string>
+
 #include <nlohmann/json.hpp>
+
+
+using MonthStringArray = std::array<std::string, Constants::MonthCount>;
 
 
 class GameDataLoader
 {
 public:
 	static nlohmann::json loadStrings();
-	static std::array<std::string, Constants::MonthCount> loadMonthStrings();
+	static MonthStringArray loadMonthStrings();
 	static nlohmann::json loadTools();
 };
-
