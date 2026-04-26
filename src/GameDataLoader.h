@@ -8,29 +8,17 @@
 // Micropolis-SDLPP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
 // file, included in this distribution, for details.
-#include "Month.h"
+#pragma once
 
-#include "GameDataLoader.h"
 
-#include <array>
-#include <fstream>
 #include <nlohmann/json.hpp>
 
 
-using json = nlohmann::json;
-
-
-namespace
+class GameDataLoader
 {
-	std::array<std::string, 12> MonthStrings;
-}
+public:
+	static nlohmann::json loadStrings();
+	static std::array<std::string, 12> loadMonthStrings();
+	static nlohmann::json loadTools();
+};
 
-const std::string& Month::toString(Month::Enum month)
-{
-    if (MonthStrings[0].empty())
-    {
-        MonthStrings = GameDataLoader::loadMonthStrings();
-    }
-
-    return MonthStrings[static_cast<int>(month)];
-}

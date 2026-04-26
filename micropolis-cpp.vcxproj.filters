@@ -168,6 +168,9 @@
     <ClCompile Include="src\Month.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameDataLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\animtab.h">
@@ -342,6 +345,9 @@
       <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="src\Month.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameDataLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
