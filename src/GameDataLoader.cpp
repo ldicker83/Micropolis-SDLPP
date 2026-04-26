@@ -1,7 +1,6 @@
 #include "GameDataLoader.h"
 
-#include "Constants.h"
-
+#include <format>
 #include <fstream>
 
 
@@ -13,7 +12,7 @@ namespace
 
         if (!file.is_open())
         {
-            throw std::runtime_error("Could not open '" + filePath + "'");
+            throw std::runtime_error(std::format(Constants::ErrorMessages::CouldNotOpenFile, filePath));
         }
 
         return file;
@@ -36,18 +35,29 @@ namespace
     }
 
 
-    void assertJsonDataIsArray(const nlohmann::json& jsonData, const std::string& errorMessage)
+    void assertJsonDataIsArray(const nlohmann::json& jsonData)
     {
         if (!jsonData.is_array())
         {
-            throw std::runtime_error(errorMessage);
+            throw std::runtime_error(Constants::ErrorMessages::JsonDataNotArray);
         }
     }
 
 
+    void assertJsonArraySize(const nlohmann::json& jsonData, size_t expectedSize, const std::string& errorMessage)
+    {
+        assertJsonDataIsArray(jsonData);
+
+        if (jsonData.size() != expectedSize)
+        {
+            throw std::runtime_error(errorMessage);
+        }
+	}
+
+
     MonthStringArray loadMonthStringsFromJson(const nlohmann::json& monthsArray)
     {
-        assertJsonDataIsArray(monthsArray, Constants::ErrorMessages::StringsFileMissingMonths);
+		assertJsonArraySize(monthsArray, Constants::MonthCount, Constants::ErrorMessages::ExpectedTwelveMonths);
 
         MonthStringArray monthStrings;
         for (size_t i = 0; i < Constants::MonthCount; ++i)

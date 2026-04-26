@@ -25,9 +25,11 @@ namespace Constants
         constexpr const char* Months = "months";
     }
 
-    namespace ErrorMessages
-    {
-        constexpr const char* StringsFileMissingMonths = "Strings file missing 'strings.months' structure";
-        constexpr const char* ExpectedTwelveMonths = "Expected 12 months in strings file";
-    }
+	namespace ErrorMessages
+	{
+		constexpr const char* CouldNotOpenFile = "Could not open '{}'";
+		constexpr const char* JsonDataNotArray = "Invalid JSON type: expected array";
+		constexpr const char* StringsFileMissingMonths = "Strings file missing 'strings.months' structure";
+		constexpr const char* ExpectedTwelveMonths = "Expected 12 months in strings file";
+	}
 }
