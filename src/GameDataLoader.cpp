@@ -1,5 +1,6 @@
 #include "GameDataLoader.h"
 
+#include "Constants.h"
 
 #include <fstream>
 
@@ -27,25 +28,26 @@ namespace
 
 nlohmann::json GameDataLoader::loadStrings()
 {
-	auto jsonData = loadJsonFromFile("res/strings.json");
-    return jsonData;
+	auto jsonData = loadJsonFromFile(Constants::FilePaths::Strings);
+	return jsonData;
 }
 
 
 std::array<std::string, 12> GameDataLoader::loadMonthStrings()
 {
-    auto data = loadJsonFromFile("res/strings.json");
+    auto data = loadJsonFromFile(Constants::FilePaths::Strings);
 
-    if (!data.contains("strings") || !data["strings"].contains("months"))
+    if (!data.contains(Constants::JsonKeys::Strings) || 
+        !data[Constants::JsonKeys::Strings].contains(Constants::JsonKeys::Months))
     {
-        throw std::runtime_error("Strings file missing 'strings.months' structure");
+        throw std::runtime_error(Constants::ErrorMessages::StringsFileMissingMonths);
     }
 
-    const auto& monthsArray = data["strings"]["months"];
+    const auto& monthsArray = data[Constants::JsonKeys::Strings][Constants::JsonKeys::Months];
 
     if (!monthsArray.is_array() || monthsArray.size() != 12)
     {
-        throw std::runtime_error("Expected 12 months in strings file");
+        throw std::runtime_error(Constants::ErrorMessages::ExpectedTwelveMonths);
     }
 
     std::array<std::string, 12> monthStrings;
