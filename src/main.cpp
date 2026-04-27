@@ -31,7 +31,7 @@
 #include "Sprite.h"
 #include "StringRender.h"
 #include "Texture.h"
-#include "Tool.h"
+#include "ToolManager.h"
 #include "Util.h"
 #include "w_sound.h"
 #include "w_tk.h"

@@ -67,23 +67,3 @@ struct Tool
 
     const std::string name{};
 };
-
-
-const Tool& tool(Tool::Type);
-
-void ToolDown(const Point<int> location, Budget& budget);
-
-const ZoneStats& queryResult();
-
-const Tool& pendingTool();
-void pendingTool(const Tool::Type);
-
-void toolStart(const Point<int>&);
-const Point<int>& toolStart();
-
-void toolEnd(const Point<int>&);
-const Point<int>& toolEnd();
-
-int longestAxis(const Vector<int>&);
-void validateDraggableToolVector(Vector<int>&, Budget&);
-void executeDraggableTool(const Vector<int>&, const Point<int>&, Budget&);
