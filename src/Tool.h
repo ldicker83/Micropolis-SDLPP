@@ -10,8 +10,6 @@
 // file, included in this distribution, for details.
 #pragma once
 
-#include "w_resrc.h"
-
 #include "Math/Point.h"
 #include "Math/Vector.h"
 
