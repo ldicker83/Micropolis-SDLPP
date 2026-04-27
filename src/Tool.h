@@ -71,9 +71,7 @@ struct Tool
 
 const Tool& tool(Tool::Type);
 
-
 void ToolDown(const Point<int> location, Budget& budget);
-bool tally(int tileValue);
 
 const ZoneStats& queryResult();
 

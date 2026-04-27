@@ -40,6 +40,13 @@ namespace
     Point<int> ToolEnd{};
 
     ZoneStats QueryResult{};
+    
+    bool canAutoBulldoze(int tileValue)
+    {
+        return (((tileValue >= RiverEdgeFirst) && (tileValue <= RubbleLast)) ||
+            ((tileValue >= (PowerBase + 2)) && (tileValue <= (PowerBase + 12))) ||
+            ((tileValue >= ExplosionTiny) && (tileValue <= (ExplosionTinyLast + 2))));
+    }
 }
 
 
@@ -131,7 +138,7 @@ ToolResult putDownNetwork(int mapH, int mapV, Budget& budget)
 {
     int tile = tileValue(mapH, mapV) & LowerMask;
 
-    if ((budget.CurrentFunds() > 0) && tally(tile))
+    if ((budget.CurrentFunds() > 0) && canAutoBulldoze(tile))
     {
         tileValue(mapH, mapV) = tile = 0;
         budget.Spend(1);
@@ -288,15 +295,6 @@ int checkBigZone(int id, int* deltaHPtr, int* deltaVPtr)
 }
 
 
-bool tally(int tileValue)
-{
-    /* can we autobulldoze this tile? */
-    return (((tileValue >= RiverEdgeFirst) && (tileValue <= RubbleLast)) ||
-        ((tileValue >= (PowerBase + 2)) && (tileValue <= (PowerBase + 12))) ||
-        ((tileValue >= ExplosionTiny) && (tileValue <= (ExplosionTinyLast + 2))));/* ??? */
-}
-
-
 int checkSize(int temp)
 {
     /* check for the normal com, resl, ind 3x3 zones & the fireDept & PoliceDept */
@@ -387,7 +385,7 @@ ToolResult checkArea(const Point<int> location, const int base, const Tool& tool
                 // if autoDoze is enabled, add up the cost of bulldozed tiles
                 if (tileValue != 0)
                 {
-                    if (tally(tileValue))
+                    if (canAutoBulldoze(tileValue))
                     {
                         ++totalCost;
                     }
