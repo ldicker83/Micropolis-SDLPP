@@ -33,6 +33,7 @@ namespace Constants
 		constexpr const char* StringsFileMissingStrings = "Strings file missing 'strings' structure";
 		constexpr const char* StringsFileMissingMonths = "Strings file missing 'strings.months' structure";
 		constexpr const char* StringsFileMissingTools = "Strings file missing 'strings.tools' structure";
+		constexpr const char* ToolKeyNotFound = "Tool key '{}' not found in 'strings.tools'";
 		constexpr const char* ExpectedTwelveMonths = "Expected 12 months in strings file";
 	}
 }
