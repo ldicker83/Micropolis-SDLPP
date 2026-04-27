@@ -14,13 +14,13 @@ namespace Constants
 {
     constexpr int MonthCount = 12;
 
-	namespace FilePaths
+	namespace Files
 	{
 		constexpr const char* Strings = "res/strings.json";
 		constexpr const char* Tools = "res/tools.json";
 	}
 
-	namespace JsonKeys
+	namespace Keys
 	{
 		constexpr const char* Strings = "strings";
 		constexpr const char* Months = "months";
@@ -53,7 +53,7 @@ namespace Constants
 		}
 	}
 
-	namespace ErrorMessages
+	namespace Errors
 	{
 		constexpr const char* CouldNotOpenFile = "Could not open '{}'";
 		constexpr const char* JsonParseError = "Failed to parse JSON from '{}': {}";
