@@ -8,11 +8,13 @@
 // Micropolis-SDLPP is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms. See the README
 // file, included in this distribution, for details.
+#include "Tool.h"
+
 #include "Map.h"
 
 #include "Budget.h"
 #include "Connection.h"
-#include "Tool.h"
+#include "GameDataLoader.h"
 
 #include "s_alloc.h"
 #include "s_msg.h"
@@ -25,56 +27,20 @@
 #include "Util.h"
 
 #include <algorithm>
-#include <array>
-#include <cmath>
-#include <map>
 #include <string>
-#include <stdexcept>
+
 
 namespace
 {
     const Tool* PendingTool{ nullptr };
 
-    const std::vector<Tool> Tools =
-    {
-        {},
-        { Tool::Type::Residential, 100, 3, 1, false, "Residential" },
-        { Tool::Type::Commercial, 100, 3, 1, false, "Commercial" },
-        { Tool::Type::Industrial, 100, 3, 1, false, "Industrial" },
-        { Tool::Type::Fire, 500, 3, 1, false, "Fire Department" },
-        { Tool::Type::Query, 0, 1, 0, false, "Query" },
-        { Tool::Type::Police, 500, 3, 1, false, "Police Department" },
-        { Tool::Type::Wire, 5, 1, 0, true, "Power Line" },
-        { Tool::Type::Bulldoze, 1, 1, 0, false, "Bulldoze" },
-        { Tool::Type::Rail, 20, 1, 0, true, "Rail" },
-        { Tool::Type::Road, 10, 1, 0, true, "Roads" },
-        { Tool::Type::Stadium, 5000, 4, 1, false, "Stadium" },
-        { Tool::Type::Park, 10, 1, 0, false, "Park" },
-        { Tool::Type::Seaport, 3000, 4, 1, false, "Seaport" },
-        { Tool::Type::Coal, 3000, 4, 1, false, "Coal Power" },
-        { Tool::Type::Nuclear, 5000, 4, 1, false, "Nuclear Power" },
-        { Tool::Type::Airport, 10000, 6, 1, false, "Airport" },
-        { Tool::Type::Network, 100, 1, 0, false, "Network" }
-    };
-
-
-    const std::map<ToolResult, std::string> ToolResultStringTable =
-    {
-        { ToolResult::CannotBulldoze, "Cannot Bulldoze" },
-        { ToolResult::InsufficientFunds, "Insufficient Funds" },
-        { ToolResult::InvalidLocation, "Invalid Location" },
-        { ToolResult::InvalidOperation, "Invalid Operation" },
-        { ToolResult::NetworkVotedNo, "Other players vetoed action" },
-        { ToolResult::OutOfBounds, "Out of Bounds" },
-        { ToolResult::RequiresBulldozing, "Bulldozing Required" },
-        { ToolResult::Success, "Success!" }
-    };
+    const std::vector<Tool> Tools = GameDataLoader::loadTools();
 
     Point<int> ToolStart{};
     Point<int> ToolEnd{};
 
     ZoneStats QueryResult{};
-};
+}
 
 
 const Tool& tool(Tool::Type requested)

@@ -14,6 +14,7 @@
 
 #include <array>
 #include <string>
+#include <vector>
 
 #include <nlohmann/json.hpp>
 
@@ -21,10 +22,13 @@
 using MonthStringArray = std::array<std::string, Constants::MonthCount>;
 
 
+struct Tool;
+
+
 class GameDataLoader
 {
 public:
 	static nlohmann::json loadStrings();
 	static MonthStringArray loadMonthStrings();
-	static nlohmann::json loadTools();
+	static std::vector<Tool> loadTools();
 };
