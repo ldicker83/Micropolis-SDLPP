@@ -43,9 +43,16 @@ namespace
     
     bool canAutoBulldoze(int tileValue)
     {
-        return (((tileValue >= RiverEdgeFirst) && (tileValue <= RubbleLast)) ||
-            ((tileValue >= (PowerBase + 2)) && (tileValue <= (PowerBase + 12))) ||
-            ((tileValue >= ExplosionTiny) && (tileValue <= (ExplosionTinyLast + 2))));
+        // Natural terrain and rubble (rivers, trees, rubble, etc.)
+        const bool isNaturalOrRubble = (tileValue >= RiverEdgeFirst) && (tileValue <= RubbleLast);
+
+        // Power lines (excluding power plant base tiles)
+        const bool isPowerLine = (tileValue >= (PowerBase + 2)) && (tileValue <= (PowerBase + 12));
+
+        // Active explosions and debris
+        const bool isExplosion = (tileValue >= ExplosionTiny) && (tileValue <= (ExplosionTinyLast + 2));
+
+        return isNaturalOrRubble || isPowerLine || isExplosion;
     }
 }
 
