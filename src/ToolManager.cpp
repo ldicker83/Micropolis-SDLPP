@@ -25,14 +25,7 @@
 
 namespace
 {
-    const Tool* PendingTool{ nullptr };
-
-    const std::vector<Tool> Tools = GameDataLoader::loadTools();
-
-    Point<int> ToolStart{};
-    Point<int> ToolEnd{};
-
-    ZoneStats QueryResult{};
+    ToolManager toolManager{};
 }
 
 namespace
@@ -542,7 +535,7 @@ namespace
             statusStr[i] = ZoneStatsString(static_cast<ZoneStatsId>(std::clamp(id, 1, 19)));
         }
 
-        QueryResult = { queryString(tileNum), statusStr[0], statusStr[1], statusStr[2], statusStr[3], statusStr[4] };
+        toolManager.queryResult({ queryString(tileNum), statusStr[0], statusStr[1], statusStr[2], statusStr[3], statusStr[4] });
     }
 
 
@@ -908,52 +901,49 @@ void ToolManager::queryResult(const ZoneStats& result)
 // Legacy free functions
 const Tool& tool(Tool::Type requested)
 {
-    return *std::find_if(Tools.begin(), Tools.end(), [requested](const Tool& tool)
-        {
-            return tool.type == requested;
-        });
+    return toolManager.tool(requested);
 }
 
 
 const Tool& pendingTool()
 {
-    return *PendingTool;
+    return toolManager.currentTool();
 }
 
 
 void pendingTool(const Tool::Type requestedTool)
 {
-    PendingTool = &tool(requestedTool);
+	toolManager.currentTool(requestedTool);
 }
 
 
 const ZoneStats& queryResult()
 {
-    return QueryResult;
+    return toolManager.queryResult();
 }
 
 
 void toolStart(const Point<int>& start)
 {
-    ToolStart = start;
+    toolManager.dragStart(start);
 }
 
 
 const Point<int>& toolStart()
 {
-    return ToolStart;
+    return toolManager.dragStart();
 }
 
 
 void toolEnd(const Point<int>& end)
 {
-    ToolEnd = end;
+    toolManager.dragEnd(end);
 }
 
 
 const Point<int>& toolEnd()
 {
-    return ToolEnd;
+    return toolManager.dragEnd();
 }
 
 
