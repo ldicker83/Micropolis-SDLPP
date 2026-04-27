@@ -19,11 +19,33 @@ namespace Constants
         constexpr const char* Strings = "res/strings.json";
     }
 
-    namespace JsonKeys
-    {
-        constexpr const char* Strings = "strings";
-        constexpr const char* Months = "months";
-    }
+	namespace JsonKeys
+	{
+		constexpr const char* Strings = "strings";
+		constexpr const char* Months = "months";
+		constexpr const char* Tools = "tools";
+
+		namespace ToolTypes
+		{
+			constexpr const char* Residential = "residential";
+			constexpr const char* Commercial = "commercial";
+			constexpr const char* Industrial = "industrial";
+			constexpr const char* Fire = "fire";
+			constexpr const char* Query = "query";
+			constexpr const char* Police = "police";
+			constexpr const char* Wire = "wire";
+			constexpr const char* Bulldoze = "bulldoze";
+			constexpr const char* Rail = "rail";
+			constexpr const char* Road = "road";
+			constexpr const char* Stadium = "stadium";
+			constexpr const char* Park = "park";
+			constexpr const char* Seaport = "seaport";
+			constexpr const char* Coal = "coal";
+			constexpr const char* Nuclear = "nuclear";
+			constexpr const char* Airport = "airport";
+			constexpr const char* Network = "network";
+		}
+	}
 
 	namespace ErrorMessages
 	{

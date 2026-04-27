@@ -108,28 +108,28 @@ std::vector<Tool> GameDataLoader::loadTools()
 {
     const auto data = parseJsonFile(Constants::FilePaths::Strings);
 
-    assertJsonContainsKey(data, "strings", Constants::ErrorMessages::StringsFileMissingStrings);
-    assertJsonContainsKey(data["strings"], "tools", Constants::ErrorMessages::StringsFileMissingTools);
+    assertJsonContainsKey(data, Constants::JsonKeys::Strings, Constants::ErrorMessages::StringsFileMissingStrings);
+    assertJsonContainsKey(data[Constants::JsonKeys::Strings], Constants::JsonKeys::Tools, Constants::ErrorMessages::StringsFileMissingTools);
 
-	const auto& toolsData = data["strings"]["tools"];
-    return {
-        {},
-        { Tool::Type::Residential, 100, 3, 1, false, jsonStringValue(toolsData, "residential") },
-        { Tool::Type::Commercial, 100, 3, 1, false, jsonStringValue(toolsData, "commercial") },
-        { Tool::Type::Industrial, 100, 3, 1, false, jsonStringValue(toolsData, "industrial") },
-        { Tool::Type::Fire, 500, 3, 1, false, jsonStringValue(toolsData, "fire") },
-        { Tool::Type::Query, 0, 1, 0, false, jsonStringValue(toolsData, "query") },
-        { Tool::Type::Police, 500, 3, 1, false, jsonStringValue(toolsData, "police") },
-        { Tool::Type::Wire, 5, 1, 0, true, jsonStringValue(toolsData, "wire") },
-        { Tool::Type::Bulldoze, 1, 1, 0, false, jsonStringValue(toolsData, "bulldoze") },
-        { Tool::Type::Rail, 20, 1, 0, true, jsonStringValue(toolsData, "rail") },
-        { Tool::Type::Road, 10, 1, 0, true, jsonStringValue(toolsData, "road") },
-        { Tool::Type::Stadium, 5000, 4, 1, false, jsonStringValue(toolsData, "stadium") },
-        { Tool::Type::Park, 10, 1, 0, false, jsonStringValue(toolsData, "park") },
-        { Tool::Type::Seaport, 3000, 4, 1, false, jsonStringValue(toolsData, "seaport") },
-        { Tool::Type::Coal, 3000, 4, 1, false, jsonStringValue(toolsData, "coal") },
-        { Tool::Type::Nuclear, 5000, 4, 1, false, jsonStringValue(toolsData, "nuclear") },
-        { Tool::Type::Airport, 10000, 6, 1, false, jsonStringValue(toolsData, "airport") },
-        { Tool::Type::Network, 100, 1, 0, false, jsonStringValue(toolsData, "network") }
-    };
+	const auto& toolsData = data[Constants::JsonKeys::Strings][Constants::JsonKeys::Tools];
+	return {
+		{},
+		{ Tool::Type::Residential, 100, 3, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Residential) },
+		{ Tool::Type::Commercial, 100, 3, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Commercial) },
+		{ Tool::Type::Industrial, 100, 3, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Industrial) },
+		{ Tool::Type::Fire, 500, 3, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Fire) },
+		{ Tool::Type::Query, 0, 1, 0, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Query) },
+		{ Tool::Type::Police, 500, 3, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Police) },
+		{ Tool::Type::Wire, 5, 1, 0, true, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Wire) },
+		{ Tool::Type::Bulldoze, 1, 1, 0, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Bulldoze) },
+		{ Tool::Type::Rail, 20, 1, 0, true, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Rail) },
+		{ Tool::Type::Road, 10, 1, 0, true, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Road) },
+		{ Tool::Type::Stadium, 5000, 4, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Stadium) },
+		{ Tool::Type::Park, 10, 1, 0, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Park) },
+		{ Tool::Type::Seaport, 3000, 4, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Seaport) },
+		{ Tool::Type::Coal, 3000, 4, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Coal) },
+		{ Tool::Type::Nuclear, 5000, 4, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Nuclear) },
+		{ Tool::Type::Airport, 10000, 6, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Airport) },
+		{ Tool::Type::Network, 100, 1, 0, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Network) }
+	};
 }
