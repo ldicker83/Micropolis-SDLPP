@@ -14,12 +14,5 @@
 
 class Budget;
 
-enum class ToolOperation
-{
-	Road,
-	Rail,
-	Wire
-};
-
-ToolResult ConnectTile(int x, int y, const Tool&, Budget&);
-ToolResult CanConnectTile(int x, int y, const Tool&, Budget&);
+ToolResult ConnectTile(int x, int y, Tool::Type type, Budget&);
+ToolResult CanConnectTile(int x, int y, int cost, Budget&);

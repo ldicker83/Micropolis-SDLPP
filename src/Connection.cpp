@@ -578,9 +578,9 @@ void _FixZone(int x, int y)
 }
 
 
-ToolResult CanConnectTile(int x, int y, const Tool& tool, Budget& budget)
+ToolResult CanConnectTile(int x, int y, int cost, Budget& budget)
 {
-    if (budget.CurrentFunds() < tool.cost)
+    if (budget.CurrentFunds() < cost)
     {
         return ToolResult::InsufficientFunds;
     }
@@ -622,12 +622,12 @@ ToolResult CanConnectTile(int x, int y, const Tool& tool, Budget& budget)
 }
 
 
-ToolResult ConnectTile(int x, int y, const Tool& tool, Budget& budget)
+ToolResult ConnectTile(int x, int y, Tool::Type type, Budget& budget)
 {
     int Tile = tileValue(x, y);
 
     // AutoDoze
-    if (tool.type == Tool::Type::Rail || tool.type == Tool::Type::Road || tool.type == Tool::Type::Wire)
+    if (type == Tool::Type::Rail || type == Tool::Type::Road || type == Tool::Type::Wire)
     {
         if (gameplayOptions().autoBulldoze && (budget.CurrentFunds() > 0) && (Tile & BulldozableBit))
         {
@@ -642,7 +642,7 @@ ToolResult ConnectTile(int x, int y, const Tool& tool, Budget& budget)
     }
 
     ToolResult result = ToolResult::Success;
-    switch (tool.type)
+    switch (type)
     {
     case Tool::Type::None:
         _FixZone(x, y);
