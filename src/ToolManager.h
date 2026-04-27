@@ -11,12 +11,34 @@
 #pragma once
 
 #include "Tool.h"
+#include "w_resrc.h"
 
+#include <vector>
 
 class ToolManager
 {
 public:
+    ToolManager();
 
+    const Tool& tool(Tool::Type type) const;
+    const Tool& currentTool() const;
+    void currentTool(Tool::Type type);
+
+    void dragStart(const Point<int>& start);
+    const Point<int>& dragStart() const;
+
+    void dragEnd(const Point<int>& end);
+    const Point<int>& dragEnd() const;
+
+    const ZoneStats& queryResult() const;
+    void queryResult(const ZoneStats& result);
+
+private:
+    const std::vector<Tool> mTools;
+    const Tool* mCurrentTool;
+    Point<int> mDragStart;
+    Point<int> mDragEnd;
+    ZoneStats mQueryResult;
 };
 
 

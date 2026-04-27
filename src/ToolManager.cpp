@@ -21,7 +21,7 @@
 #include "w_sound.h"
 #include "w_update.h"
 
-#include <vector>
+#include <algorithm>
 
 namespace
 {
@@ -33,7 +33,6 @@ namespace
     Point<int> ToolEnd{};
 
     ZoneStats QueryResult{};
-
 }
 
 namespace
@@ -840,11 +839,73 @@ namespace
 
         return putDownNetwork(x, y, budget);
     }
-
-
 }
 
 
+ToolManager::ToolManager() :
+    mTools{ GameDataLoader::loadTools() },
+    mCurrentTool{ nullptr }
+{}
+
+
+const Tool& ToolManager::tool(Tool::Type type) const
+{
+    return *std::find_if(mTools.begin(), mTools.end(), [type](const Tool& tool)
+        {
+            return tool.type == type;
+        });
+}
+
+
+const Tool& ToolManager::currentTool() const
+{
+    return *mCurrentTool;
+}
+
+
+void ToolManager::currentTool(Tool::Type type)
+{
+    mCurrentTool = &tool(type);
+}
+
+
+void ToolManager::dragStart(const Point<int>& start)
+{
+    mDragStart = start;
+}
+
+
+const Point<int>& ToolManager::dragStart() const
+{
+    return mDragStart;
+}
+
+
+void ToolManager::dragEnd(const Point<int>& end)
+{
+    mDragEnd = end;
+}
+
+
+const Point<int>& ToolManager::dragEnd() const
+{
+    return mDragEnd;
+}
+
+
+const ZoneStats& ToolManager::queryResult() const
+{
+    return mQueryResult;
+}
+
+
+void ToolManager::queryResult(const ZoneStats& result)
+{
+    mQueryResult = result;
+}
+
+
+// Legacy free functions
 const Tool& tool(Tool::Type requested)
 {
     return *std::find_if(Tools.begin(), Tools.end(), [requested](const Tool& tool)
