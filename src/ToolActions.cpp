@@ -26,6 +26,9 @@
 
 namespace
 {
+    constexpr Point<int> ZoneAnchor{ 1, 1 };
+	constexpr Point<int> NuclearPlantAnimatedTile{ 1, 2 };
+
     bool tileIsNaturalOrRubble(int tileValue)
     {
         return (tileValue >= RiverEdgeFirst) && (tileValue <= RubbleLast);
@@ -286,23 +289,19 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        bool needsBulldozing{ false };
-
         int totalCost{ tool.cost };
 
-        int mapY{ location.y - 1 };
+		Point<int> position = location - Vector<int>{ 1, 1 };
         for (int row = 0; row < tool.size; ++row)
         {
-            int mapX{ location.x - 1 };
+            position.x = location.x - 1;
 
             for (int col = 0; col < tool.size; ++col)
             {
-                const unsigned int tileValue{ maskedTileValue(mapX, mapY) };
-
+                const unsigned int tileValue{ maskedTileValue(position) };
                 if (gameplayOptions().autoBulldoze)
                 {
-                    // if autoDoze is enabled, add up the cost of bulldozed tiles
-                    if (tileValue != 0)
+                    if (tileValue != Dirt)
                     {
                         if (canAutoBulldoze(tileValue))
                         {
@@ -310,27 +309,20 @@ namespace
                         }
                         else
                         {
-                            needsBulldozing = true;
+                            return ToolResult::RequiresBulldozing;
                         }
                     }
                 }
                 else
                 {
-                    // check and see if the tile is clear or not
                     if (tileValue != 0)
                     {
-                        needsBulldozing = true;
-                        break;
+                        return ToolResult::RequiresBulldozing;
                     }
                 }
-                ++mapX;
+                ++position.x;
             }
-            ++mapY;
-        }
-
-        if (needsBulldozing)
-        {
-            return ToolResult::RequiresBulldozing;
+            ++position.y;
         }
 
         if (!budget.CanAfford(totalCost))
@@ -342,30 +334,32 @@ namespace
         updateFunds(budget);
 
         int tileBase = base;
-        mapY = location.y - 1;
+        position = location - Vector<int>{ 1, 1 };
         for (int row = 0; row < tool.size; ++row)
         {
-            int mapX = location.x - 1;
+            position.x = location.x - 1;
 
             for (int col = 0; col < tool.size; ++col)
             {
-                if (col == 1 && row == 1)
+				const Point<int> zonePosition{ col, row };
+                if (zonePosition == ZoneAnchor)
                 {
-                    tileValue(mapX, mapY) = tileBase + BNCNBIT + ZonedBit;
+                    tileValue(position) = tileBase + BNCNBIT + ZonedBit;
                 }
                 // special case to get nuclear plant animation working
-                else if (tool.type == Tool::Type::Nuclear && col == 1 && row == 2)
+                else if (tool.type == Tool::Type::Nuclear && zonePosition == NuclearPlantAnimatedTile)
                 {
-                    tileValue(mapX, mapY) = tileBase + BNCNBIT + AnimatedBit;
+                    tileValue(position) = tileBase + BNCNBIT + AnimatedBit;
                 }
                 else
                 {
-                    tileValue(mapX, mapY) = tileBase + BNCNBIT;
+                    tileValue(position) = tileBase + BNCNBIT;
                 }
-                ++mapX;
+
+                ++position.x;
                 ++tileBase;
             }
-            ++mapY;
+			++position.y;
         }
 
         checkBorder(location.x - 1, location.y - 1, tool.size, budget);
@@ -522,6 +516,7 @@ namespace
             }
         }
     }
+
 
     ToolResult query_tool(int x, int y, Budget&, ToolManager& toolManager)
     {
