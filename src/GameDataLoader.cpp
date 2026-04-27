@@ -86,6 +86,13 @@ namespace
     }
 
 
+	void validateStringsSection(const nlohmann::json& stringsData, const std::string& subsection, const std::string& error)
+    {
+		assertJsonContainsKey(stringsData, Constants::JsonKeys::Strings, Constants::ErrorMessages::StringsFileMissingStrings);
+        assertJsonContainsKey(stringsData[Constants::JsonKeys::Strings], subsection, error);
+    }
+
+
     std::string jsonStringValue(const nlohmann::json& data, const std::string& key)
     {
         assertJsonContainsKey(data, key, std::format(Constants::ErrorMessages::ToolKeyNotFound, key));
@@ -165,7 +172,7 @@ namespace
     std::vector<Tool> loadToolsFromJson(const nlohmann::json& toolsData, const nlohmann::json& stringsData)
     {
         std::vector<Tool> tools;
-        tools.push_back({});
+        tools.push_back({}); // First tool is empty/None
 
         populateToolVector(tools, toolsData, stringsData[Constants::JsonKeys::Strings][Constants::JsonKeys::Tools]);
      
@@ -184,8 +191,7 @@ nlohmann::json GameDataLoader::loadStrings()
 MonthStringArray GameDataLoader::loadMonthStrings()
 {
     auto data = parseJsonFile(Constants::FilePaths::Strings);
-	assertJsonContainsKey(data, Constants::JsonKeys::Strings, Constants::ErrorMessages::StringsFileMissingStrings);
-	assertJsonContainsKey(data[Constants::JsonKeys::Strings], Constants::JsonKeys::Months, Constants::ErrorMessages::StringsFileMissingMonths);
+	validateStringsSection(data, Constants::JsonKeys::Months, Constants::ErrorMessages::StringsFileMissingMonths);
 
     return loadMonthStringsFromJson(data[Constants::JsonKeys::Strings][Constants::JsonKeys::Months]);
 }
@@ -193,12 +199,11 @@ MonthStringArray GameDataLoader::loadMonthStrings()
 
 std::vector<Tool> GameDataLoader::loadTools()
 {
-	const auto stringsFileData = parseJsonFile(Constants::FilePaths::Strings);
-	assertJsonContainsKey(stringsFileData, Constants::JsonKeys::Strings, Constants::ErrorMessages::StringsFileMissingStrings);
-	assertJsonContainsKey(stringsFileData[Constants::JsonKeys::Strings], Constants::JsonKeys::Tools, Constants::ErrorMessages::StringsFileMissingTools);
+	const auto stringsData = parseJsonFile(Constants::FilePaths::Strings);
+	validateStringsSection(stringsData, Constants::JsonKeys::Tools, Constants::ErrorMessages::StringsFileMissingTools);
 
-    const auto toolsFileData = parseJsonFile(Constants::FilePaths::Tools);
-    assertJsonContainsKey(toolsFileData, Constants::JsonKeys::Tools, Constants::ErrorMessages::ToolsFileMissingTools);
+    const auto toolsData = parseJsonFile(Constants::FilePaths::Tools);
+    assertJsonContainsKey(toolsData, Constants::JsonKeys::Tools, Constants::ErrorMessages::ToolsFileMissingTools);
     
-    return loadToolsFromJson(toolsFileData, stringsFileData);
+    return loadToolsFromJson(toolsData, stringsData);
 }
