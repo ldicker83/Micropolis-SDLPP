@@ -148,6 +148,29 @@ namespace
 
         return monthStrings;
     }
+
+
+	void populateToolVector(std::vector<Tool>& tools, const nlohmann::json& toolsData, const nlohmann::json& toolStrings)
+    {
+        const auto& toolsArray = toolsData[Constants::JsonKeys::Tools];
+        assertJsonDataIsArray(toolsArray);
+
+        for (const auto& toolData : toolsArray)
+        {
+            tools.push_back(toolFromJson(toolData, toolStrings));
+        }
+    }
+
+
+    std::vector<Tool> loadToolsFromJson(const nlohmann::json& toolsData, const nlohmann::json& stringsData)
+    {
+        std::vector<Tool> tools;
+        tools.push_back({});
+
+        populateToolVector(tools, toolsData, stringsData[Constants::JsonKeys::Strings][Constants::JsonKeys::Tools]);
+     
+        return tools;
+    }
 }
 
 
@@ -170,25 +193,12 @@ MonthStringArray GameDataLoader::loadMonthStrings()
 
 std::vector<Tool> GameDataLoader::loadTools()
 {
-	const auto toolsFileData = parseJsonFile(Constants::FilePaths::Tools);
 	const auto stringsFileData = parseJsonFile(Constants::FilePaths::Strings);
-
-	assertJsonContainsKey(toolsFileData, Constants::JsonKeys::Tools, Constants::ErrorMessages::ToolsFileMissingTools);
 	assertJsonContainsKey(stringsFileData, Constants::JsonKeys::Strings, Constants::ErrorMessages::StringsFileMissingStrings);
 	assertJsonContainsKey(stringsFileData[Constants::JsonKeys::Strings], Constants::JsonKeys::Tools, Constants::ErrorMessages::StringsFileMissingTools);
 
-	const auto& toolsArray = toolsFileData[Constants::JsonKeys::Tools];
-	const auto& toolStringsData = stringsFileData[Constants::JsonKeys::Strings][Constants::JsonKeys::Tools];
-
-	assertJsonDataIsArray(toolsArray);
-
-	std::vector<Tool> tools;
-	tools.push_back({});  // First tool is empty/None
-
-	for (const auto& toolData : toolsArray)
-	{
-		tools.push_back(toolFromJson(toolData, toolStringsData));
-	}
-
-	return tools;
+    const auto toolsFileData = parseJsonFile(Constants::FilePaths::Tools);
+    assertJsonContainsKey(toolsFileData, Constants::JsonKeys::Tools, Constants::ErrorMessages::ToolsFileMissingTools);
+    
+    return loadToolsFromJson(toolsFileData, stringsFileData);
 }
