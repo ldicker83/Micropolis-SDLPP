@@ -31,6 +31,7 @@
 #include "Sprite.h"
 #include "StringRender.h"
 #include "Texture.h"
+#include "ToolActions.h"
 #include "ToolManager.h"
 #include "Util.h"
 #include "w_sound.h"
@@ -680,7 +681,7 @@ void handleMouseEvent(SDL_Event& event)
         if (toolManager->currentTool().draggable && EventHandling::MouseLeftDown && toolManager->dragStart() != TilePointedAt)
         {
             DraggableToolVector = vectorFromPoints(toolManager->dragStart(), TilePointedAt);
-            validateDraggableToolVector(DraggableToolVector, budget);
+			ToolActions::validateDragVector(DraggableToolVector, budget, *toolManager);
         }
 
         calculateMouseToWorld();
@@ -711,7 +712,7 @@ void handleMouseEvent(SDL_Event& event)
             
             if (!interfaceManager->budgetWindow().visible() && !toolManager->currentTool().draggable)
             {
-                ToolDown(TilePointedAt, budget);
+                ToolActions::ToolDown(TilePointedAt, budget, *toolManager);
             }
 
             if (toolManager->currentTool().type == Tool::Type::Query)
@@ -738,7 +739,7 @@ void handleMouseEvent(SDL_Event& event)
             
             if (toolManager->currentTool().draggable)
             {
-                executeDraggableTool(DraggableToolVector, TilePointedAt, budget);
+                ToolActions::executeDrag(DraggableToolVector, TilePointedAt, budget, *toolManager);
             }
         }
         else if (event.button.button == SDL_BUTTON_RIGHT)
@@ -1114,7 +1115,6 @@ int main(int argc, char* argv[])
         initUI();
 
         toolManager = std::make_shared<ToolManager>(); // \todo Find a sane place for this
-        injectToolManager(toolManager);
 
         gameInit();
 

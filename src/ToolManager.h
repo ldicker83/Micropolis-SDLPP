@@ -41,12 +41,3 @@ private:
     Point<int> mDragEnd;
     ZoneStats mQueryResult;
 };
-
-
-void injectToolManager(std::shared_ptr<ToolManager> manager);
-
-void ToolDown(const Point<int> location, Budget& budget);
-
-int longestAxis(const Vector<int>&);
-void validateDraggableToolVector(Vector<int>&, Budget&);
-void executeDraggableTool(const Vector<int>&, const Point<int>&, Budget&);

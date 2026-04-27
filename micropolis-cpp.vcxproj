@@ -36,6 +36,7 @@
     <ClCompile Include="src\Power.cpp" />
     <ClCompile Include="src\s_sim.cpp" />
     <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\ToolActions.cpp" />
     <ClCompile Include="src\ToolManager.cpp" />
     <ClCompile Include="src\Traffic.cpp" />
     <ClCompile Include="src\UI\BudgetWindow.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="src\s_sim.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Tool.h" />
+    <ClInclude Include="src\ToolActions.h" />
     <ClInclude Include="src\ToolManager.h" />
     <ClInclude Include="src\Traffic.h" />
     <ClInclude Include="src\UI\BudgetWindow.h" />
