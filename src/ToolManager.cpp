@@ -25,7 +25,7 @@
 
 namespace
 {
-    ToolManager toolManager{};
+    std::shared_ptr<ToolManager> ToolManagerPtr{};
 }
 
 namespace
@@ -58,7 +58,7 @@ namespace
     {
         int tile{};
 
-        if (budget.CanAfford(tool(Tool::Type::Park).cost))
+        if (budget.CanAfford(ToolManagerPtr->tool(Tool::Type::Park).cost))
         {
             int value = randomRange(0, 4);
 
@@ -73,7 +73,7 @@ namespace
 
             if (tileValue(mapH, mapV) == 0)
             {
-                budget.Spend(tool(Tool::Type::Park).cost);
+                budget.Spend(ToolManagerPtr->tool(Tool::Type::Park).cost);
                 updateFunds(budget);
                 tileValue(mapH, mapV) = tile;
                 return ToolResult::Success;
@@ -102,10 +102,10 @@ namespace
             return ToolResult::RequiresBulldozing;
         }
 
-        if (budget.CanAfford(tool(Tool::Type::Network).cost))
+        if (budget.CanAfford(ToolManagerPtr->tool(Tool::Type::Network).cost))
         {
             tileValue(mapH, mapV) = TELEBASE | ConductiveBit | BurnableBit | BurnableBit | AnimatedBit;
-            budget.Spend(tool(Tool::Type::Network).cost);
+            budget.Spend(ToolManagerPtr->tool(Tool::Type::Network).cost);
             return ToolResult::Success;
         }
         else
@@ -535,7 +535,7 @@ namespace
             statusStr[i] = ZoneStatsString(static_cast<ZoneStatsId>(std::clamp(id, 1, 19)));
         }
 
-        toolManager.queryResult({ queryString(tileNum), statusStr[0], statusStr[1], statusStr[2], statusStr[3], statusStr[4] });
+        ToolManagerPtr->queryResult({ queryString(tileNum), statusStr[0], statusStr[1], statusStr[2], statusStr[3], statusStr[4] });
     }
 
 
@@ -642,7 +642,7 @@ namespace
             {
                 if (budget.CanAfford(5)) /// \fixme Magic Number
                 {
-                    result = ConnectTile(x, y, tool(Tool::Type::Bulldoze), budget);
+                    result = ConnectTile(x, y, ToolManagerPtr->tool(Tool::Type::Bulldoze), budget);
                     if (temp != (tileValue(x, y) & LowerMask))
                     {
                         budget.Spend(5);
@@ -655,7 +655,7 @@ namespace
             }
             else
             {
-                result = ConnectTile(x, y, tool(Tool::Type::Bulldoze), budget);
+                result = ConnectTile(x, y, ToolManagerPtr->tool(Tool::Type::Bulldoze), budget);
             }
         }
         updateFunds(budget);
@@ -670,7 +670,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        ToolResult result = ConnectTile(x, y, tool(Tool::Type::Road), budget);
+        ToolResult result = ConnectTile(x, y, ToolManagerPtr->tool(Tool::Type::Road), budget);
         updateFunds(budget);
         return result;
     }
@@ -683,7 +683,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        ToolResult result = ConnectTile(x, y, tool(Tool::Type::Rail), budget);
+        ToolResult result = ConnectTile(x, y, ToolManagerPtr->tool(Tool::Type::Rail), budget);
         updateFunds(budget);
         return result;
     }
@@ -696,7 +696,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        ToolResult result = ConnectTile(x, y, tool(Tool::Type::Wire), budget);
+        ToolResult result = ConnectTile(x, y, ToolManagerPtr->tool(Tool::Type::Wire), budget);
         updateFunds(budget);
         return result;
     }
@@ -720,7 +720,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        return checkArea({ x, y }, ResidentialBase, pendingTool(), budget);
+        return checkArea({ x, y }, ResidentialBase, ToolManagerPtr->currentTool(), budget);
     }
 
 
@@ -731,7 +731,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        return checkArea({ x, y }, CommercialBase, pendingTool(), budget);
+        return checkArea({ x, y }, CommercialBase, ToolManagerPtr->currentTool(), budget);
     }
 
 
@@ -742,7 +742,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        return checkArea({ x, y }, IndustryBase, pendingTool(), budget);
+        return checkArea({ x, y }, IndustryBase, ToolManagerPtr->currentTool(), budget);
     }
 
 
@@ -753,7 +753,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        return checkArea({ x, y }, PoliceStationBase, pendingTool(), budget);
+        return checkArea({ x, y }, PoliceStationBase, ToolManagerPtr->currentTool(), budget);
     }
 
 
@@ -764,7 +764,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        return checkArea({ x, y }, FireStationBase, pendingTool(), budget);
+        return checkArea({ x, y }, FireStationBase, ToolManagerPtr->currentTool(), budget);
     }
 
 
@@ -775,7 +775,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        return checkArea({ x, y }, StadiumBase, pendingTool(), budget);
+        return checkArea({ x, y }, StadiumBase, ToolManagerPtr->currentTool(), budget);
     }
 
 
@@ -786,7 +786,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        return checkArea({ x, y }, CoalPowerBase, pendingTool(), budget);
+        return checkArea({ x, y }, CoalPowerBase, ToolManagerPtr->currentTool(), budget);
     }
 
 
@@ -797,7 +797,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        return checkArea({ x, y }, NuclearPowerBase, pendingTool(), budget);
+        return checkArea({ x, y }, NuclearPowerBase, ToolManagerPtr->currentTool(), budget);
     }
 
 
@@ -808,7 +808,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        return checkArea({ x, y }, PortBase, pendingTool(), budget);
+        return checkArea({ x, y }, PortBase, ToolManagerPtr->currentTool(), budget);
     }
 
 
@@ -819,7 +819,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        return checkArea({ x, y }, AirportBase, pendingTool(), budget);
+        return checkArea({ x, y }, AirportBase, ToolManagerPtr->currentTool(), budget);
     }
 
 
@@ -898,55 +898,6 @@ void ToolManager::queryResult(const ZoneStats& result)
 }
 
 
-// Legacy free functions
-const Tool& tool(Tool::Type requested)
-{
-    return toolManager.tool(requested);
-}
-
-
-const Tool& pendingTool()
-{
-    return toolManager.currentTool();
-}
-
-
-void pendingTool(const Tool::Type requestedTool)
-{
-	toolManager.currentTool(requestedTool);
-}
-
-
-const ZoneStats& queryResult()
-{
-    return toolManager.queryResult();
-}
-
-
-void toolStart(const Point<int>& start)
-{
-    toolManager.dragStart(start);
-}
-
-
-const Point<int>& toolStart()
-{
-    return toolManager.dragStart();
-}
-
-
-void toolEnd(const Point<int>& end)
-{
-    toolManager.dragEnd(end);
-}
-
-
-const Point<int>& toolEnd()
-{
-    return toolManager.dragEnd();
-}
-
-
 std::map<Tool::Type, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
 {
     { Tool::Type::Residential, &residential_tool },
@@ -970,6 +921,12 @@ std::map<Tool::Type, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
 };
 
 
+void injectToolManager(std::shared_ptr<ToolManager> manager)
+{
+    ToolManagerPtr = manager;
+}
+
+
 /**
  * Performs tool action
  *
@@ -978,12 +935,12 @@ std::map<Tool::Type, ToolResult(*)(int, int, Budget&)> ToolFunctionTable =
  */
 void ToolDown(const Point<int> location, Budget& budget)
 {
-    if (pendingTool().type == Tool::Type::None)
+    if (ToolManagerPtr->currentTool().type == Tool::Type::None)
     {
         return;
     }
 
-    ToolResult result = ToolFunctionTable.at(pendingTool().type)(location.x, location.y, budget);
+    ToolResult result = ToolFunctionTable.at(ToolManagerPtr->currentTool().type)(location.x, location.y, budget);
 
     if (result == ToolResult::RequiresBulldozing)
     {
@@ -1017,9 +974,9 @@ void validateDraggableToolVector(Vector<int>& toolVector, Budget& budget)
     const int step = axisLarge < 0 ? -1 : 1;
     const bool xAxisLarger = std::abs(toolVector.x) > std::abs(toolVector.y);
 
-    const Point<int>& origin = toolStart();
+    const Point<int>& origin = ToolManagerPtr->dragStart();
 
-    if (CanConnectTile(origin.x, origin.y, pendingTool(), budget) != ToolResult::Success)
+    if (CanConnectTile(origin.x, origin.y, ToolManagerPtr->currentTool(), budget) != ToolResult::Success)
     {
         toolVector = {};
         return;
@@ -1029,7 +986,7 @@ void validateDraggableToolVector(Vector<int>& toolVector, Budget& budget)
     {
         for (int i = 0; std::abs(i) <= std::abs(toolVector.x); i += step)
         {
-            const auto result = CanConnectTile(origin.x + i, origin.y, pendingTool(), budget);
+            const auto result = CanConnectTile(origin.x + i, origin.y, ToolManagerPtr->currentTool(), budget);
             if (result != ToolResult::Success)
             {
                 toolVector = { i - step, 0 };
@@ -1041,7 +998,7 @@ void validateDraggableToolVector(Vector<int>& toolVector, Budget& budget)
     {
         for (int i = 0; std::abs(i) <= std::abs(toolVector.y); i += step)
         {
-            if (CanConnectTile(origin.x, origin.y + i, pendingTool(), budget) != ToolResult::Success)
+            if (CanConnectTile(origin.x, origin.y + i, ToolManagerPtr->currentTool(), budget) != ToolResult::Success)
             {
                 toolVector = { 0, i - step };
                 return;
@@ -1068,7 +1025,7 @@ void executeDraggableTool(const Vector<int>& toolVector, const Point<int>& tileP
         for (int i = 0; std::abs(i) <= std::abs(toolVector.x); i += step)
         {
             // note: Type cast is temporary
-            ConnectTile(toolStart().x + i, toolStart().y, pendingTool(), budget);
+            ConnectTile(ToolManagerPtr->dragStart().x + i, ToolManagerPtr->dragStart().y, ToolManagerPtr->currentTool(), budget);
         }
     }
     else
@@ -1076,7 +1033,7 @@ void executeDraggableTool(const Vector<int>& toolVector, const Point<int>& tileP
         for (int i = 0; std::abs(i) <= std::abs(toolVector.y); i += step)
         {
             // note: Type cast is temporary
-            ConnectTile(toolStart().x, toolStart().y + i, pendingTool(), budget);
+            ConnectTile(ToolManagerPtr->dragStart().x, ToolManagerPtr->dragStart().y + i, ToolManagerPtr->currentTool(), budget);
         }
     }
 }

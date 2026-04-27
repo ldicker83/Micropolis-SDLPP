@@ -13,6 +13,7 @@
 #include "Tool.h"
 #include "w_resrc.h"
 
+#include <memory>
 #include <vector>
 
 class ToolManager
@@ -42,18 +43,7 @@ private:
 };
 
 
-const Tool& tool(Tool::Type);
-
-const ZoneStats& queryResult();
-
-const Tool& pendingTool();
-void pendingTool(const Tool::Type);
-
-void toolStart(const Point<int>&);
-const Point<int>& toolStart();
-
-void toolEnd(const Point<int>&);
-const Point<int>& toolEnd();
+void injectToolManager(std::shared_ptr<ToolManager> manager);
 
 void ToolDown(const Point<int> location, Budget& budget);
 
