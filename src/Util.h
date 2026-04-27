@@ -70,6 +70,8 @@ bool pointInFRect(const Point<int>& point, const SDL_FRect& rect);
 
 SDL_FRect fRectFromRect(const SDL_Rect& rect);
 
+int longestAxis(const Vector<int>& vec);
+
 int randomRange(int min, int max);
 int random();
 int rand16();

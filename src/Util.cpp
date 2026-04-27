@@ -97,6 +97,12 @@ SDL_FRect fRectFromRect(const SDL_Rect& rect)
 }
 
 
+int longestAxis(const Vector<int>& vec)
+{
+    return abs(vec.x) >= abs(vec.y) ? vec.x : vec.y;
+}
+
+
 Point<int> positionToCell(const Point<int>& position, const Point<int>& offset)
 {
     return
