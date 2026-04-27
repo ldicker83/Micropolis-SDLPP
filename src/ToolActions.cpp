@@ -27,7 +27,7 @@
 namespace
 {
     constexpr Point<int> ZoneAnchor{ 1, 1 };
-	constexpr Point<int> NuclearPlantAnimatedTile{ 1, 2 };
+    constexpr Point<int> NuclearPlantAnimatedTile{ 1, 2 };
 
     bool tileIsNaturalOrRubble(int tileValue)
     {
@@ -85,7 +85,7 @@ namespace
     }
 
 
-     int checkBigZone(int id, int* deltaHPtr, int* deltaVPtr)
+    int checkBigZone(int id, int* deltaHPtr, int* deltaVPtr)
     {
         switch (id)
         {
@@ -282,23 +282,17 @@ namespace
     }
 
 
-    ToolResult checkArea(const Point<int> location, const int base, const Tool& tool, Budget& budget)
+    ToolResult validateAreaForPlacement(const Point<int> location, int toolSize, int& totalCost)
     {
-        if (!pointInRect({ location.x - 1, location.y - 1 }, { 0, 0, SimWidth - tool.size, SimHeight - tool.size }))
-        {
-            return ToolResult::OutOfBounds;
-        }
-
-        int totalCost{ tool.cost };
-
-		Point<int> position = location - Vector<int>{ 1, 1 };
-        for (int row = 0; row < tool.size; ++row)
+        Point<int> position = location - Vector<int>{ 1, 1 };
+        for (int row = 0; row < toolSize; ++row)
         {
             position.x = location.x - 1;
 
-            for (int col = 0; col < tool.size; ++col)
+            for (int col = 0; col < toolSize; ++col)
             {
                 const unsigned int tileValue{ maskedTileValue(position) };
+
                 if (gameplayOptions().autoBulldoze)
                 {
                     if (tileValue != Dirt)
@@ -309,45 +303,43 @@ namespace
                         }
                         else
                         {
-                            return ToolResult::RequiresBulldozing;
+                            ToolResult::RequiresBulldozing;
                         }
                     }
                 }
                 else
                 {
-                    if (tileValue != 0)
+                    if (tileValue != Dirt)
                     {
-                        return ToolResult::RequiresBulldozing;
+                        ToolResult::RequiresBulldozing;
                     }
                 }
+
                 ++position.x;
             }
+
             ++position.y;
         }
 
-        if (!budget.CanAfford(totalCost))
-        {
-            return ToolResult::InsufficientFunds;
-        }
+        return ToolResult::Success;
+    }
 
-        budget.Spend(totalCost);
-        updateFunds(budget);
 
+    void placeStructureTiles(const Point<int> location, const int base, const Tool& tool)
+    {
         int tileBase = base;
-        position = location - Vector<int>{ 1, 1 };
+        Point<int> position = location - Vector<int>{ 1, 1 };
         for (int row = 0; row < tool.size; ++row)
         {
             position.x = location.x - 1;
 
             for (int col = 0; col < tool.size; ++col)
             {
-				const Point<int> zonePosition{ col, row };
-                if (zonePosition == ZoneAnchor)
+                if (Point<int>{ col, row } == ZoneAnchor)
                 {
                     tileValue(position) = tileBase + BNCNBIT + ZonedBit;
                 }
-                // special case to get nuclear plant animation working
-                else if (tool.type == Tool::Type::Nuclear && zonePosition == NuclearPlantAnimatedTile)
+                else if (tool.type == Tool::Type::Nuclear && Point<int>{ col, row } == NuclearPlantAnimatedTile)
                 {
                     tileValue(position) = tileBase + BNCNBIT + AnimatedBit;
                 }
@@ -359,10 +351,38 @@ namespace
                 ++position.x;
                 ++tileBase;
             }
-			++position.y;
+
+            ++position.y;
+        }
+    }
+
+
+    ToolResult checkArea(const Point<int> location, const int base, const Tool& tool, Budget& budget)
+    {
+        if (!pointInRect(location - Vector<int>{ 1, 1 }, { 0, 0, SimWidth - tool.size, SimHeight - tool.size }))
+        {
+            return ToolResult::OutOfBounds;
         }
 
+        int totalCost{ tool.cost };
+
+        ToolResult validationResult = validateAreaForPlacement(location, tool.size, totalCost);
+        if (validationResult != ToolResult::Success)
+        {
+            return validationResult;
+        }
+
+        if (!budget.CanAfford(totalCost))
+        {
+            return ToolResult::InsufficientFunds;
+        }
+
+        budget.Spend(totalCost);
+        updateFunds(budget);
+
+        placeStructureTiles(location, base, tool);
         checkBorder(location.x - 1, location.y - 1, tool.size, budget);
+
         return ToolResult::Success;
     }
 
@@ -524,7 +544,7 @@ namespace
         {
             return ToolResult::OutOfBounds;
         }
-        
+
         toolManager.queryResult(doZoneStatus(x, y));
 
         return ToolResult::Success;
