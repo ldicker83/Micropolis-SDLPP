@@ -14,16 +14,22 @@ namespace Constants
 {
     constexpr int MonthCount = 12;
 
-    namespace FilePaths
-    {
-        constexpr const char* Strings = "res/strings.json";
-    }
+	namespace FilePaths
+	{
+		constexpr const char* Strings = "res/strings.json";
+		constexpr const char* Tools = "res/tools.json";
+	}
 
 	namespace JsonKeys
 	{
 		constexpr const char* Strings = "strings";
 		constexpr const char* Months = "months";
 		constexpr const char* Tools = "tools";
+		constexpr const char* Type = "type";
+		constexpr const char* Cost = "cost";
+		constexpr const char* Size = "size";
+		constexpr const char* Offset = "offset";
+		constexpr const char* Draggable = "draggable";
 
 		namespace ToolTypes
 		{
@@ -55,7 +61,10 @@ namespace Constants
 		constexpr const char* StringsFileMissingStrings = "Strings file missing 'strings' structure";
 		constexpr const char* StringsFileMissingMonths = "Strings file missing 'strings.months' structure";
 		constexpr const char* StringsFileMissingTools = "Strings file missing 'strings.tools' structure";
+		constexpr const char* ToolsFileMissingTools = "Tools file missing 'tools' array";
 		constexpr const char* ToolKeyNotFound = "Tool key '{}' not found in 'strings.tools'";
+		constexpr const char* ToolMissingField = "Tool object missing required field '{}'";
+		constexpr const char* ToolTypeUnknown = "Unknown tool type: {}";
 		constexpr const char* ExpectedTwelveMonths = "Expected 12 months in strings file";
 	}
 }

@@ -4,10 +4,31 @@
 
 #include <format>
 #include <fstream>
+#include <unordered_map>
 
 
 namespace
 {
+    const std::unordered_map<std::string, Tool::Type> ToolTypeTable = {
+        { Constants::JsonKeys::ToolTypes::Residential, Tool::Type::Residential },
+        { Constants::JsonKeys::ToolTypes::Commercial, Tool::Type::Commercial },
+        { Constants::JsonKeys::ToolTypes::Industrial, Tool::Type::Industrial },
+        { Constants::JsonKeys::ToolTypes::Fire, Tool::Type::Fire },
+        { Constants::JsonKeys::ToolTypes::Query, Tool::Type::Query },
+        { Constants::JsonKeys::ToolTypes::Police, Tool::Type::Police },
+        { Constants::JsonKeys::ToolTypes::Wire, Tool::Type::Wire },
+        { Constants::JsonKeys::ToolTypes::Bulldoze, Tool::Type::Bulldoze },
+        { Constants::JsonKeys::ToolTypes::Rail, Tool::Type::Rail },
+        { Constants::JsonKeys::ToolTypes::Road, Tool::Type::Road },
+        { Constants::JsonKeys::ToolTypes::Stadium, Tool::Type::Stadium },
+        { Constants::JsonKeys::ToolTypes::Park, Tool::Type::Park },
+        { Constants::JsonKeys::ToolTypes::Seaport, Tool::Type::Seaport },
+        { Constants::JsonKeys::ToolTypes::Coal, Tool::Type::Coal },
+        { Constants::JsonKeys::ToolTypes::Nuclear, Tool::Type::Nuclear },
+        { Constants::JsonKeys::ToolTypes::Airport, Tool::Type::Airport },
+        { Constants::JsonKeys::ToolTypes::Network, Tool::Type::Network }
+    };
+
     auto loadJsonFile(const std::string& filePath)
     {
         std::ifstream file(filePath);
@@ -72,6 +93,49 @@ namespace
     }
 
 
+    int jsonIntValue(const nlohmann::json& data, const std::string& key)
+    {
+        assertJsonContainsKey(data, key, std::format(Constants::ErrorMessages::ToolMissingField, key));
+        return data[key].get<int>();
+    }
+
+
+    bool jsonBoolValue(const nlohmann::json& data, const std::string& key)
+    {
+        assertJsonContainsKey(data, key, std::format(Constants::ErrorMessages::ToolMissingField, key));
+        return data[key].get<bool>();
+    }
+
+
+    Tool::Type toolType(const std::string& type)
+    {
+        try
+        {
+			return ToolTypeTable.at(type);
+        }
+		catch (const std::out_of_range&)
+        {
+            throw std::runtime_error(std::format(Constants::ErrorMessages::ToolTypeUnknown, type));
+		}
+
+    }
+
+
+    Tool toolFromJson(const nlohmann::json& toolData, const nlohmann::json& stringsData)
+    {
+        const auto typeString = jsonStringValue(toolData, Constants::JsonKeys::Type);
+
+        return {
+            toolType(typeString),
+            jsonIntValue(toolData, Constants::JsonKeys::Cost),
+            jsonIntValue(toolData, Constants::JsonKeys::Size),
+            jsonIntValue(toolData, Constants::JsonKeys::Offset),
+            jsonBoolValue(toolData, Constants::JsonKeys::Draggable),
+            jsonStringValue(stringsData, typeString)
+        };
+    }
+
+
     MonthStringArray loadMonthStringsFromJson(const nlohmann::json& monthsArray)
     {
         assertJsonArraySize(monthsArray, Constants::MonthCount, Constants::ErrorMessages::ExpectedTwelveMonths);
@@ -106,30 +170,25 @@ MonthStringArray GameDataLoader::loadMonthStrings()
 
 std::vector<Tool> GameDataLoader::loadTools()
 {
-    const auto data = parseJsonFile(Constants::FilePaths::Strings);
+	const auto toolsFileData = parseJsonFile(Constants::FilePaths::Tools);
+	const auto stringsFileData = parseJsonFile(Constants::FilePaths::Strings);
 
-    assertJsonContainsKey(data, Constants::JsonKeys::Strings, Constants::ErrorMessages::StringsFileMissingStrings);
-    assertJsonContainsKey(data[Constants::JsonKeys::Strings], Constants::JsonKeys::Tools, Constants::ErrorMessages::StringsFileMissingTools);
+	assertJsonContainsKey(toolsFileData, Constants::JsonKeys::Tools, Constants::ErrorMessages::ToolsFileMissingTools);
+	assertJsonContainsKey(stringsFileData, Constants::JsonKeys::Strings, Constants::ErrorMessages::StringsFileMissingStrings);
+	assertJsonContainsKey(stringsFileData[Constants::JsonKeys::Strings], Constants::JsonKeys::Tools, Constants::ErrorMessages::StringsFileMissingTools);
 
-	const auto& toolsData = data[Constants::JsonKeys::Strings][Constants::JsonKeys::Tools];
-	return {
-		{},
-		{ Tool::Type::Residential, 100, 3, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Residential) },
-		{ Tool::Type::Commercial, 100, 3, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Commercial) },
-		{ Tool::Type::Industrial, 100, 3, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Industrial) },
-		{ Tool::Type::Fire, 500, 3, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Fire) },
-		{ Tool::Type::Query, 0, 1, 0, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Query) },
-		{ Tool::Type::Police, 500, 3, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Police) },
-		{ Tool::Type::Wire, 5, 1, 0, true, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Wire) },
-		{ Tool::Type::Bulldoze, 1, 1, 0, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Bulldoze) },
-		{ Tool::Type::Rail, 20, 1, 0, true, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Rail) },
-		{ Tool::Type::Road, 10, 1, 0, true, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Road) },
-		{ Tool::Type::Stadium, 5000, 4, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Stadium) },
-		{ Tool::Type::Park, 10, 1, 0, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Park) },
-		{ Tool::Type::Seaport, 3000, 4, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Seaport) },
-		{ Tool::Type::Coal, 3000, 4, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Coal) },
-		{ Tool::Type::Nuclear, 5000, 4, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Nuclear) },
-		{ Tool::Type::Airport, 10000, 6, 1, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Airport) },
-		{ Tool::Type::Network, 100, 1, 0, false, jsonStringValue(toolsData, Constants::JsonKeys::ToolTypes::Network) }
-	};
+	const auto& toolsArray = toolsFileData[Constants::JsonKeys::Tools];
+	const auto& toolStringsData = stringsFileData[Constants::JsonKeys::Strings][Constants::JsonKeys::Tools];
+
+	assertJsonDataIsArray(toolsArray);
+
+	std::vector<Tool> tools;
+	tools.push_back({});  // First tool is empty/None
+
+	for (const auto& toolData : toolsArray)
+	{
+		tools.push_back(toolFromJson(toolData, toolStringsData));
+	}
+
+	return tools;
 }

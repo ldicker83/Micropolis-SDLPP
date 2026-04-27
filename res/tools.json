@@ -1,0 +1,123 @@
+{
+  "tools": [
+    {
+      "type": "residential",
+      "cost": 100,
+      "size": 3,
+      "offset": 1,
+      "draggable": false
+    },
+    {
+      "type": "commercial",
+      "cost": 100,
+      "size": 3,
+      "offset": 1,
+      "draggable": false
+    },
+    {
+      "type": "industrial",
+      "cost": 100,
+      "size": 3,
+      "offset": 1,
+      "draggable": false
+    },
+    {
+      "type": "fire",
+      "cost": 500,
+      "size": 3,
+      "offset": 1,
+      "draggable": false
+    },
+    {
+      "type": "query",
+      "cost": 0,
+      "size": 1,
+      "offset": 0,
+      "draggable": false
+    },
+    {
+      "type": "police",
+      "cost": 500,
+      "size": 3,
+      "offset": 1,
+      "draggable": false
+    },
+    {
+      "type": "wire",
+      "cost": 5,
+      "size": 1,
+      "offset": 0,
+      "draggable": true
+    },
+    {
+      "type": "bulldoze",
+      "cost": 1,
+      "size": 1,
+      "offset": 0,
+      "draggable": false
+    },
+    {
+      "type": "rail",
+      "cost": 20,
+      "size": 1,
+      "offset": 0,
+      "draggable": true
+    },
+    {
+      "type": "road",
+      "cost": 10,
+      "size": 1,
+      "offset": 0,
+      "draggable": true
+    },
+    {
+      "type": "stadium",
+      "cost": 5000,
+      "size": 4,
+      "offset": 1,
+      "draggable": false
+    },
+    {
+      "type": "park",
+      "cost": 10,
+      "size": 1,
+      "offset": 0,
+      "draggable": false
+    },
+    {
+      "type": "seaport",
+      "cost": 3000,
+      "size": 4,
+      "offset": 1,
+      "draggable": false
+    },
+    {
+      "type": "coal",
+      "cost": 3000,
+      "size": 4,
+      "offset": 1,
+      "draggable": false
+    },
+    {
+      "type": "nuclear",
+      "cost": 5000,
+      "size": 4,
+      "offset": 1,
+      "draggable": false
+    },
+    {
+      "type": "airport",
+      "cost": 10000,
+      "size": 6,
+      "offset": 1,
+      "draggable": false
+    },
+    {
+      "type": "network",
+      "cost": 100,
+      "size": 1,
+      "offset": 0,
+      "draggable": false
+    }
+  ]
+}
