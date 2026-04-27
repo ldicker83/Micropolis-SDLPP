@@ -82,37 +82,7 @@ namespace
     }
 
 
-    // Radar?
-    ToolResult putDownNetwork(int mapH, int mapV, int cost, Budget& budget)
-    {
-        int tile = tileValue(mapH, mapV) & LowerMask;
-
-        if ((budget.CurrentFunds() > 0) && canAutoBulldoze(tile))
-        {
-            tileValue(mapH, mapV) = tile = 0;
-            budget.Spend(1);
-        }
-
-        if (tile != 0)
-        {
-            return ToolResult::RequiresBulldozing;
-        }
-
-        if (budget.CanAfford(cost))
-        {
-            tileValue(mapH, mapV) = TELEBASE | ConductiveBit | BurnableBit | BurnableBit | AnimatedBit;
-            budget.Spend(cost);
-            return ToolResult::Success;
-        }
-        else
-        {
-            return ToolResult::InsufficientFunds;
-        }
-
-    }
-
-
-    int checkBigZone(int id, int* deltaHPtr, int* deltaVPtr)
+     int checkBigZone(int id, int* deltaHPtr, int* deltaVPtr)
     {
         switch (id)
         {
@@ -820,17 +790,6 @@ namespace
     }
 
 
-    ToolResult network_tool(int x, int y, Budget& budget, ToolManager& toolManager)
-    {
-        if (!coordinatesValid({ x, y }))
-        {
-            return ToolResult::OutOfBounds;
-        }
-
-        return putDownNetwork(x, y, toolManager.currentTool().cost, budget);
-    }
-
-
     std::map<Tool::Type, ToolResult(*)(int, int, Budget&, ToolManager&)> ToolFunctionTable =
     {
         { Tool::Type::Residential, &residential_tool },
@@ -849,7 +808,6 @@ namespace
         { Tool::Type::Coal, &coal_power_plant_tool },
         { Tool::Type::Nuclear, &nuclear_power_plant_tool },
         { Tool::Type::Airport, &airport_tool },
-        { Tool::Type::Network, &network_tool },
         { Tool::Type::None, nullptr }
     };
 }

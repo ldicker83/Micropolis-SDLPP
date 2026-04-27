@@ -111,13 +111,6 @@
       "size": 6,
       "offset": 1,
       "draggable": false
-    },
-    {
-      "type": "network",
-      "cost": 100,
-      "size": 1,
-      "offset": 0,
-      "draggable": false
     }
   ]
 }

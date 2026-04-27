@@ -49,7 +49,6 @@ namespace Constants
 			constexpr const char* Coal = "coal";
 			constexpr const char* Nuclear = "nuclear";
 			constexpr const char* Airport = "airport";
-			constexpr const char* Network = "network";
 		}
 	}
 

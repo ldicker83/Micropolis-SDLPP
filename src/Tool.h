@@ -51,7 +51,6 @@ struct Tool
         Coal,
         Nuclear,
         Airport,
-        Network,
         None
     };
 

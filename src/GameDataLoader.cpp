@@ -25,8 +25,7 @@ namespace
         { Constants::Keys::ToolTypes::Seaport, Tool::Type::Seaport },
         { Constants::Keys::ToolTypes::Coal, Tool::Type::Coal },
         { Constants::Keys::ToolTypes::Nuclear, Tool::Type::Nuclear },
-        { Constants::Keys::ToolTypes::Airport, Tool::Type::Airport },
-        { Constants::Keys::ToolTypes::Network, Tool::Type::Network }
+        { Constants::Keys::ToolTypes::Airport, Tool::Type::Airport }
     };
 
     auto loadJsonFile(const std::string& filePath)

@@ -30,8 +30,7 @@
       "seaport": "Seaport",
       "coal": "Coal Power",
       "nuclear": "Nuclear Power",
-      "airport": "Airport",
-      "network": "Network"
+      "airport": "Airport"
     }
   }
 }
