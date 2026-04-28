@@ -519,7 +519,7 @@ void startFire(const Point<int>& location)
         return;
     }
 
-    tileValue(mapCoords.x, mapCoords.y) = FireBase + randomRange(0, 3) + AnimatedBit;
+    tileValue(mapCoords.x, mapCoords.y) = FireBase + randomRange(0, 3) | AnimatedBit;
 }
 
 

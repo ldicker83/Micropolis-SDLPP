@@ -343,15 +343,15 @@ namespace
     {
         if (tilePosition == ZoneAnchor)
         {
-            tileValue(position) = tileBase + BurnableConductiveBits + ZonedBit;
+            tileValue(position) |= BurnableConductiveBits | ZonedBit;
         }
         else if (toolType == Tool::Type::Nuclear && tilePosition == NuclearPlantAnimatedTile)
         {
-            tileValue(position) = tileBase + BurnableConductiveBits + AnimatedBit;
+            tileValue(position) |= BurnableConductiveBits | AnimatedBit;
         }
         else
         {
-            tileValue(position) = tileBase + BurnableConductiveBits;
+            tileValue(position) |= tileBase | BurnableConductiveBits;
         }
     }
 

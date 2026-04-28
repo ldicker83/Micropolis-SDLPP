@@ -116,11 +116,11 @@ void MakeEarthquake()
         {
             if (randomRange(0, 3) != 0)
             {
-                tileValue(position) = (Rubble + BulldozableBit) + randomRange(0, 3);
+                tileValue(position) = (Rubble + randomRange(0, 3)) | BulldozableBit;
             }
             else
             {
-                tileValue(position) = (FireBase + AnimatedBit) + randomRange(0, 7);
+				tileValue(position) = (FireBase + randomRange(0, 7)) | AnimatedBit;
             }
         }
     }

@@ -106,7 +106,7 @@ namespace
         int fireProtection = FireProtectionMap.value(position.skewInverseBy({ 8, 8 }));
         if (!randomRange(0, getBurnoutRate(fireProtection)))
         {
-            tileValue(position.x, position.y) = Rubble + randomRange(0, 3) + BulldozableBit;
+            tileValue(position.x, position.y) = Rubble + randomRange(0, 3) | BulldozableBit;
         }
 	}
 
@@ -132,7 +132,7 @@ namespace
 				explodeIfIndustrial(position, tile);
             }
 
-            tileValue(position) = FireBase + randomRange(0, 3) + AnimatedBit;
+            tileValue(position) = (FireBase + randomRange(0, 3)) | AnimatedBit;
         }
     }
 }
@@ -233,7 +233,7 @@ void DoRail(const Point<int>& position)
                     }
                     else
                     {
-                        tileValue(position.x, position.y) = Rubble + randomRange(0, 3) + BulldozableBit;
+                        tileValue(position.x, position.y) = Rubble + randomRange(0, 3) | BulldozableBit;
                     }
                     return;
                 }
@@ -395,7 +395,7 @@ void DoRoad()
                     }
                     else
                     {
-                        tileValue(SimulationTarget.x, SimulationTarget.y) = Rubble + (rand16() & 3) + BulldozableBit;
+                        tileValue(SimulationTarget.x, SimulationTarget.y) = Rubble + (rand16() & 3) | BulldozableBit;
                     }
                     return;
                 }

@@ -23,9 +23,6 @@
 #include <algorithm>
 
 
-#define ASCBIT (AnimatedBit | ConductiveBit | BurnableBit)
-#define REGBIT (ConductiveBit | BurnableBit)
-
 const std::array<Vector<int>, 4> AdjacentVector =
 { {
     {  0, -1 },
@@ -89,14 +86,14 @@ void zonePlop(const int base)
 
         if (coordinatesValid(coordinates))
         {
-            tileValue(coordinates) = tileBase + BurnableConductiveBits;
+            tileValue(coordinates) = tileBase | BurnableConductiveBits;
         }
 
         ++tileBase;
     }
 
     setZonePower(SimulationTarget);
-    tileValue(SimulationTarget) |= ZonedBit + BulldozableBit;
+    tileValue(SimulationTarget) |= ZonedBit | BulldozableBit;
 }
 
 
@@ -219,16 +216,14 @@ void setSmoke(bool ZonePower)
             {
                 if ((maskedTileValue(location)) == AniTabC[z])
                 {
-                    tileValue(location) = ASCBIT | (SmokeBase + AniTabA[z]);
-                    //tileValue(location) = ASCBIT | (SMOKEBASE + AniTabB[z]);
+                    tileValue(location) = (SmokeBase + AniTabA[z]) | (AnimatedBit | ConductiveBit | BurnableBit);
                 }
             }
             else
             {
                 if ((maskedTileValue(location)) > static_cast<unsigned int>(AniTabC[z]))
                 {
-                    tileValue(location) = REGBIT | AniTabC[z];
-                    //tileValue(location) = REGBIT | AniTabD[z];
+                    tileValue(location) = AniTabC[z] | (ConductiveBit | BurnableBit);
                 }
             }
         }
@@ -391,7 +386,7 @@ void buildHouse(int value)
 
         if (coordinatesValid(location))
         {
-            tileValue(location) = House + BulldozableBurnableConductiveBits + randomRange(0, 2) + (value * 3);
+            tileValue(location) = (House + randomRange(0, 2) + (value * 3)) | BulldozableBurnableConductiveBits;
         }
     }
 }
@@ -482,7 +477,7 @@ void convertResidentialToHomes(int value)
                 const auto tile = maskedTileValue(coordinates);
                 if (tile != ResidentialEmpty)
                 {
-                    tileValue(coordinates) = LHTHR + value + randomRange(0, 2) + BulldozableBurnableConductiveBits;
+                    tileValue(coordinates) = (LHTHR + value + randomRange(0, 2)) | BulldozableBurnableConductiveBits;
                 }
             }
         }
@@ -505,7 +500,7 @@ void clearResidentialZone()
                 const auto tile = maskedTileValue(coordinates);
                 if ((tile >= LHTHR) && (tile <= HHTHR))
                 {
-                    tileValue(coordinates) = ResidentialBase + zoneTileOffset[index] + BulldozableBurnableConductiveBits;
+                    tileValue(coordinates) = (ResidentialBase + zoneTileOffset[index]) | BulldozableBurnableConductiveBits;
                     return;
                 }
             }
