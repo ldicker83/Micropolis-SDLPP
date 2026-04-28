@@ -425,10 +425,7 @@ namespace
     }
 
 
-    /* QUERY */
-    /* search table for zone status string match */
-    static int idArray[28] =
-    {
+	std::array<int, 28> idArray {
         Dirt,
         River,
         TreeBase,
@@ -507,12 +504,11 @@ namespace
 
     const std::string& queryString(int tileValue)
     {
-        for (int i = 1; i < 29; ++i)
+        for (int i = 1; i < idArray.size(); ++i)
         {
             if (tileValue < idArray[i])
             {
-                const int queryId = std::clamp(i - 1, 0, 28);
-                return QueryStatsString(static_cast<QueryStatsId>(queryId));
+                return QueryStatsString(static_cast<QueryStatsId>(i - 1));
             }
         }
 
