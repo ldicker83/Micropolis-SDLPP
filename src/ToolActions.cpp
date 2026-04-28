@@ -29,6 +29,8 @@ namespace
     constexpr Point<int> ZoneAnchor{ 1, 1 };
     constexpr Point<int> NuclearPlantAnimatedTile{ 1, 2 };
 
+    constexpr Vector<int> AnchorOffset{ 1, 1 };
+
     bool tileIsNaturalOrRubble(int tileValue)
     {
         return (tileValue >= RiverEdgeFirst) && (tileValue <= RubbleLast);
@@ -282,37 +284,49 @@ namespace
     }
 
 
+    ToolResult validateTileForConstruction(unsigned int tileValue, int& totalCost)
+    {
+        if (gameplayOptions().autoBulldoze)
+        {
+            if (tileValue != Dirt)
+            {
+                if (canAutoBulldoze(tileValue))
+                {
+                    ++totalCost;
+                }
+                else
+                {
+                    return ToolResult::RequiresBulldozing;
+                }
+            }
+        }
+        else
+        {
+            if (tileValue != Dirt)
+            {
+                return ToolResult::RequiresBulldozing;
+            }
+        }
+
+        return ToolResult::Success;
+    }
+
+
     ToolResult validateAreaForPlacement(const Point<int> location, int toolSize, int& totalCost)
     {
-        Point<int> position = location - Vector<int>{ 1, 1 };
+        Point<int> position = location - AnchorOffset;
         for (int row = 0; row < toolSize; ++row)
         {
             position.x = location.x - 1;
 
             for (int col = 0; col < toolSize; ++col)
             {
-                const unsigned int tileValue{ maskedTileValue(position) };
-
-                if (gameplayOptions().autoBulldoze)
+                const auto tileValue{ maskedTileValue(position) };
+                const ToolResult result = validateTileForConstruction(tileValue, totalCost);
+                
+                if (result != ToolResult::Success)
                 {
-                    if (tileValue != Dirt)
-                    {
-                        if (canAutoBulldoze(tileValue))
-                        {
-                            ++totalCost;
-                        }
-                        else
-                        {
-                            ToolResult::RequiresBulldozing;
-                        }
-                    }
-                }
-                else
-                {
-                    if (tileValue != Dirt)
-                    {
-                        ToolResult::RequiresBulldozing;
-                    }
+                    return result;
                 }
 
                 ++position.x;
@@ -325,28 +339,34 @@ namespace
     }
 
 
-    void placeStructureTiles(const Point<int> location, const int base, const Tool& tool)
+    void plopStructureTile(const Point<int>& position, int tileBase, const Point<int>& tilePosition, Tool::Type toolType)
+    {
+        if (tilePosition == ZoneAnchor)
+        {
+            tileValue(position) = tileBase + BNCNBIT + ZonedBit;
+        }
+        else if (toolType == Tool::Type::Nuclear && tilePosition == NuclearPlantAnimatedTile)
+        {
+            tileValue(position) = tileBase + BNCNBIT + AnimatedBit;
+        }
+        else
+        {
+            tileValue(position) = tileBase + BNCNBIT;
+        }
+    }
+
+
+    void plopStructureTiles(const Point<int> location, const int base, const Tool& tool)
     {
         int tileBase = base;
-        Point<int> position = location - Vector<int>{ 1, 1 };
+        Point<int> position = location - AnchorOffset;
         for (int row = 0; row < tool.size; ++row)
         {
             position.x = location.x - 1;
 
             for (int col = 0; col < tool.size; ++col)
             {
-                if (Point<int>{ col, row } == ZoneAnchor)
-                {
-                    tileValue(position) = tileBase + BNCNBIT + ZonedBit;
-                }
-                else if (tool.type == Tool::Type::Nuclear && Point<int>{ col, row } == NuclearPlantAnimatedTile)
-                {
-                    tileValue(position) = tileBase + BNCNBIT + AnimatedBit;
-                }
-                else
-                {
-                    tileValue(position) = tileBase + BNCNBIT;
-                }
+                plopStructureTile(position, tileBase, Point<int>{ col, row }, tool.type);
 
                 ++position.x;
                 ++tileBase;
@@ -357,16 +377,14 @@ namespace
     }
 
 
-    ToolResult checkArea(const Point<int> location, const int base, const Tool& tool, Budget& budget)
+    ToolResult validatePlacement(const Point<int> location, int toolSize, Budget& budget, int& totalCost)
     {
-        if (!pointInRect(location - Vector<int>{ 1, 1 }, { 0, 0, SimWidth - tool.size, SimHeight - tool.size }))
+        if (!pointInRect(location - AnchorOffset, { 0, 0, SimWidth - toolSize, SimHeight - toolSize }))
         {
             return ToolResult::OutOfBounds;
         }
 
-        int totalCost{ tool.cost };
-
-        ToolResult validationResult = validateAreaForPlacement(location, tool.size, totalCost);
+        ToolResult validationResult = validateAreaForPlacement(location, toolSize, totalCost);
         if (validationResult != ToolResult::Success)
         {
             return validationResult;
@@ -377,11 +395,31 @@ namespace
             return ToolResult::InsufficientFunds;
         }
 
+        return ToolResult::Success;
+    }
+
+
+    void executePlacement(const Point<int> location, const int base, const Tool& tool, Budget& budget, int totalCost)
+    {
         budget.Spend(totalCost);
         updateFunds(budget);
 
-        placeStructureTiles(location, base, tool);
+        plopStructureTiles(location, base, tool);
         checkBorder(location.x - 1, location.y - 1, tool.size, budget);
+    }
+
+
+    ToolResult checkArea(const Point<int> location, const int base, const Tool& tool, Budget& budget)
+    {
+        int totalCost{ tool.cost };
+
+        ToolResult validationResult = validatePlacement(location, tool.size, budget, totalCost);
+        if (validationResult != ToolResult::Success)
+        {
+            return validationResult;
+        }
+
+        executePlacement(location, base, tool, budget, totalCost);
 
         return ToolResult::Success;
     }
