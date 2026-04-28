@@ -16,7 +16,7 @@
 
 namespace ToolActions
 {
-    void ToolDown(const Point<int> location, Budget&, ToolManager&);
+    void executeTool(const Point<int> location, Budget&, ToolManager&);
 
     void validateDragVector(Vector<int>& toolVector, Budget& budget, ToolManager&);
     void executeDrag(const Vector<int>& toolVector, const Point<int>& tilePointedAt, Budget&, ToolManager&);

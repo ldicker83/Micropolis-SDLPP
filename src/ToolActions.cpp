@@ -31,6 +31,38 @@ namespace
 
     constexpr Vector<int> AnchorOffset{ 1, 1 };
 
+    const std::array<int, 28> TileGroups{
+        Dirt,
+        River,
+        TreeBase,
+        Rubble,
+        Flood,
+        RadiationTile,
+        FireBase,
+        BridgeBase,
+        PowerBase,
+        RailBase,
+        ResidentialBase,
+        CommercialBase,
+        IndustryBase,
+        PortBase,
+        AirportBase,
+        CoalPowerBase,
+        FireStationBase,
+        PoliceStationBase,
+        StadiumBase,
+        NuclearPowerBase,
+        LightningBolt,
+        Radar0,
+        Fountain,
+        INDBASE2,
+        FootballGame1,
+        VBRDG0,
+        Ur238,
+        TileQuerySentinel
+    };
+
+
     bool tileIsNaturalOrRubble(int tileValue)
     {
         return (tileValue >= RiverEdgeFirst) && (tileValue <= RubbleLast);
@@ -425,38 +457,6 @@ namespace
     }
 
 
-	std::array<int, 28> idArray {
-        Dirt,
-        River,
-        TreeBase,
-        Rubble,
-        Flood,
-        RadiationTile,
-        FireBase,
-        BridgeBase,
-        PowerBase,
-        RailBase,
-        ResidentialBase,
-        CommercialBase,
-        IndustryBase,
-        PortBase,
-        AirportBase,
-        CoalPowerBase,
-        FireStationBase,
-        PoliceStationBase,
-        StadiumBase,
-        NuclearPowerBase,
-        LightningBolt,
-        Radar0,
-        Fountain,
-        INDBASE2,
-        FootballGame1,
-        VBRDG0,
-        Ur238,
-        TileQuerySentinel
-    };
-
-
     int getDensityStr(int catNo, int mapH, int mapV)
     {
         int z;
@@ -502,11 +502,11 @@ namespace
     }
 
 
-    const std::string& queryString(int tileValue)
+    const std::string& tileIdToString(int tileValue)
     {
-        for (int i = 1; i < idArray.size(); ++i)
+        for (int i = 1; i < TileGroups.size(); ++i)
         {
-            if (tileValue < idArray[i])
+            if (tileValue < TileGroups[i])
             {
                 return QueryStatsString(static_cast<QueryStatsId>(i - 1));
             }
@@ -531,7 +531,7 @@ namespace
             statusStr[i] = ZoneStatsString(static_cast<ZoneStatsId>(std::clamp(id, 1, 19)));
         }
 
-        return { queryString(tileNum), statusStr[0], statusStr[1], statusStr[2], statusStr[3], statusStr[4] };
+        return { tileIdToString(tileNum), statusStr[0], statusStr[1], statusStr[2], statusStr[3], statusStr[4] };
     }
 
 
@@ -850,7 +850,7 @@ namespace
  * Coordinates expected to be in tile coords,
  * not screen coords.
  */
-void ToolActions::ToolDown(const Point<int> location, Budget& budget, ToolManager& manager)
+void ToolActions::executeTool(const Point<int> location, Budget& budget, ToolManager& manager)
 {
     if (manager.currentTool().type == Tool::Type::None)
     {
@@ -926,7 +926,7 @@ void ToolActions::executeDrag(const Vector<int>& toolVector, const Point<int>& t
 {
     if (toolVector == Vector<int>{ 0, 0 })
     {
-        ToolDown(tilePointedAt, budget, manager);
+        executeTool(tilePointedAt, budget, manager);
         return;
     }
 

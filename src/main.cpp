@@ -712,7 +712,7 @@ void handleMouseEvent(SDL_Event& event)
             
             if (!interfaceManager->budgetWindow().visible() && !toolManager->currentTool().draggable)
             {
-                ToolActions::ToolDown(TilePointedAt, budget, *toolManager);
+                ToolActions::executeTool(TilePointedAt, budget, *toolManager);
             }
 
             if (toolManager->currentTool().type == Tool::Type::Query)
