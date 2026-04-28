@@ -459,24 +459,6 @@ namespace
         TileQuerySentinel
     };
 
-    /*
-      0, 2, 21, 44,
-      48, 52, 53, 64,
-      208, 224, 240, 423,
-      612, 693, 709, 745,
-      761, 770, 779, 811,
-      827, 832, 840, 844,
-      932, 948, 952, 956
-
-      Clear, Water, Trees, Rubble,
-      Flood, Radioactive Waste, Fire, Road,
-      Power, Rail, Residential, Commercial,
-      Industrial, Port, AirPort, Coal Power,
-      Fire Department, Police Department, Stadium, Nuclear Power,
-      Draw Bridge, Radar Dish, Fountain, Industrial,
-      49er's 38  Bears 3, Draw Bridge, Ur 238
-    */
-
 
     int getDensityStr(int catNo, int mapH, int mapV)
     {
