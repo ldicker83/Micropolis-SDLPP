@@ -156,6 +156,8 @@ constexpr auto VBRDG0 = 948;
 constexpr auto VBRDG1 = 949;
 constexpr auto VBRDG2 = 950;
 constexpr auto VBRDG3 = 951;
+constexpr auto Ur238 = 952;
+constexpr auto TileQuerySentinel = 956;
 
 constexpr auto TILE_COUNT = 960;
 

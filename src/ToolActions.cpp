@@ -449,14 +449,14 @@ namespace
         PoliceStationBase,
         StadiumBase,
         NuclearPowerBase,
-        827, // crossed out lightning bolt
-        832, // radar dish first frame
+        LightningBolt,
+        Radar0,
         Fountain,
         INDBASE2,
         FootballGame1,
         VBRDG0,
-        952, // radiation icon first frame
-        956 // white tile?
+        Ur238,
+        TileQuerySentinel
     };
 
     /*
