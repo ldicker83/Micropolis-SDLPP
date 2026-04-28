@@ -87,7 +87,7 @@ namespace
     }
 
 
-    ToolResult putDownPark(int mapH, int mapV, int cost, Budget& budget)
+    ToolResult plopPark(int mapH, int mapV, int cost, Budget& budget)
     {
         int tile{};
 
@@ -707,7 +707,7 @@ namespace
             return ToolResult::OutOfBounds;
         }
 
-        return putDownPark(x, y, toolManager.currentTool().cost, budget);
+        return plopPark(x, y, toolManager.currentTool().cost, budget);
     }
 
 
