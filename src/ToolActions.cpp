@@ -271,10 +271,12 @@ namespace
 
     void doConnectTile(const int x, const int y, const int w, const int h, Budget& budget)
     {
-        if (coordinatesValid({ x, y }))
+        if (!coordinatesValid({ x, y }))
         {
-            ConnectTile(x, y, Tool::Type::None, budget);
+            return;
         }
+
+        ConnectTile(x, y, Tool::Type::None, budget);
     }
 
 
