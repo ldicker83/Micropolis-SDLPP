@@ -320,23 +320,22 @@ namespace
 
     ToolResult validateTileForConstruction(unsigned int tileValue, int& totalCost)
     {
-        if (gameplayOptions().autoBulldoze)
+        if (!gameplayOptions().autoBulldoze)
         {
             if (tileValue != Dirt)
             {
-                if (canAutoBulldoze(tileValue))
-                {
-                    ++totalCost;
-                }
-                else
-                {
-                    return ToolResult::RequiresBulldozing;
-                }
+                return ToolResult::RequiresBulldozing;
             }
         }
-        else
+
+
+        if (tileValue != Dirt)
         {
-            if (tileValue != Dirt)
+            if (canAutoBulldoze(tileValue))
+            {
+                ++totalCost;
+            }
+            else
             {
                 return ToolResult::RequiresBulldozing;
             }
