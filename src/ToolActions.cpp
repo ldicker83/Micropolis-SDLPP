@@ -941,7 +941,6 @@ void ToolActions::executeDrag(const Vector<int>& toolVector, const Point<int>& t
     {
         for (int i = 0; std::abs(i) <= std::abs(toolVector.x); i += step)
         {
-            // note: Type cast is temporary
             ConnectTile(dragStart.x + i, dragStart.y, currentToolType, budget);
         }
     }
@@ -949,7 +948,6 @@ void ToolActions::executeDrag(const Vector<int>& toolVector, const Point<int>& t
     {
         for (int i = 0; std::abs(i) <= std::abs(toolVector.y); i += step)
         {
-            // note: Type cast is temporary
             ConnectTile(dragStart.x, dragStart.y + i, currentToolType, budget);
         }
     }
