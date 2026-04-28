@@ -482,7 +482,7 @@ void DrawStadium(int z)
     {
         for (int x = (SimulationTarget.x - 1); x < (SimulationTarget.x + 3); x++)
         {
-            tileValue(x, y) = (z++) | BNCNBIT;
+            tileValue(x, y) = (z++) | BurnableConductiveBits;
         }
     }
  

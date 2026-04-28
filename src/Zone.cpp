@@ -89,7 +89,7 @@ void zonePlop(const int base)
 
         if (coordinatesValid(coordinates))
         {
-            tileValue(coordinates) = tileBase + BNCNBIT;
+            tileValue(coordinates) = tileBase + BurnableConductiveBits;
         }
 
         ++tileBase;
@@ -391,7 +391,7 @@ void buildHouse(int value)
 
         if (coordinatesValid(location))
         {
-            tileValue(location) = House + BLBNCNBIT + randomRange(0, 2) + (value * 3);
+            tileValue(location) = House + BulldozableBurnableConductiveBits + randomRange(0, 2) + (value * 3);
         }
     }
 }
@@ -470,7 +470,7 @@ void increaseIndustry(int population, int value)
 
 void convertResidentialToHomes(int value)
 {
-    tileValue(SimulationTarget) = ResidentialEmpty | BLBNCNBIT | ZonedBit;
+    tileValue(SimulationTarget) = ResidentialEmpty | BulldozableBurnableConductiveBits | ZonedBit;
 
     for (int x{ SimulationTarget.x - 1 }; x <= SimulationTarget.x + 1; ++x)
     {
@@ -482,7 +482,7 @@ void convertResidentialToHomes(int value)
                 const auto tile = maskedTileValue(coordinates);
                 if (tile != ResidentialEmpty)
                 {
-                    tileValue(coordinates) = LHTHR + value + randomRange(0, 2) + BLBNCNBIT;
+                    tileValue(coordinates) = LHTHR + value + randomRange(0, 2) + BulldozableBurnableConductiveBits;
                 }
             }
         }
@@ -505,7 +505,7 @@ void clearResidentialZone()
                 const auto tile = maskedTileValue(coordinates);
                 if ((tile >= LHTHR) && (tile <= HHTHR))
                 {
-                    tileValue(coordinates) = ResidentialBase + zoneTileOffset[index] + BLBNCNBIT;
+                    tileValue(coordinates) = ResidentialBase + zoneTileOffset[index] + BulldozableBurnableConductiveBits;
                     return;
                 }
             }

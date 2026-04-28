@@ -170,9 +170,9 @@ constexpr int ZonedBit = 0x0400; /* 1 bit 10 */
 constexpr int UpperMask = 0xFC00; /* mask for upper 6 bits	*/
 constexpr int LowerMask = 0x03FF; /* mask for low 10 bits	*/
 
-constexpr int BLBNBIT = BulldozableBit + BurnableBit;
-constexpr int BLBNCNBIT = BulldozableBit + BurnableBit + ConductiveBit;
-constexpr int BNCNBIT = BurnableBit + ConductiveBit;
+constexpr int BulldozableBurnableBits = BulldozableBit + BurnableBit;
+constexpr int BulldozableBurnableConductiveBits = BulldozableBit + BurnableBit + ConductiveBit;
+constexpr int BurnableConductiveBits = BurnableBit + ConductiveBit;
 
 
 /* Constants */

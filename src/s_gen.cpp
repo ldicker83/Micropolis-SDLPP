@@ -168,7 +168,7 @@ void SmoothTrees()
                             temp = temp - 8;
                         }
                     }
-                    tileValue(MapX, MapY) = temp + BLBNBIT;
+                    tileValue(MapX, MapY) = temp + BulldozableBurnableBits;
                 }
                 else
                 {
@@ -251,7 +251,7 @@ void TreeSplash(int xloc, int yloc)
 
         if ((maskedTileValue(MapX, MapY)) == Dirt)
         {
-            tileValue(MapX, MapY) = Woods + BLBNBIT;
+            tileValue(MapX, MapY) = Woods + BulldozableBurnableBits;
         }
     }
 }
