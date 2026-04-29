@@ -271,4 +271,5 @@ void ToolPalette::cancelTool()
 
     mSelectedIndex = NoSelection;
     mTool = Tool::Type::None;
+    mToolChangedHandler();
 }
