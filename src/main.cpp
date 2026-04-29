@@ -988,6 +988,21 @@ MiniMapWindow::EffectMapButtonMapping buildEffectMapMapping()
 }
 
 
+void initMinimap(const Point<int>& mainWindowPosition, const SDL_DisplayMode* mode)
+{
+    const Point<int> miniMapWindowPosition
+    {
+        std::clamp(mainWindowPosition.x - (SimWidth * MiniTileSize) - 10, 10, mode->w),
+        std::clamp(mainWindowPosition.y, 10, mode->h)
+    };
+
+    miniMapWindow = std::make_unique<MiniMapWindow>(miniMapWindowPosition, Vector<int>{ SimWidth, SimHeight });
+    miniMapWindow->updateViewportSize(WindowSize);
+    miniMapWindow->focusOnMapCoordBind(&minimapViewUpdated);
+    miniMapWindow->linkEffectMaps(buildEffectMapMapping());
+}
+
+
 void initUI()
 {
     Point<int> mainWindowPosition{};
@@ -1000,16 +1015,7 @@ void initUI()
         throw std::runtime_error(std::string("initUI(): Unable to get desktop display mode: ") + SDL_GetError());
 	}
 
-    const Point<int> miniMapWindowPosition
-    {
-        std::clamp(mainWindowPosition.x - (SimWidth * MiniTileSize) - 10, 10, mode->w),
-        std::clamp(mainWindowPosition.y, 10, mode->h)
-    };
-
-    miniMapWindow = std::make_unique<MiniMapWindow>(miniMapWindowPosition, Vector<int>{ SimWidth, SimHeight });
-    miniMapWindow->updateViewportSize(WindowSize);
-    miniMapWindow->focusOnMapCoordBind(&minimapViewUpdated);
-	miniMapWindow->linkEffectMaps(buildEffectMapMapping());
+	initMinimap(mainWindowPosition, mode);
 
     stringRenderer = std::make_unique<StringRender>(MainWindowRenderer);
 
