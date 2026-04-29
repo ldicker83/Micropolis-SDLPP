@@ -973,6 +973,21 @@ void registerCallbacks()
 }
 
 
+MiniMapWindow::EffectMapButtonMapping buildEffectMapMapping()
+{
+    return {
+        { MiniMapWindow::ButtonId::Crime, CrimeMap},
+        { MiniMapWindow::ButtonId::FireProtection, FireProtectionMap},
+        { MiniMapWindow::ButtonId::LandValue, LandValueMap },
+        { MiniMapWindow::ButtonId::PoliceProtection, PoliceProtectionMap },
+        { MiniMapWindow::ButtonId::Pollution, PollutionMap },
+        { MiniMapWindow::ButtonId::PopulationDensity, PopulationDensityMap },
+        { MiniMapWindow::ButtonId::PopulationGrowth, RateOfGrowthMap },
+        { MiniMapWindow::ButtonId::TrafficDensity, TrafficDensityMap }
+    };
+}
+
+
 void initUI()
 {
     Point<int> mainWindowPosition{};
@@ -994,19 +1009,7 @@ void initUI()
     miniMapWindow = std::make_unique<MiniMapWindow>(miniMapWindowPosition, Vector<int>{ SimWidth, SimHeight });
     miniMapWindow->updateViewportSize(WindowSize);
     miniMapWindow->focusOnMapCoordBind(&minimapViewUpdated);
-
-    MiniMapWindow::EffectMapButtonMapping maps{
-        { MiniMapWindow::ButtonId::Crime, CrimeMap},
-        { MiniMapWindow::ButtonId::FireProtection, FireProtectionMap},
-        { MiniMapWindow::ButtonId::LandValue, LandValueMap },
-        { MiniMapWindow::ButtonId::PoliceProtection, PoliceProtectionMap },
-        { MiniMapWindow::ButtonId::Pollution, PollutionMap },
-        { MiniMapWindow::ButtonId::PopulationDensity, PopulationDensityMap },
-        { MiniMapWindow::ButtonId::PopulationGrowth, RateOfGrowthMap },
-        { MiniMapWindow::ButtonId::TrafficDensity, TrafficDensityMap }
-    };
-
-	miniMapWindow->linkEffectMaps(maps);
+	miniMapWindow->linkEffectMaps(buildEffectMapMapping());
 
     stringRenderer = std::make_unique<StringRender>(MainWindowRenderer);
 
