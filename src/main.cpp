@@ -1021,6 +1021,10 @@ void initUI()
     interfaceManager->optionsWindow().saveGameCallbackConnect(saveGame);
     interfaceManager->optionsWindow().openGameCallbackConnect(openGame);
 
+	interfaceManager->toolPalette().toolChangedCallback([]() {
+        interfaceManager->dashboardWindow().onToolChanged(interfaceManager->toolPalette().tool());
+        });
+
     registerCallbacks();
 }
 
@@ -1111,10 +1115,10 @@ int main(int argc, char* argv[])
         loadGraphics();
         loadFonts();
 
+        toolManager = std::make_shared<ToolManager>(); // \todo Find a sane place for this
+
         initViewParamters();
         initUI();
-
-        toolManager = std::make_shared<ToolManager>(); // \todo Find a sane place for this
 
         gameInit();
 
