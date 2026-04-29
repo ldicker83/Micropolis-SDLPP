@@ -116,6 +116,7 @@ void ToolPalette::toolIndex(const int toolIndex)
     setButtonState(toolIndex, PressedState);
     mSelectedIndex = toolIndex;
     mTool = mToolButtons[mSelectedIndex].tool;
+    mToolChangedHandler();
 }
 
 
@@ -135,6 +136,12 @@ Tool::Type ToolPalette::tool() const
 const Texture& ToolPalette::toolGost() const
 {
     return mToolButtons[mSelectedIndex].ghost;
+}
+
+
+void ToolPalette::toolChangedCallback(VoidDelegate handler)
+{
+	mToolChangedHandler = handler;
 }
 
 

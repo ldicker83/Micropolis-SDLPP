@@ -14,6 +14,7 @@
 
 #include <SDL3/SDL.h>
 
+#include "../Delegate.h"
 #include "../Texture.h"
 #include "../Tool.h"
 
@@ -42,6 +43,8 @@ public:
 
     Tool::Type tool() const;
     const Texture& toolGost() const;
+
+	void toolChangedCallback(VoidDelegate handler);
 
     void draw() override;
     void update() override;
@@ -83,6 +86,8 @@ private:
     
     Texture mIcons{};
     Texture mBackground{};
+
+	VoidDelegate mToolChangedHandler;
 
     int mSelectedIndex{ NoSelection };
     Tool::Type mTool{ Tool::Type::None };
