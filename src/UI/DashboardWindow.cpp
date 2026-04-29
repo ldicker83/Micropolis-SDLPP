@@ -103,11 +103,12 @@ namespace
 }
 
 
-DashboardWindow::DashboardWindow(SDL_Renderer* renderer, const Budget& budget, const RCI& rci) :
+DashboardWindow::DashboardWindow(SDL_Renderer* renderer, const Budget& budget, const RCI& rci, const ToolManager& toolManager) :
 	mRenderer{ renderer },
 	mTexture(loadTexture(renderer, "images/DashboardWindow.png")),
 	mBudget{ budget },
 	mRci{ rci },
+	mToolManager{ toolManager },
     mStringRenderer{ renderer }
 {
 	size({ 750, 82 });
@@ -155,6 +156,12 @@ void DashboardWindow::onNewMonth(int monthId)
 void DashboardWindow::onNewYear(int year)
 {
     mCurrentYear = year;
+}
+
+
+void DashboardWindow::onToolChanged(Tool::Type toolType)
+{
+
 }
 
 

@@ -20,6 +20,7 @@
 #include "../RCI.h"
 #include "../StringRender.h"
 #include "../Texture.h"
+#include "../ToolManager.h"
 
 #include <SDL3/SDL.h>
 
@@ -40,7 +41,7 @@ public:
 	};
 
 public:
-	DashboardWindow(SDL_Renderer* renderer, const Budget& budget, const RCI& rci);
+	DashboardWindow(SDL_Renderer* renderer, const Budget& budget, const RCI& rci, const ToolManager& toolManager);
 
 public:
 	void cityName(const std::string& name);
@@ -49,6 +50,8 @@ public:
 
 	void onNewMonth(int);
 	void onNewYear(int);
+
+	void onToolChanged(Tool::Type);
 
 	void registerButtonHandler(ButtonId buttonId, VoidDelegate handler);
 
@@ -73,6 +76,7 @@ private:
 	
 	const Budget& mBudget;
 	const RCI& mRci;
+	const ToolManager& mToolManager;
 
 	int mTitleHalfWidth{ 0 };
 
