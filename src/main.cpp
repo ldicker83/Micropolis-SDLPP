@@ -1096,12 +1096,11 @@ int main(int argc, char* argv[])
 {
     setLocale();
 
-    std::cout << "Starting Micropolis-SDL2 version " << MicropolisVersion << " originally by Will Wright and Don Hopkins." << std::endl;
+    std::cout << "Starting Micropolis-SDLPP version " << MicropolisVersion << " originally by Will Wright and Don Hopkins." << std::endl;
     std::cout << "Original code Copyright (C) 2002 by Electronic Arts, Maxis. Released under the GPL v3" << std::endl;
     std::cout << "Modifications Copyright (C) 2022 - 2026 by Leeor Dicker. Available under the terms of the GPL v3" << std::endl << std::endl;
 
-    std::cout << "Micropolis-SDL2 is not afiliated with Electronic Arts." << std::endl << std::endl;
-
+    std::cout << "Micropolis-SDLPP is not afiliated with Electronic Arts." << std::endl << std::endl;
     try
     {
         if (!SDL_Init(SDL_INIT_VIDEO))
