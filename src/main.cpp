@@ -124,12 +124,9 @@ namespace
 
     std::unique_ptr<MiniMapWindow> miniMapWindow;
 
-    std::unique_ptr<StringRender> stringRenderer;
-
-    std::unique_ptr<Font> MainFont;
-
 	std::shared_ptr<InterfaceManager> interfaceManager;
 	std::shared_ptr<ToolManager> toolManager;
+
 
     unsigned int speedModifier()
     {
@@ -447,13 +444,6 @@ void buildBigTileset()
 void loadGraphics()
 {
     buildBigTileset();
-}
-
-
-void loadFonts()
-{
-    //MainFont = std::make_unique<Font>("res/Raleway-Medium.ttf", 12);
-    MainFont = std::make_unique<Font>("res/Raleway-Medium.ttf", 14);
 }
 
 
@@ -1022,8 +1012,6 @@ void initUI()
 
 	initMinimap(mainWindowPosition, mode);
 
-    stringRenderer = std::make_unique<StringRender>(MainWindowRenderer);
-
     interfaceManager = std::make_shared<InterfaceManager>(MainWindowRenderer, MainWindow, budget, currentRCI(), *toolManager);
 	shareInterfaceManager(interfaceManager);
 
@@ -1051,10 +1039,6 @@ void cleanUp()
     
     interfaceManager.reset();
     toolManager.reset();
-
-    stringRenderer.reset(nullptr);
-
-    MainFont.reset(nullptr);
 
     SDL_DestroyTexture(BigTileset.texture);
 
@@ -1127,7 +1111,6 @@ int main(int argc, char* argv[])
 
         initRenderer();
         loadGraphics();
-        loadFonts();
 
         toolManager = std::make_shared<ToolManager>(); // \todo Find a sane place for this
 
