@@ -1003,17 +1003,22 @@ void initMinimap(const Point<int>& mainWindowPosition, const SDL_DisplayMode* mo
 }
 
 
+void assertModeNotNull(const SDL_DisplayMode* mode)
+{
+    if (!mode)
+    {
+        throw std::runtime_error(std::string("initUI(): Unable to get desktop display mode: ") + SDL_GetError());
+    }
+}
+
+
 void initUI()
 {
     Point<int> mainWindowPosition{};
     SDL_GetWindowPosition(MainWindow, &mainWindowPosition.x, &mainWindowPosition.y);
 
     const auto mode = SDL_GetDesktopDisplayMode(SDL_GetPrimaryDisplay());
-
-    if(!mode)
-    {
-        throw std::runtime_error(std::string("initUI(): Unable to get desktop display mode: ") + SDL_GetError());
-	}
+    assertModeNotNull(mode);
 
 	initMinimap(mainWindowPosition, mode);
 
