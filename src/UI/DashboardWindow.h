@@ -86,6 +86,7 @@ private:
 
 	std::string mCityName;
 	std::string mMessage;
+	std::string mToolAndCost;
 
 	std::unordered_map<ButtonId, VoidDelegate> mButtonHandlers;
 	std::unordered_map<ButtonId, Rectangle<int>> mButtonRects;

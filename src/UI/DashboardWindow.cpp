@@ -161,7 +161,14 @@ void DashboardWindow::onNewYear(int year)
 
 void DashboardWindow::onToolChanged(Tool::Type toolType)
 {
+    if (toolType == Tool::Type::None)
+    {
+        mToolAndCost.clear();
+		return;
+    }
 
+	const auto& tool = mToolManager.tool(toolType);
+	mToolAndCost = tool.name + " - " + numberToDollarDecimal(tool.cost);
 }
 
 
@@ -183,6 +190,11 @@ void DashboardWindow::draw()
     drawBudget();
     drawMessage();
 
+    const Point<int> toolAndCostPosition{
+        area().position.x + 662 - MessageFont->width(mToolAndCost),
+        area().position.y + 69 - MessageFont->height()
+    };
+	mStringRenderer.drawString(*MessageFont, mToolAndCost, toolAndCostPosition);
     drawValve();
 }
 
@@ -213,7 +225,12 @@ void DashboardWindow::drawDate()
 
 void DashboardWindow::drawMessage()
 {
-    mStringRenderer.drawString(*MessageFont, mMessage, { area().position.x + 54, area().position.y + 69 - MessageFont->height() });
+	const Point<int> messagePosition{
+        area().position.x + 54,
+        area().position.y + 69 - MessageFont->height()
+    };
+    
+    mStringRenderer.drawString(*MessageFont, mMessage, messagePosition);
 }
 
 
