@@ -38,11 +38,11 @@ namespace
 	}
 }
 
-InterfaceManager::InterfaceManager(SDL_Renderer* renderer, SDL_Window* window, Budget& budget, const RCI& rci) :
+InterfaceManager::InterfaceManager(SDL_Renderer* renderer, SDL_Window* window, Budget& budget, const RCI& rci, const ToolManager& toolManager) :
 	mRenderer{ renderer },
 	mWindow{ window },
 	mBudgetWindow{ renderer, budget },
-	mDashboardWindow{ renderer, budget, rci },
+	mDashboardWindow{ renderer, budget, rci, toolManager },
 	mGraphWindow{ renderer },
 	mEvaluationWindow{ renderer },
 	mToolPalette{ renderer },

@@ -47,7 +47,7 @@ public:
 	InterfaceManager& operator=(const InterfaceManager&) = delete;
 
 public:
-	InterfaceManager(SDL_Renderer* renderer, SDL_Window* window, Budget& budget, const RCI& rci);
+	InterfaceManager(SDL_Renderer* renderer, SDL_Window* window, Budget& budget, const RCI& rci, const ToolManager& toolManager);
 
 	void injectMouseMotion(const Vector<int>& delta);
 	bool injectMouseDown(const Point<int>& position);

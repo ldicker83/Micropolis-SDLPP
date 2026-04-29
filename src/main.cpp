@@ -1010,7 +1010,7 @@ void initUI()
 
     stringRenderer = std::make_unique<StringRender>(MainWindowRenderer);
 
-    interfaceManager = std::make_shared<InterfaceManager>(MainWindowRenderer, MainWindow, budget, currentRCI());
+    interfaceManager = std::make_shared<InterfaceManager>(MainWindowRenderer, MainWindow, budget, currentRCI(), *toolManager);
 	shareInterfaceManager(interfaceManager);
 
     positionDashboardWindow();
