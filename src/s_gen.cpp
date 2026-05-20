@@ -559,7 +559,7 @@ void GenerateCityFromSeed(int seed, CityProperties& properties, Budget& budget)
     ScenarioID = 0;
     CityTime = 0;
     InitSimLoad = 2;
-    DoInitialEval = 0;
+    DoInitialEval = false;
 
     initWillStuff();
     updateFunds(budget);

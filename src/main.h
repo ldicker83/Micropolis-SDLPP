@@ -50,7 +50,7 @@ extern int ScoreType;
 extern int ScoreWait;
 
 extern int InitSimLoad;
-extern int DoInitialEval;
+extern bool DoInitialEval;
 
 extern SDL_Renderer* MainWindowRenderer;
 

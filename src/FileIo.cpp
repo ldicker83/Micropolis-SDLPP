@@ -228,6 +228,6 @@ void LoadScenario(Scenario scenario, CityProperties& properties, Budget& budget)
     initWillStuff();
     updateFunds(budget);
     InitSimLoad = 1;
-    DoInitialEval = 0;
+    DoInitialEval = false;
     DoSimInit(properties, budget);
 }

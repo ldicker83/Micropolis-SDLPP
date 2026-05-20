@@ -58,7 +58,7 @@ int UnpoweredZoneCount;
 int AvCityTax;
 int Scycle = 0;
 int Fcycle = 0;
-int DoInitialEval = 0;
+bool DoInitialEval = false;
 int MeltX, MeltY;
 
 
@@ -1230,7 +1230,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         
         if (DoInitialEval)
         {
-            DoInitialEval = 0;
+            DoInitialEval = false;
             CityEvaluation(budget);
         }
         
@@ -1389,7 +1389,7 @@ void DoSimInit(CityProperties& properties, Budget& budget)
     fireAnalysis();
     newMap(true);
     PopulationTotal = 1;
-    DoInitialEval = 1;
+    DoInitialEval = true;
 }
 
 
