@@ -64,7 +64,6 @@ int ScoreType;
 int ScoreWait;
 int PoweredZoneCount;
 int UnpoweredZoneCount;
-int AvCityTax;
 
 bool DoInitialEval = false;
 int MeltX, MeltY;
@@ -990,10 +989,6 @@ void CollectTax(const CityProperties& properties, Budget& budget)
     static float RLevels[3] = { 0.7f, 0.9f, 1.2f };
     static float FLevels[3] = { 1.4f, 1.2f, 0.8f };
 
-    // XXX: do something with z
-    //int z = AvCityTax / 48;  // post
-    AvCityTax = 0;
-    
     budget.PoliceFundsNeeded(PoliceStationCount * 100);
     budget.FireFundsNeeded(FireStationCount * 100);
     budget.RoadFundsNeeded(static_cast<int>((RoadCount + (RailCount * 2)) * RLevels[properties.GameLevel()]));
@@ -1186,8 +1181,6 @@ void SimLoadInit(CityProperties& properties)
     ComCap = 0;
     IndCap = 0;
 
-    AvCityTax = (CityTime % 48) * 7; /* post */
-
     resetPowerMap();
 
     DoNilPower();
@@ -1243,7 +1236,6 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         }
         
         CityTime++;
-        AvCityTax += budget.TaxRate(); // post <-- ?
         
         if (!(SimCycleCounter.current() % 2))
         {
