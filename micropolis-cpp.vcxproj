@@ -65,6 +65,7 @@
     <ClInclude Include="src\CityProperties.h" />
     <ClInclude Include="src\Colors.h" />
     <ClInclude Include="src\Connection.h" />
+    <ClInclude Include="src\CycleCounter.h" />
     <ClInclude Include="src\Delegate.h" />
     <ClInclude Include="src\EffectMap.h" />
     <ClInclude Include="src\Evaluation.h" />

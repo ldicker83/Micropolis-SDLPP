@@ -362,6 +362,9 @@
     <ClInclude Include="src\ToolActions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\CycleCounter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="micropolis.ico">
