@@ -13,6 +13,7 @@
 #include "Budget.h"
 #include "CityProperties.h"
 #include "Constants.h"
+#include "CycleCounter.h"
 #include "Evaluation.h"
 
 #include "Map.h"
@@ -43,6 +44,14 @@
 
 /* Simulation */
 
+namespace
+{
+    constexpr auto SimCycleSize = 1024;
+
+    CycleCounter<SimCycleSize> SimPhaseCounter;
+    CycleCounter<SimCycleSize> SimCycleCounter;
+}
+
 constexpr auto CensusRate = 4;
 constexpr auto TaxFrequency = 48;
 
@@ -56,8 +65,7 @@ int ScoreWait;
 int PoweredZoneCount;
 int UnpoweredZoneCount;
 int AvCityTax;
-int SimCycleCounter = 0;
-int SimPhaseCounter = 0;
+
 bool DoInitialEval = false;
 int MeltX, MeltY;
 
@@ -1226,7 +1234,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
     switch (mod16)
     {
     case 0:
-        ++SimCycleCounter > 1023 ? SimCycleCounter = 0 : SimCycleCounter;
+        SimCycleCounter.advance();
         
         if (DoInitialEval)
         {
@@ -1237,7 +1245,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         CityTime++;
         AvCityTax += budget.TaxRate(); // post <-- ?
         
-        if (!(SimCycleCounter % 2))
+        if (!(SimCycleCounter.current() % 2))
         {
             SetValves(properties, budget);
         }
@@ -1295,7 +1303,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         break;
 
     case 10:
-        if (!(SimCycleCounter % 5))
+        if (!(SimCycleCounter.current() % 5))
         {
             DecROGMem();
         }
@@ -1304,35 +1312,35 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         break;
 
     case 11:
-        if (!(SimCycleCounter % PowerScanFrequency[speed]))
+        if (!(SimCycleCounter.current() % PowerScanFrequency[speed]))
         {
             powerScan();
         }
         break;
 
     case 12:
-        if (!(SimCycleCounter % PollutionScanFrequency[speed]))
+        if (!(SimCycleCounter.current() % PollutionScanFrequency[speed]))
         {
             pollutionAndLandValueScan();
         }
         break;
 
     case 13:
-        if (!(SimCycleCounter % CrimeScanFrequency[speed]))
+        if (!(SimCycleCounter.current() % CrimeScanFrequency[speed]))
         {
             crimeScan();
         }
         break;
 
     case 14:
-        if (!(SimCycleCounter % PopulationDensityScanFrequency[speed]))
+        if (!(SimCycleCounter.current() % PopulationDensityScanFrequency[speed]))
         {
             scanPopulationDensity();
         }
         break;
 
     case 15:
-        if (!(SimCycleCounter % FireAnalysisFrequency[speed]))
+        if (!(SimCycleCounter.current() % FireAnalysisFrequency[speed]))
         {
             fireAnalysis();
         }
@@ -1355,19 +1363,14 @@ void SimFrame(CityProperties& properties, Budget& budget)
         return;
     }
 
-    if (++SimPhaseCounter > 1024)
-    {
-        SimPhaseCounter = 0;
-    }
-
-    Simulate(SimPhaseCounter % 16, properties, budget);
+    Simulate(SimPhaseCounter.advance() % 16, properties, budget);
 }
 
 
 void DoSimInit(CityProperties& properties, Budget& budget)
 {
-    SimPhaseCounter = 0;
-    SimCycleCounter = 0;
+    SimPhaseCounter.reset();
+    SimCycleCounter.reset();
 
     if (InitSimLoad == 2) 			/* if new city    */
     {
