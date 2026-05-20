@@ -56,8 +56,8 @@ int ScoreWait;
 int PoweredZoneCount;
 int UnpoweredZoneCount;
 int AvCityTax;
-int Scycle = 0;
-int Fcycle = 0;
+int SimCycleCounter = 0;
+int SimPhaseCounter = 0;
 bool DoInitialEval = false;
 int MeltX, MeltY;
 
@@ -1226,7 +1226,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
     switch (mod16)
     {
     case 0:
-        ++Scycle > 1023 ? Scycle = 0 : Scycle;
+        ++SimCycleCounter > 1023 ? SimCycleCounter = 0 : SimCycleCounter;
         
         if (DoInitialEval)
         {
@@ -1237,7 +1237,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         CityTime++;
         AvCityTax += budget.TaxRate(); // post <-- ?
         
-        if (!(Scycle % 2))
+        if (!(SimCycleCounter % 2))
         {
             SetValves(properties, budget);
         }
@@ -1295,7 +1295,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         break;
 
     case 10:
-        if (!(Scycle % 5))
+        if (!(SimCycleCounter % 5))
         {
             DecROGMem();
         }
@@ -1304,35 +1304,35 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         break;
 
     case 11:
-        if (!(Scycle % PowerScanFrequency[speed]))
+        if (!(SimCycleCounter % PowerScanFrequency[speed]))
         {
             powerScan();
         }
         break;
 
     case 12:
-        if (!(Scycle % PollutionScanFrequency[speed]))
+        if (!(SimCycleCounter % PollutionScanFrequency[speed]))
         {
             pollutionAndLandValueScan();
         }
         break;
 
     case 13:
-        if (!(Scycle % CrimeScanFrequency[speed]))
+        if (!(SimCycleCounter % CrimeScanFrequency[speed]))
         {
             crimeScan();
         }
         break;
 
     case 14:
-        if (!(Scycle % PopulationDensityScanFrequency[speed]))
+        if (!(SimCycleCounter % PopulationDensityScanFrequency[speed]))
         {
             scanPopulationDensity();
         }
         break;
 
     case 15:
-        if (!(Scycle % FireAnalysisFrequency[speed]))
+        if (!(SimCycleCounter % FireAnalysisFrequency[speed]))
         {
             fireAnalysis();
         }
@@ -1355,19 +1355,19 @@ void SimFrame(CityProperties& properties, Budget& budget)
         return;
     }
 
-    if (++Fcycle > 1024)
+    if (++SimPhaseCounter > 1024)
     {
-        Fcycle = 0;
+        SimPhaseCounter = 0;
     }
 
-    Simulate(Fcycle % 16, properties, budget);
+    Simulate(SimPhaseCounter % 16, properties, budget);
 }
 
 
 void DoSimInit(CityProperties& properties, Budget& budget)
 {
-    Fcycle = 0;
-    Scycle = 0;
+    SimPhaseCounter = 0;
+    SimCycleCounter = 0;
 
     if (InitSimLoad == 2) 			/* if new city    */
     {
