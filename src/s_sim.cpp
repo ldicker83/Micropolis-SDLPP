@@ -1244,6 +1244,12 @@ void phase0(CityProperties& properties, Budget& budget)
 }
 
 
+void scanMapSegment(CityProperties& properties, Budget&, int phase)
+{
+    MapScan((phase - 1) * EighthWorldWidth, phase * EighthWorldWidth, properties);
+}
+
+
 void phase9(CityProperties& properties, Budget& budget)
 {
     if (!(CityTime % CensusRate))
@@ -1264,7 +1270,7 @@ void phase9(CityProperties& properties, Budget& budget)
 }
 
 
-void phase10(CityProperties& properties, Budget& budget)
+void phase10(CityProperties&, Budget& budget)
 {
     if (!(SimCycleCounter.current() % 5))
     {
@@ -1276,7 +1282,7 @@ void phase10(CityProperties& properties, Budget& budget)
 }
 
 
-void phase11(CityProperties& properties, Budget& budget)
+void phase11(CityProperties&, Budget&)
 {
 	const int speed = static_cast<int>(simSpeed());
     if (!(SimCycleCounter.current() % PowerScanFrequency[speed]))
@@ -1286,7 +1292,7 @@ void phase11(CityProperties& properties, Budget& budget)
 }
 
 
-void phase12(CityProperties& properties, Budget& budget)
+void phase12(CityProperties&, Budget&)
 {
 	const int speed = static_cast<int>(simSpeed());
 	if (!(SimCycleCounter.current() % PollutionScanFrequency[speed]))
@@ -1296,7 +1302,7 @@ void phase12(CityProperties& properties, Budget& budget)
 }
 
 
-void phase13(CityProperties& properties, Budget& budget)
+void phase13(CityProperties&, Budget&)
 {
 	const int speed = static_cast<int>(simSpeed());
 	if (!(SimCycleCounter.current() % CrimeScanFrequency[speed]))
@@ -1306,7 +1312,7 @@ void phase13(CityProperties& properties, Budget& budget)
  }
 
 
-void phase14(CityProperties& properties, Budget& budget)
+void phase14(CityProperties&, Budget&)
 {
     const int speed = static_cast<int>(simSpeed());
     if (!(SimCycleCounter.current() % PopulationDensityScanFrequency[speed]))
@@ -1316,7 +1322,7 @@ void phase14(CityProperties& properties, Budget& budget)
 }
 
 
-void phase15(CityProperties& properties, Budget& budget)
+void phase15(CityProperties& properties, Budget&)
 {
 	const int speed = static_cast<int>(simSpeed());
 
@@ -1340,35 +1346,14 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         break;
 
     case 1:
-        MapScan(0, 1 * SimWidth / 8, properties);
-        break;
-
     case 2:
-        MapScan(1 * SimWidth / 8, 2 * SimWidth / 8, properties);
-        break;
-
     case 3:
-        MapScan(2 * SimWidth / 8, 3 * SimWidth / 8, properties);
-        break;
-
     case 4:
-        MapScan(3 * SimWidth / 8, 4 * SimWidth / 8, properties);
-        break;
-
     case 5:
-        MapScan(4 * SimWidth / 8, 5 * SimWidth / 8, properties);
-        break;
-
     case 6:
-        MapScan(5 * SimWidth / 8, 6 * SimWidth / 8, properties);
-        break;
-
     case 7:
-        MapScan(6 * SimWidth / 8, 7 * SimWidth / 8, properties);
-        break;
-
     case 8:
-        MapScan(7 * SimWidth / 8, SimWidth, properties);
+		scanMapSegment(properties, budget, mod16);
         break;
 
     case 9:
