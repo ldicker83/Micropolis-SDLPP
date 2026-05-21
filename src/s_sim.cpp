@@ -39,6 +39,7 @@
 #include <SDL3/SDL.h>
 
 #include <algorithm>
+#include <functional>
 #include <iostream>
 
 
@@ -1217,7 +1218,115 @@ namespace
     int CrimeScanFrequency[5] = { 1,  1,  8, 18, 28 };
     int PopulationDensityScanFrequency[5] = { 1,  1,  9, 19, 29 };
     int FireAnalysisFrequency[5] = { 1,  1, 10, 20, 30 };
+
+	using PhaseFunction = std::function<void(CityProperties&, Budget&)>;
 };
+
+
+void phase0(CityProperties& properties, Budget& budget)
+{
+    SimCycleCounter.advance();
+
+    if (DoInitialEval)
+    {
+        DoInitialEval = false;
+        CityEvaluation(budget);
+    }
+
+    CityTime++;
+
+    if (!(SimCycleCounter.current() % 2))
+    {
+        SetValves(properties, budget);
+    }
+
+    ClearCensus();
+}
+
+
+void phase9(CityProperties& properties, Budget& budget)
+{
+    if (!(CityTime % CensusRate))
+    {
+        TakeCensus(budget);
+    }
+
+    if (!(CityTime % (CensusRate * Constants::MonthCount)))
+    {
+        Take2Census();
+    }
+
+    if (!(CityTime % TaxFrequency))
+    {
+        CollectTax(properties, budget);
+        CityEvaluation(budget);
+    }
+}
+
+
+void phase10(CityProperties& properties, Budget& budget)
+{
+    if (!(SimCycleCounter.current() % 5))
+    {
+        DecROGMem();
+    }
+
+    DecTrafficMem();
+    SendMessages(budget);
+}
+
+
+void phase11(CityProperties& properties, Budget& budget)
+{
+	const int speed = static_cast<int>(simSpeed());
+    if (!(SimCycleCounter.current() % PowerScanFrequency[speed]))
+    {
+        powerScan();
+    }
+}
+
+
+void phase12(CityProperties& properties, Budget& budget)
+{
+	const int speed = static_cast<int>(simSpeed());
+	if (!(SimCycleCounter.current() % PollutionScanFrequency[speed]))
+	{
+		pollutionAndLandValueScan();
+	}
+}
+
+
+void phase13(CityProperties& properties, Budget& budget)
+{
+	const int speed = static_cast<int>(simSpeed());
+	if (!(SimCycleCounter.current() % CrimeScanFrequency[speed]))
+	{
+		crimeScan();
+	}
+ }
+
+
+void phase14(CityProperties& properties, Budget& budget)
+{
+    const int speed = static_cast<int>(simSpeed());
+    if (!(SimCycleCounter.current() % PopulationDensityScanFrequency[speed]))
+    {
+        scanPopulationDensity();
+    }
+}
+
+
+void phase15(CityProperties& properties, Budget& budget)
+{
+	const int speed = static_cast<int>(simSpeed());
+
+    if (!(SimCycleCounter.current() % FireAnalysisFrequency[speed]))
+    {
+        fireAnalysis();
+    }
+
+    DoDisasters(properties);
+}
 
 
 void Simulate(int mod16, CityProperties& properties, Budget& budget)
@@ -1227,22 +1336,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
     switch (mod16)
     {
     case 0:
-        SimCycleCounter.advance();
-        
-        if (DoInitialEval)
-        {
-            DoInitialEval = false;
-            CityEvaluation(budget);
-        }
-        
-        CityTime++;
-        
-        if (!(SimCycleCounter.current() % 2))
-        {
-            SetValves(properties, budget);
-        }
-        
-        ClearCensus();
+        phase0(properties, budget);
         break;
 
     case 1:
@@ -1278,65 +1372,31 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
         break;
 
     case 9:
-        if (!(CityTime % CensusRate))
-        {
-            TakeCensus(budget);
-        }
-        if (!(CityTime % (CensusRate * Constants::MonthCount)))
-        {
-            Take2Census();
-        }
-
-        if (!(CityTime % TaxFrequency))
-        {
-            CollectTax(properties, budget);
-            CityEvaluation(budget);
-        }
+        phase9(properties, budget);
         break;
 
     case 10:
-        if (!(SimCycleCounter.current() % 5))
-        {
-            DecROGMem();
-        }
-        DecTrafficMem();
-        SendMessages(budget);
+		phase10(properties, budget);
         break;
 
     case 11:
-        if (!(SimCycleCounter.current() % PowerScanFrequency[speed]))
-        {
-            powerScan();
-        }
+        phase11(properties, budget);
         break;
 
     case 12:
-        if (!(SimCycleCounter.current() % PollutionScanFrequency[speed]))
-        {
-            pollutionAndLandValueScan();
-        }
+        phase12(properties, budget);
         break;
 
     case 13:
-        if (!(SimCycleCounter.current() % CrimeScanFrequency[speed]))
-        {
-            crimeScan();
-        }
+        phase13(properties, budget);
         break;
 
     case 14:
-        if (!(SimCycleCounter.current() % PopulationDensityScanFrequency[speed]))
-        {
-            scanPopulationDensity();
-        }
+        phase14(properties, budget);
         break;
 
     case 15:
-        if (!(SimCycleCounter.current() % FireAnalysisFrequency[speed]))
-        {
-            fireAnalysis();
-        }
-        DoDisasters(properties);
+        phase15(properties, budget);
         break;
     }
 }
