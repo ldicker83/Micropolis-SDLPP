@@ -25,7 +25,7 @@ namespace
     const SDL_FRect RCISrc{ 0.0f, 83.0f, 32.0f, 11.0f };
     constexpr auto RciValveHeight = 20;
 
-	constexpr int WindowMiddleX = 254;
+	constexpr int WindowMiddleX = 375;
     constexpr int WindowTitleBuffer = 20;
 
     std::unique_ptr<Font> TitleFont;
