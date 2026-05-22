@@ -41,6 +41,7 @@
 #include <algorithm>
 #include <functional>
 #include <iostream>
+#include <optional>
 
 
 /* Simulation */
@@ -1219,11 +1220,11 @@ namespace
     int PopulationDensityScanFrequency[5] = { 1,  1,  9, 19, 29 };
     int FireAnalysisFrequency[5] = { 1,  1, 10, 20, 30 };
 
-	using PhaseFunction = std::function<void(CityProperties&, Budget&)>;
+	using PhaseFunction = std::function<void(std::optional<int>, CityProperties&, Budget&)>;
 };
 
 
-void phase0(CityProperties& properties, Budget& budget)
+void phase0(std::optional<int>, CityProperties& properties, Budget& budget)
 {
     SimCycleCounter.advance();
 
@@ -1244,13 +1245,14 @@ void phase0(CityProperties& properties, Budget& budget)
 }
 
 
-void scanMapSegment(CityProperties& properties, Budget&, int phase)
+void scanMapSegment(std::optional<int> phase, CityProperties& properties, Budget&)
 {
-    MapScan((phase - 1) * EighthWorldWidth, phase * EighthWorldWidth, properties);
+	const auto phaseValue = phase.value_or(0);
+    MapScan((phaseValue - 1) * EighthWorldWidth, phaseValue * EighthWorldWidth, properties);
 }
 
 
-void phase9(CityProperties& properties, Budget& budget)
+void phase9(std::optional<int>, CityProperties& properties, Budget& budget)
 {
     if (!(CityTime % CensusRate))
     {
@@ -1270,7 +1272,7 @@ void phase9(CityProperties& properties, Budget& budget)
 }
 
 
-void phase10(CityProperties&, Budget& budget)
+void phase10(std::optional<int>, CityProperties&, Budget& budget)
 {
     if (!(SimCycleCounter.current() % 5))
     {
@@ -1282,7 +1284,7 @@ void phase10(CityProperties&, Budget& budget)
 }
 
 
-void phase11(CityProperties&, Budget&)
+void phase11(std::optional<int>, CityProperties&, Budget&)
 {
 	const int speed = static_cast<int>(simSpeed());
     if (!(SimCycleCounter.current() % PowerScanFrequency[speed]))
@@ -1292,7 +1294,7 @@ void phase11(CityProperties&, Budget&)
 }
 
 
-void phase12(CityProperties&, Budget&)
+void phase12(std::optional<int>, CityProperties&, Budget&)
 {
 	const int speed = static_cast<int>(simSpeed());
 	if (!(SimCycleCounter.current() % PollutionScanFrequency[speed]))
@@ -1302,7 +1304,7 @@ void phase12(CityProperties&, Budget&)
 }
 
 
-void phase13(CityProperties&, Budget&)
+void phase13(std::optional<int>, CityProperties&, Budget&)
 {
 	const int speed = static_cast<int>(simSpeed());
 	if (!(SimCycleCounter.current() % CrimeScanFrequency[speed]))
@@ -1312,7 +1314,7 @@ void phase13(CityProperties&, Budget&)
  }
 
 
-void phase14(CityProperties&, Budget&)
+void phase14(std::optional<int>, CityProperties&, Budget&)
 {
     const int speed = static_cast<int>(simSpeed());
     if (!(SimCycleCounter.current() % PopulationDensityScanFrequency[speed]))
@@ -1322,7 +1324,7 @@ void phase14(CityProperties&, Budget&)
 }
 
 
-void phase15(CityProperties& properties, Budget&)
+void phase15(std::optional<int>, CityProperties& properties, Budget&)
 {
 	const int speed = static_cast<int>(simSpeed());
 
@@ -1342,7 +1344,7 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
     switch (mod16)
     {
     case 0:
-        phase0(properties, budget);
+        phase0(std::nullopt, properties, budget);
         break;
 
     case 1:
@@ -1353,35 +1355,35 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
     case 6:
     case 7:
     case 8:
-		scanMapSegment(properties, budget, mod16);
+		scanMapSegment(mod16, properties, budget);
         break;
 
     case 9:
-        phase9(properties, budget);
+        phase9(std::nullopt, properties, budget);
         break;
 
     case 10:
-		phase10(properties, budget);
+		phase10(std::nullopt, properties, budget);
         break;
 
     case 11:
-        phase11(properties, budget);
+        phase11(std::nullopt, properties, budget);
         break;
 
     case 12:
-        phase12(properties, budget);
+        phase12(std::nullopt, properties, budget);
         break;
 
     case 13:
-        phase13(properties, budget);
+        phase13(std::nullopt, properties, budget);
         break;
 
     case 14:
-        phase14(properties, budget);
+        phase14(std::nullopt, properties, budget);
         break;
 
     case 15:
-        phase15(properties, budget);
+        phase15(std::nullopt, properties, budget);
         break;
     }
 }
