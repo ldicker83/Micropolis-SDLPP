@@ -39,6 +39,7 @@
 #include <SDL3/SDL.h>
 
 #include <algorithm>
+#include <array>
 #include <functional>
 #include <iostream>
 #include <optional>
@@ -1219,8 +1220,6 @@ namespace
     int CrimeScanFrequency[5] = { 1,  1,  8, 18, 28 };
     int PopulationDensityScanFrequency[5] = { 1,  1,  9, 19, 29 };
     int FireAnalysisFrequency[5] = { 1,  1, 10, 20, 30 };
-
-	using PhaseFunction = std::function<void(std::optional<int>, CityProperties&, Budget&)>;
 };
 
 
@@ -1337,55 +1336,20 @@ void phase15(std::optional<int>, CityProperties& properties, Budget&)
 }
 
 
+namespace
+{
+    using PhaseFunction = std::function<void(std::optional<int>, CityProperties&, Budget&)>;
+    const std::array<PhaseFunction, 16> PhaseFunctions = {
+        phase0, scanMapSegment, scanMapSegment, scanMapSegment, scanMapSegment,
+		scanMapSegment, scanMapSegment, scanMapSegment, scanMapSegment, phase9,
+		phase10, phase11, phase12, phase13, phase14, phase15
+	};
+}
+
+
 void Simulate(int mod16, CityProperties& properties, Budget& budget)
 {
-    int speed = static_cast<int>(simSpeed()); // ew, find a better way to do this
-
-    switch (mod16)
-    {
-    case 0:
-        phase0(std::nullopt, properties, budget);
-        break;
-
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-    case 7:
-    case 8:
-		scanMapSegment(mod16, properties, budget);
-        break;
-
-    case 9:
-        phase9(std::nullopt, properties, budget);
-        break;
-
-    case 10:
-		phase10(std::nullopt, properties, budget);
-        break;
-
-    case 11:
-        phase11(std::nullopt, properties, budget);
-        break;
-
-    case 12:
-        phase12(std::nullopt, properties, budget);
-        break;
-
-    case 13:
-        phase13(std::nullopt, properties, budget);
-        break;
-
-    case 14:
-        phase14(std::nullopt, properties, budget);
-        break;
-
-    case 15:
-        phase15(std::nullopt, properties, budget);
-        break;
-    }
+	PhaseFunctions[mod16](mod16, properties, budget);
 }
 
 
