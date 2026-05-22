@@ -2,6 +2,8 @@
 
 This is a C++/SDL port of the SimCity/Micropolis code developed by Don Hopkins for Unix. See __README_OG for the original readme provided by Don Hopkins and EA.
 
+<div align="center"><img src="./docs/content/micropolis-sdlpp-1.png" alt="Screenshot of Micropolis-SDLPP displaying a mid- to late game city"></div>
+
 ## License
 This project is licensed under the GPL as required by the original code. See COPYING for details. There are additional licensing stipulations required by EA, see "ADDITIONAL TERMS" in __README_OG.
 
