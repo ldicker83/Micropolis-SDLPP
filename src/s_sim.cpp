@@ -49,10 +49,7 @@
 
 namespace
 {
-    constexpr auto SimCycleSize = 1024;
 
-    CycleCounter<SimCycleSize> SimPhaseCounter;
-    CycleCounter<SimCycleSize> SimCycleCounter;
 }
 
 constexpr auto CensusRate = 4;
@@ -75,6 +72,29 @@ int MeltX, MeltY;
 namespace
 {
 	RCI rci;
+
+    constexpr auto SimCycleSize = 1024;
+
+    CycleCounter<SimCycleSize> SimPhaseCounter;
+    CycleCounter<SimCycleSize> SimCycleCounter;
+
+    int PowerScanFrequency[5] = { 1,  2,  4,  5, 6 };
+    int PollutionScanFrequency[5] = { 1,  2,  7, 17, 27 };
+    int CrimeScanFrequency[5] = { 1,  1,  8, 18, 28 };
+    int PopulationDensityScanFrequency[5] = { 1,  1,  9, 19, 29 };
+    int FireAnalysisFrequency[5] = { 1,  1, 10, 20, 30 };
+
+    using PhaseFunction = std::function<void(std::optional<int>, CityProperties&, Budget&)>;
+
+    PhaseFunction phase0, phase9, phase10, phase11, phase12, phase13, phase14, phase15;
+    PhaseFunction scanMapSegment;
+
+    const std::array<PhaseFunction, 16> PhaseFunctions = {
+        phase0, scanMapSegment, scanMapSegment, scanMapSegment, scanMapSegment,
+        scanMapSegment, scanMapSegment, scanMapSegment, scanMapSegment, phase9,
+        phase10, phase11, phase12, phase13, phase14, phase15
+    };
+
 
 	/**
 	 * Fire Protection Thresholds
@@ -1213,16 +1233,6 @@ void SimLoadInit(CityProperties& properties)
 }
 
 
-namespace
-{
-    int PowerScanFrequency[5] = { 1,  2,  4,  5, 6 };
-    int PollutionScanFrequency[5] = { 1,  2,  7, 17, 27 };
-    int CrimeScanFrequency[5] = { 1,  1,  8, 18, 28 };
-    int PopulationDensityScanFrequency[5] = { 1,  1,  9, 19, 29 };
-    int FireAnalysisFrequency[5] = { 1,  1, 10, 20, 30 };
-};
-
-
 void phase0(std::optional<int>, CityProperties& properties, Budget& budget)
 {
     SimCycleCounter.advance();
@@ -1333,17 +1343,6 @@ void phase15(std::optional<int>, CityProperties& properties, Budget&)
     }
 
     DoDisasters(properties);
-}
-
-
-namespace
-{
-    using PhaseFunction = std::function<void(std::optional<int>, CityProperties&, Budget&)>;
-    const std::array<PhaseFunction, 16> PhaseFunctions = {
-        phase0, scanMapSegment, scanMapSegment, scanMapSegment, scanMapSegment,
-		scanMapSegment, scanMapSegment, scanMapSegment, scanMapSegment, phase9,
-		phase10, phase11, phase12, phase13, phase14, phase15
-	};
 }
 
 
