@@ -39,17 +39,17 @@
 #include <SDL3/SDL.h>
 
 #include <algorithm>
+#include <array>
+#include <functional>
 #include <iostream>
+#include <optional>
 
 
 /* Simulation */
 
 namespace
 {
-    constexpr auto SimCycleSize = 1024;
 
-    CycleCounter<SimCycleSize> SimPhaseCounter;
-    CycleCounter<SimCycleSize> SimCycleCounter;
 }
 
 constexpr auto CensusRate = 4;
@@ -72,6 +72,18 @@ int MeltX, MeltY;
 namespace
 {
 	RCI rci;
+
+    constexpr auto SimPhaseCount = 16;
+    constexpr auto SimCycleSize = 1024;
+
+    CycleCounter<SimCycleSize> SimPhaseCounter;
+    CycleCounter<SimCycleSize> SimCycleCounter;
+
+    int PowerScanFrequency[5] = { 1,  2,  4,  5, 6 };
+    int PollutionScanFrequency[5] = { 1,  2,  7, 17, 27 };
+    int CrimeScanFrequency[5] = { 1,  1,  8, 18, 28 };
+    int PopulationDensityScanFrequency[5] = { 1,  1,  9, 19, 29 };
+    int FireAnalysisFrequency[5] = { 1,  1, 10, 20, 30 };
 
 	/**
 	 * Fire Protection Thresholds
@@ -1212,76 +1224,41 @@ void SimLoadInit(CityProperties& properties)
 
 namespace
 {
-    int PowerScanFrequency[5] = { 1,  2,  4,  5, 6 };
-    int PollutionScanFrequency[5] = { 1,  2,  7, 17, 27 };
-    int CrimeScanFrequency[5] = { 1,  1,  8, 18, 28 };
-    int PopulationDensityScanFrequency[5] = { 1,  1,  9, 19, 29 };
-    int FireAnalysisFrequency[5] = { 1,  1, 10, 20, 30 };
-};
-
-
-void Simulate(int mod16, CityProperties& properties, Budget& budget)
-{
-    int speed = static_cast<int>(simSpeed()); // ew, find a better way to do this
-
-    switch (mod16)
+    void advanceCityTime(CityProperties& properties, Budget& budget)
     {
-    case 0:
         SimCycleCounter.advance();
-        
+
         if (DoInitialEval)
         {
             DoInitialEval = false;
             CityEvaluation(budget);
         }
-        
+
         CityTime++;
-        
+
         if (!(SimCycleCounter.current() % 2))
         {
             SetValves(properties, budget);
         }
-        
+
         ClearCensus();
-        break;
+    }
 
-    case 1:
-        MapScan(0, 1 * SimWidth / 8, properties);
-        break;
 
-    case 2:
-        MapScan(1 * SimWidth / 8, 2 * SimWidth / 8, properties);
-        break;
+    void scanMapSegment(CityProperties& properties, Budget&)
+    {
+        const auto currentPhase = SimPhaseCounter.current() % SimPhaseCount;
+        MapScan((currentPhase - 1) * EighthWorldWidth, currentPhase * EighthWorldWidth, properties);
+    }
 
-    case 3:
-        MapScan(2 * SimWidth / 8, 3 * SimWidth / 8, properties);
-        break;
 
-    case 4:
-        MapScan(3 * SimWidth / 8, 4 * SimWidth / 8, properties);
-        break;
-
-    case 5:
-        MapScan(4 * SimWidth / 8, 5 * SimWidth / 8, properties);
-        break;
-
-    case 6:
-        MapScan(5 * SimWidth / 8, 6 * SimWidth / 8, properties);
-        break;
-
-    case 7:
-        MapScan(6 * SimWidth / 8, 7 * SimWidth / 8, properties);
-        break;
-
-    case 8:
-        MapScan(7 * SimWidth / 8, SimWidth, properties);
-        break;
-
-    case 9:
+    void collectCensusAndTaxes(CityProperties& properties, Budget& budget)
+    {
         if (!(CityTime % CensusRate))
         {
             TakeCensus(budget);
         }
+
         if (!(CityTime % (CensusRate * Constants::MonthCount)))
         {
             Take2Census();
@@ -1292,52 +1269,88 @@ void Simulate(int mod16, CityProperties& properties, Budget& budget)
             CollectTax(properties, budget);
             CityEvaluation(budget);
         }
-        break;
+    }
 
-    case 10:
+
+    void decayMapsAndSendMessages(CityProperties&, Budget& budget)
+    {
         if (!(SimCycleCounter.current() % 5))
         {
             DecROGMem();
         }
+
         DecTrafficMem();
         SendMessages(budget);
-        break;
+    }
 
-    case 11:
+
+    void updatePowerMap(CityProperties&, Budget&)
+    {
+        const int speed = static_cast<int>(simSpeed());
         if (!(SimCycleCounter.current() % PowerScanFrequency[speed]))
         {
             powerScan();
         }
-        break;
+    }
 
-    case 12:
+
+    void updatePollutionAndLandValue(CityProperties&, Budget&)
+    {
+        const int speed = static_cast<int>(simSpeed());
         if (!(SimCycleCounter.current() % PollutionScanFrequency[speed]))
         {
             pollutionAndLandValueScan();
         }
-        break;
+    }
 
-    case 13:
+
+    void updateCrimeMap(CityProperties&, Budget&)
+    {
+        const int speed = static_cast<int>(simSpeed());
         if (!(SimCycleCounter.current() % CrimeScanFrequency[speed]))
         {
             crimeScan();
         }
-        break;
+    }
 
-    case 14:
+
+    void updatePopulationDensity(CityProperties&, Budget&)
+    {
+        const int speed = static_cast<int>(simSpeed());
         if (!(SimCycleCounter.current() % PopulationDensityScanFrequency[speed]))
         {
             scanPopulationDensity();
         }
-        break;
+    }
 
-    case 15:
+
+    void updateFireAnalysisAndDisasters(CityProperties& properties, Budget&)
+    {
+        const int speed = static_cast<int>(simSpeed());
+
         if (!(SimCycleCounter.current() % FireAnalysisFrequency[speed]))
         {
             fireAnalysis();
         }
+
         DoDisasters(properties);
-        break;
+    }
+
+
+    using PhaseFunction = void(*)(CityProperties&, Budget&);
+    std::array<PhaseFunction, 16> PhaseFunctions = {
+        advanceCityTime, scanMapSegment, scanMapSegment, scanMapSegment,
+        scanMapSegment, scanMapSegment, scanMapSegment, scanMapSegment,
+        scanMapSegment, collectCensusAndTaxes, decayMapsAndSendMessages,
+        updatePowerMap, updatePollutionAndLandValue, updateCrimeMap,
+        updatePopulationDensity, updateFireAnalysisAndDisasters
+    };
+
+
+    void Simulate(CityProperties& properties, Budget& budget)
+    {
+        const int simulationPhase = SimPhaseCounter.advance() % SimPhaseCount;
+        PhaseFunctions[simulationPhase](properties, budget);
     }
 }
 
@@ -1355,7 +1368,7 @@ void SimFrame(CityProperties& properties, Budget& budget)
         return;
     }
 
-    Simulate(SimPhaseCounter.advance() % 16, properties, budget);
+    Simulate(properties, budget);
 }
 
 
