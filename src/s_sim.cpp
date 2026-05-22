@@ -73,6 +73,7 @@ namespace
 {
 	RCI rci;
 
+    constexpr auto SimPhaseCount = 16;
     constexpr auto SimCycleSize = 1024;
 
     CycleCounter<SimCycleSize> SimPhaseCounter;
@@ -83,18 +84,6 @@ namespace
     int CrimeScanFrequency[5] = { 1,  1,  8, 18, 28 };
     int PopulationDensityScanFrequency[5] = { 1,  1,  9, 19, 29 };
     int FireAnalysisFrequency[5] = { 1,  1, 10, 20, 30 };
-
-    using PhaseFunction = std::function<void(std::optional<int>, CityProperties&, Budget&)>;
-
-    PhaseFunction phase0, phase9, phase10, phase11, phase12, phase13, phase14, phase15;
-    PhaseFunction scanMapSegment;
-
-    const std::array<PhaseFunction, 16> PhaseFunctions = {
-        phase0, scanMapSegment, scanMapSegment, scanMapSegment, scanMapSegment,
-        scanMapSegment, scanMapSegment, scanMapSegment, scanMapSegment, phase9,
-        phase10, phase11, phase12, phase13, phase14, phase15
-    };
-
 
 	/**
 	 * Fire Protection Thresholds
@@ -1233,122 +1222,136 @@ void SimLoadInit(CityProperties& properties)
 }
 
 
-void phase0(std::optional<int>, CityProperties& properties, Budget& budget)
+namespace
 {
-    SimCycleCounter.advance();
-
-    if (DoInitialEval)
+    void advanceCityTime(CityProperties& properties, Budget& budget)
     {
-        DoInitialEval = false;
-        CityEvaluation(budget);
+        SimCycleCounter.advance();
+
+        if (DoInitialEval)
+        {
+            DoInitialEval = false;
+            CityEvaluation(budget);
+        }
+
+        CityTime++;
+
+        if (!(SimCycleCounter.current() % 2))
+        {
+            SetValves(properties, budget);
+        }
+
+        ClearCensus();
     }
 
-    CityTime++;
 
-    if (!(SimCycleCounter.current() % 2))
+    void scanMapSegment(CityProperties& properties, Budget&)
     {
-        SetValves(properties, budget);
+        const auto currentPhase = SimPhaseCounter.current() % SimPhaseCount;
+        MapScan((currentPhase - 1) * EighthWorldWidth, currentPhase * EighthWorldWidth, properties);
     }
 
-    ClearCensus();
-}
 
-
-void scanMapSegment(std::optional<int> phase, CityProperties& properties, Budget&)
-{
-	const auto phaseValue = phase.value_or(0);
-    MapScan((phaseValue - 1) * EighthWorldWidth, phaseValue * EighthWorldWidth, properties);
-}
-
-
-void phase9(std::optional<int>, CityProperties& properties, Budget& budget)
-{
-    if (!(CityTime % CensusRate))
+    void collectCensusAndTaxes(CityProperties& properties, Budget& budget)
     {
-        TakeCensus(budget);
+        if (!(CityTime % CensusRate))
+        {
+            TakeCensus(budget);
+        }
+
+        if (!(CityTime % (CensusRate * Constants::MonthCount)))
+        {
+            Take2Census();
+        }
+
+        if (!(CityTime % TaxFrequency))
+        {
+            CollectTax(properties, budget);
+            CityEvaluation(budget);
+        }
     }
 
-    if (!(CityTime % (CensusRate * Constants::MonthCount)))
+
+    void decayMapsAndSendMessages(CityProperties&, Budget& budget)
     {
-        Take2Census();
+        if (!(SimCycleCounter.current() % 5))
+        {
+            DecROGMem();
+        }
+
+        DecTrafficMem();
+        SendMessages(budget);
     }
 
-    if (!(CityTime % TaxFrequency))
-    {
-        CollectTax(properties, budget);
-        CityEvaluation(budget);
-    }
-}
 
-
-void phase10(std::optional<int>, CityProperties&, Budget& budget)
-{
-    if (!(SimCycleCounter.current() % 5))
+    void updatePowerMap(CityProperties&, Budget&)
     {
-        DecROGMem();
+        const int speed = static_cast<int>(simSpeed());
+        if (!(SimCycleCounter.current() % PowerScanFrequency[speed]))
+        {
+            powerScan();
+        }
     }
 
-    DecTrafficMem();
-    SendMessages(budget);
-}
 
-
-void phase11(std::optional<int>, CityProperties&, Budget&)
-{
-	const int speed = static_cast<int>(simSpeed());
-    if (!(SimCycleCounter.current() % PowerScanFrequency[speed]))
+    void updatePollutionAndLandValue(CityProperties&, Budget&)
     {
-        powerScan();
-    }
-}
-
-
-void phase12(std::optional<int>, CityProperties&, Budget&)
-{
-	const int speed = static_cast<int>(simSpeed());
-	if (!(SimCycleCounter.current() % PollutionScanFrequency[speed]))
-	{
-		pollutionAndLandValueScan();
-	}
-}
-
-
-void phase13(std::optional<int>, CityProperties&, Budget&)
-{
-	const int speed = static_cast<int>(simSpeed());
-	if (!(SimCycleCounter.current() % CrimeScanFrequency[speed]))
-	{
-		crimeScan();
-	}
- }
-
-
-void phase14(std::optional<int>, CityProperties&, Budget&)
-{
-    const int speed = static_cast<int>(simSpeed());
-    if (!(SimCycleCounter.current() % PopulationDensityScanFrequency[speed]))
-    {
-        scanPopulationDensity();
-    }
-}
-
-
-void phase15(std::optional<int>, CityProperties& properties, Budget&)
-{
-	const int speed = static_cast<int>(simSpeed());
-
-    if (!(SimCycleCounter.current() % FireAnalysisFrequency[speed]))
-    {
-        fireAnalysis();
+        const int speed = static_cast<int>(simSpeed());
+        if (!(SimCycleCounter.current() % PollutionScanFrequency[speed]))
+        {
+            pollutionAndLandValueScan();
+        }
     }
 
-    DoDisasters(properties);
-}
+
+    void updateCrimeMap(CityProperties&, Budget&)
+    {
+        const int speed = static_cast<int>(simSpeed());
+        if (!(SimCycleCounter.current() % CrimeScanFrequency[speed]))
+        {
+            crimeScan();
+        }
+    }
 
 
-void Simulate(int mod16, CityProperties& properties, Budget& budget)
-{
-	PhaseFunctions[mod16](mod16, properties, budget);
+    void updatePopulationDensity(CityProperties&, Budget&)
+    {
+        const int speed = static_cast<int>(simSpeed());
+        if (!(SimCycleCounter.current() % PopulationDensityScanFrequency[speed]))
+        {
+            scanPopulationDensity();
+        }
+    }
+
+
+    void updateFireAnalysisAndDisasters(CityProperties& properties, Budget&)
+    {
+        const int speed = static_cast<int>(simSpeed());
+
+        if (!(SimCycleCounter.current() % FireAnalysisFrequency[speed]))
+        {
+            fireAnalysis();
+        }
+
+        DoDisasters(properties);
+    }
+
+
+    using PhaseFunction = void(*)(CityProperties&, Budget&);
+    std::array<PhaseFunction, 16> PhaseFunctions = {
+        advanceCityTime, scanMapSegment, scanMapSegment, scanMapSegment,
+        scanMapSegment, scanMapSegment, scanMapSegment, scanMapSegment,
+        scanMapSegment, collectCensusAndTaxes, decayMapsAndSendMessages,
+        updatePowerMap, updatePollutionAndLandValue, updateCrimeMap,
+        updatePopulationDensity, updateFireAnalysisAndDisasters
+    };
+
+
+    void Simulate(CityProperties& properties, Budget& budget)
+    {
+        const int simulationPhase = SimPhaseCounter.advance() % SimPhaseCount;
+        PhaseFunctions[simulationPhase](properties, budget);
+    }
 }
 
 
@@ -1365,7 +1368,7 @@ void SimFrame(CityProperties& properties, Budget& budget)
         return;
     }
 
-    Simulate(SimPhaseCounter.advance() % 16, properties, budget);
+    Simulate(properties, budget);
 }
 
 
