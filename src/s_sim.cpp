@@ -1105,8 +1105,8 @@ void initZonePowerState()
     {
         for (int y = 0; y < SimHeight; y++)
         {
-            int z = tileValue(x, y);
-            if (z & ZonedBit)
+            const auto tile = tileValue(x, y);
+            if (tile & ZonedBit)
             {
                 setZonePower({ x, y });
             }
