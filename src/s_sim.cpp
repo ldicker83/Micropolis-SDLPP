@@ -913,15 +913,23 @@ void ClearCensus()
 }
 
 
-void TakeCensus(Budget& budget)
+void stepHistoryBuffers()
 {
-    /* put census#s in Historical Graphs and scroll data  */
     std::rotate(ResidentialPopulationHistory.rbegin(), ResidentialPopulationHistory.rbegin() + 1, ResidentialPopulationHistory.rend());
     std::rotate(CommercialPopulationHistory.rbegin(), CommercialPopulationHistory.rbegin() + 1, CommercialPopulationHistory.rend());
     std::rotate(IndustrialPopulationHistory.rbegin(), IndustrialPopulationHistory.rbegin() + 1, IndustrialPopulationHistory.rend());
     std::rotate(CrimeHistory.rbegin(), CrimeHistory.rbegin() + 1, CrimeHistory.rend());
     std::rotate(PollutionHistory.rbegin(), PollutionHistory.rbegin() + 1, PollutionHistory.rend());
     std::rotate(MoneyHis.rbegin(), MoneyHis.rbegin() + 1, MoneyHis.rend());
+}
+
+
+/**
+ * Put census's in Historical Graphs and scroll data
+ */
+void TakeCensus(Budget& budget)
+{
+    stepHistoryBuffers();
 
     ResidentialPopulationHistoryHighest = *std::max_element(ResidentialPopulationHistory.begin(), ResidentialPopulationHistory.end());
     CommercialPopulationHistoryHighest = *std::max_element(CommercialPopulationHistory.begin(), CommercialPopulationHistory.end());
