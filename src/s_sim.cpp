@@ -54,6 +54,7 @@ namespace
 
 constexpr auto CensusRate = 4;
 constexpr auto TaxFrequency = 48;
+constexpr auto RampSmoothingFactor = 4;
 
 int CrimeRamp, PolluteRamp;
 int ResCap, ComCap, IndCap;
@@ -938,10 +939,10 @@ void TakeCensus(Budget& budget)
     CommercialPopulationHistory[0] = CommercialPopulationCount;
     IndustrialPopulationHistory[0] = IndustrialPopulationCount;
 
-    CrimeRamp += (CrimeAverage - CrimeRamp) / 4; // magic number
+    CrimeRamp += (CrimeAverage - CrimeRamp) / RampSmoothingFactor;
     CrimeHistory[0] = CrimeRamp;
 
-    PolluteRamp += (PolluteAverage - PolluteRamp) / 4; // magic number
+    PolluteRamp += (PolluteAverage - PolluteRamp) / RampSmoothingFactor;
     PollutionHistory[0] = PolluteRamp;
 
     MoneyHis[0] = std::clamp((budget.CashFlow() / 20) + 128, 0, 255); // scale to 0..255
