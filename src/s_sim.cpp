@@ -1194,7 +1194,6 @@ void SimLoadInit(CityProperties& properties)
     IndCap = 0;
 
     resetPowerMap();
-
     initZonePowerState();
 
     if (ScenarioID > 8)
