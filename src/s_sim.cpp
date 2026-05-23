@@ -1108,7 +1108,6 @@ void initZonePowerState()
             int z = tileValue(x, y);
             if (z & ZonedBit)
             {
-                SimulationTarget = { x, y };
                 setZonePower({ x, y });
             }
         }
