@@ -55,7 +55,7 @@ namespace
 constexpr auto CensusRate = 4;
 constexpr auto TaxFrequency = 48;
 
-int CrimeRamp, PolluteRamp ;
+int CrimeRamp, PolluteRamp;
 int ResCap, ComCap, IndCap;
 float EMarket = 4.0;
 int DisasterEvent;
