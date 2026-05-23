@@ -62,7 +62,6 @@ int PoweredZoneCount;
 int UnpoweredZoneCount;
 
 bool DoInitialEval = false;
-int MeltX, MeltY;
 
 
 namespace
