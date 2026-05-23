@@ -1075,9 +1075,7 @@ void InitSimMemory()
     PolluteRamp = 0;
     PopulationTotal = 0;
 
-	rci.residentialDemand(0);
-	rci.commercialDemand(0);
-	rci.industrialDemand(0);
+    rci.reset();
 
     ResCap = 0;
     ComCap = 0;
