@@ -1071,19 +1071,14 @@ void InitSimMemory()
 {
     SetCommonInits();
 
-    ResidentialPopulationHistory.fill(0);
-    CommercialPopulationHistory.fill(0);
-    IndustrialPopulationHistory.fill(0);
-    MoneyHis.fill(128); // magic number
-    CrimeHistory.fill(0);
-    PollutionHistory.fill(0);
-
     CrimeRamp = 0;
     PolluteRamp = 0;
     PopulationTotal = 0;
+
 	rci.residentialDemand(0);
 	rci.commercialDemand(0);
 	rci.industrialDemand(0);
+
     ResCap = 0;
     ComCap = 0;
     IndCap = 0;
