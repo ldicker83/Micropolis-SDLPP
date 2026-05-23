@@ -69,14 +69,13 @@ int FloodCount;
 int FloodX, FloodY;
 
 
-// forward declare from s_sim
-void processMeltdown(int, int);
-
 // forward declare from w_tk
 void DoEarthQuake();
 
+// forward declare from s_sim
+void processMeltdown(int, int);
 
-void MakeMeltdown()
+void triggerMeltdown()
 {
     for (int x = 0; x < (SimWidth - 1); x++)
     {
@@ -278,7 +277,7 @@ void ScenarioDisaster()
     case 7: // Boston
         if (DisasterWait == 1)
         {
-            MakeMeltdown();
+            triggerMeltdown();
         }
         break;
 
