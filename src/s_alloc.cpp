@@ -115,7 +115,7 @@ namespace
         CommercialPopulationHistory.fill(0);
         IndustrialPopulationHistory.fill(0);
 
-        MoneyHis.fill(0);
+        MoneyHis.fill(128);
         PollutionHistory.fill(0);
         CrimeHistory.fill(0);
         MiscHistory.fill(0);
@@ -124,12 +124,13 @@ namespace
         ComHis120Years.fill(0);
         IndHis120Years.fill(0);
 
-        MoneyHis120Years.fill(0);
+        MoneyHis120Years.fill(128); 
         PollutionHis120Years.fill(0);
         CrimeHis120Years.fill(0);
         MiscHis120Years.fill(0);
 
         MiscHistory.fill(0);
+
         resetPowerMap();
     }
 };
