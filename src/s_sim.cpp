@@ -52,13 +52,8 @@ namespace
 
 }
 
-constexpr auto CensusRate = 4;
-constexpr auto TaxFrequency = 48;
-constexpr auto RampSmoothingFactor = 4;
 
-int CrimeRamp, PolluteRamp;
 int ResCap, ComCap, IndCap;
-float EMarket = 4.0;
 int DisasterEvent;
 int DisasterWait;
 int ScoreType;
@@ -74,17 +69,25 @@ namespace
 {
 	RCI rci;
 
+    constexpr auto CensusRate = 4;
+    constexpr auto TaxFrequency = 48;
+    constexpr auto RampSmoothingFactor = 4;
+
     constexpr auto SimPhaseCount = 16;
     constexpr auto SimCycleSize = 1024;
 
     CycleCounter<SimCycleSize> SimPhaseCounter;
     CycleCounter<SimCycleSize> SimCycleCounter;
 
+    int CrimeRamp = 0, PolluteRamp = 0;
+
     int PowerScanFrequency[5] = { 1,  2,  4,  5, 6 };
     int PollutionScanFrequency[5] = { 1,  2,  7, 17, 27 };
     int CrimeScanFrequency[5] = { 1,  1,  8, 18, 28 };
     int PopulationDensityScanFrequency[5] = { 1,  1,  9, 19, 29 };
     int FireAnalysisFrequency[5] = { 1,  1, 10, 20, 30 };
+
+    float EMarket = 4.0;
 
 	/**
 	 * Fire Protection Thresholds
