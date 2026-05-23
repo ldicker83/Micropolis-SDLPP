@@ -19,6 +19,6 @@ const RCI& currentRCI();
 
 void SimFrame(CityProperties&, Budget&);
 void condemnZone(int Xloc, int Yloc, int ch);
-void DoSimInit(CityProperties&, Budget&);
+void initSimulation(CityProperties&, Budget&);
 void updateSpecialZones(bool powered, const CityProperties&);
 void RepairZone(int ZCent, int zsize);

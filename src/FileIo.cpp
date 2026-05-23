@@ -129,7 +129,7 @@ namespace
 
         initWillStuff();
         ScenarioID = 0;
-        DoSimInit(properties, budget);
+        initSimulation(properties, budget);
 
         return true;
     }
@@ -229,5 +229,5 @@ void LoadScenario(Scenario scenario, CityProperties& properties, Budget& budget)
     updateFunds(budget);
     InitSimLoad = 1;
     DoInitialEval = false;
-    DoSimInit(properties, budget);
+    initSimulation(properties, budget);
 }

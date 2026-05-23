@@ -157,7 +157,7 @@ namespace
 }
 
 
-void DoFire()
+void updateFire()
 {
     for (const auto [direction, vector] : SearchDirectionVectors)
     {
@@ -178,7 +178,7 @@ void DoFire()
 }
 
 
-void DoAirport()
+void updateAirport()
 {
     if (!(randomRange(0, 5)))
     {
@@ -192,7 +192,7 @@ void DoAirport()
 }
 
 
-void DoMeltdown(const int x, const int y)
+void processMeltdown(const int x, const int y)
 {
     generateExplosion({ x, y });
 
@@ -232,7 +232,7 @@ void DoMeltdown(const int x, const int y)
 }
 
 
-void DoRail(const Point<int>& position)
+void updateRails(const Point<int>& position)
 {
     RailCount++;
     generateTrain(position);
@@ -262,7 +262,7 @@ void DoRail(const Point<int>& position)
 }
 
 
-void DoRadTile()
+void decayRadiationTile()
 {
     if (randomRange(0, 4095) == 0) // Radioactive decay
     {
@@ -305,7 +305,7 @@ int GetBoatDis()
 }
 
 
-bool DoBridge()
+bool updateBridges()
 {
   static int HDx[7] = { -2,  2, -2, -1,  0,  1,  2 };
   static int HDy[7] = { -1, -1,  0,  0,  0,  0,  0 };
@@ -389,7 +389,7 @@ bool DoBridge()
 }
 
 
-void DoRoad()
+void updateRoads()
 {
     static int DensityTable[3] =
     {
@@ -425,7 +425,7 @@ void DoRoad()
     if (!(CurrentTile & BurnableBit)) /* If Bridge */
     {
         RoadCount += 4;
-        if (DoBridge())
+        if (updateBridges())
         {
             return;
         }
@@ -546,7 +546,7 @@ void updateSpecialZones(bool powered, const CityProperties& properties)
     case NuclearPower:
         if (gameplayOptions().disastersEnabled && !randomRange(0, MltdwnTab[properties.GameLevel()]))
         {
-            DoMeltdown(SimulationTarget.x, SimulationTarget.y);
+            processMeltdown(SimulationTarget.x, SimulationTarget.y);
             return;
         }
         NuclearPowerPlantCount++;
@@ -658,7 +658,7 @@ void updateSpecialZones(bool powered, const CityProperties& properties)
 
         if (powered)
         {
-            DoAirport();
+            updateAirport();
         }
         return;
 
@@ -679,7 +679,7 @@ void updateSpecialZones(bool powered, const CityProperties& properties)
 }
 
 
-/* comefrom: Simulate DoSimInit */
+/* comefrom: Simulate initSimulation */
 void MapScan(int x1, int x2, const CityProperties& properties)
 {
     for (int x = x1; x < x2; x++)
@@ -702,7 +702,7 @@ void MapScan(int x1, int x2, const CityProperties& properties)
                             BurningTileCount++;
                             if (!(rand16() & 3)) // 1 in 4 times
                             {
-                                DoFire();
+                                updateFire();
                             }
                             continue;
                         }
@@ -712,7 +712,7 @@ void MapScan(int x1, int x2, const CityProperties& properties)
                         }
                         else
                         {
-                            DoRadTile();
+                            decayRadiationTile();
                         }
                         continue;
                     }
@@ -724,7 +724,7 @@ void MapScan(int x1, int x2, const CityProperties& properties)
 
                     if ((CurrentTileMasked >= BridgeBase) && (CurrentTileMasked < PowerBase))
                     {
-                        DoRoad();
+                        updateRoads();
                         continue;
                     }
 
@@ -736,7 +736,7 @@ void MapScan(int x1, int x2, const CityProperties& properties)
 
                     if ((CurrentTileMasked >= RailBase) && (CurrentTileMasked < ResidentialBase))
                     {
-                        DoRail({ x, y });
+                        updateRails({ x, y });
                         continue;
                     }
                     if ((CurrentTileMasked >= ExplosionTinySome) && (CurrentTileMasked <= ExplosionTinyLast)) // clear AniRubble
@@ -1099,7 +1099,7 @@ void InitSimMemory()
 }
 
 
-void DoNilPower()
+void initZonePowerState()
 {
     for (int x = 0; x < SimWidth; x++)
     {
@@ -1144,7 +1144,7 @@ void DecTrafficMem()
 }
 
 
-/* comefrom: DoSimInit */
+/* comefrom: initSimulation */
 void SimLoadInit(CityProperties& properties)
 {
     static int DisTab[9] = { 0, 2, 10, 5, 20, 3, 5, 5, 2 * 48 };
@@ -1195,7 +1195,7 @@ void SimLoadInit(CityProperties& properties)
 
     resetPowerMap();
 
-    DoNilPower();
+    initZonePowerState();
 
     if (ScenarioID > 8)
     {
@@ -1372,7 +1372,7 @@ void SimFrame(CityProperties& properties, Budget& budget)
 }
 
 
-void DoSimInit(CityProperties& properties, Budget& budget)
+void initSimulation(CityProperties& properties, Budget& budget)
 {
     SimPhaseCounter.reset();
     SimCycleCounter.reset();

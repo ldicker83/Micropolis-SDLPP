@@ -70,7 +70,7 @@ int FloodX, FloodY;
 
 
 // forward declare from s_sim
-void DoMeltdown(int, int);
+void processMeltdown(int, int);
 
 // forward declare from w_tk
 void DoEarthQuake();
@@ -84,7 +84,7 @@ void MakeMeltdown()
         {
             if(tileIsNuclear(tileValue(x, y)))
             {
-                DoMeltdown(x, y);
+                processMeltdown(x, y);
                 return;
             }
         }

@@ -563,7 +563,7 @@ void GenerateCityFromSeed(int seed, CityProperties& properties, Budget& budget)
 
     initWillStuff();
     updateFunds(budget);
-    DoSimInit(properties, budget);
+    initSimulation(properties, budget);
     Eval("UIDidGenerateNewCity");
 
     GenerateMap(seed);
