@@ -31,6 +31,13 @@ public:
 	void industrialDemand(int demand) { mIndustrialDemand = demand; }
 	int industrialDemand() const { return mIndustrialDemand; }
 
+	void reset()
+	{
+		mResidentialDemand = 0;
+		mCommercialDemand = 0;
+		mIndustrialDemand = 0;
+	}
+
 private:
 	int mResidentialDemand{ 0 };
 	int mCommercialDemand{ 0 };
