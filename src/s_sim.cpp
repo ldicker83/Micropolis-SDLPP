@@ -46,13 +46,6 @@
 
 
 /* Simulation */
-
-namespace
-{
-
-}
-
-
 int ResCap, ComCap, IndCap;
 int DisasterEvent;
 int DisasterWait;
