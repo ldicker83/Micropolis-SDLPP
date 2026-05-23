@@ -79,8 +79,6 @@ namespace
     int PopulationDensityScanFrequency[5] = { 1,  1,  9, 19, 29 };
     int FireAnalysisFrequency[5] = { 1,  1, 10, 20, 30 };
 
-    float EMarket = 4.0;
-
 	/**
 	 * Fire Protection Thresholds
 	 * 0 = No Fire Protection
@@ -756,7 +754,6 @@ void SetValves(const CityProperties& properties, const Budget& budget)
     float Rratio, Cratio, Iratio, temp;
     float NormResPop, PjResPop, PjComPop, PjIndPop;
 
-    MiscHistory[1] = static_cast<int>(EMarket);
     MiscHistory[2] = ResidentialPopulationCount;
     MiscHistory[3] = CommercialPopulationCount;
     MiscHistory[4] = IndustrialPopulationCount;
@@ -1077,7 +1074,6 @@ void InitSimMemory()
     ComCap = 0;
     IndCap = 0;
 
-    EMarket = 6.0;
     DisasterEvent = 0;
     ScoreType = 0;
 
@@ -1139,7 +1135,6 @@ void SimLoadInit(CityProperties& properties)
     static int ScoreWaitTab[9] = { 0, 30 * 48, 5 * 48, 5 * 48, 10 * 48,
                      5 * 48, 10 * 48, 5 * 48, 10 * 48 };
 
-    EMarket = (float)MiscHistory[1];
     ResidentialPopulationCount = MiscHistory[2];
     CommercialPopulationCount = MiscHistory[3];
     IndustrialPopulationCount = MiscHistory[4];
@@ -1156,11 +1151,6 @@ void SimLoadInit(CityProperties& properties)
     if (CityTime < 0)
     {
         CityTime = 0;
-    }
-
-    if (!EMarket)
-    {
-        EMarket = 4.0;
     }
 
     SetCommonInits();
