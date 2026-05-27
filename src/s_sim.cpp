@@ -914,8 +914,6 @@ void ClearCensus()
     NuclearPowerPlantCount = 0;
     SeaPortCount = 0;
     AirportCount = 0;
-
-    resetScanState();
 }
 
 
@@ -1233,6 +1231,7 @@ namespace
         }
 
         ClearCensus();
+        resetScanState();
     }
 
 
@@ -1380,6 +1379,8 @@ void initSimulation(CityProperties& properties, Budget& budget)
 
     SetValves(properties, budget);
     ClearCensus();
+
+    resetScanState();
     MapScan(0, SimWidth, properties); /* XXX are you sure ??? */
     powerScan();
     pollutionAndLandValueScan();
