@@ -884,6 +884,14 @@ void SetValves(const CityProperties& properties, const Budget& budget)
 }
 
 
+void resetScanState()
+{
+    resetPowerStack();
+    FireStationMap.reset();
+    PoliceStationMap.reset();
+}
+
+
 void ClearCensus()
 {
     PoweredZoneCount = 0;
@@ -906,10 +914,8 @@ void ClearCensus()
     NuclearPowerPlantCount = 0;
     SeaPortCount = 0;
     AirportCount = 0;
-    resetPowerStack(); // Reset before Mapscan
 
-    FireStationMap.reset();
-    PoliceStationMap.reset();
+    resetScanState();
 }
 
 
