@@ -11,6 +11,7 @@
 #include "s_sim.h"
 
 #include "Budget.h"
+#include "Census.h"
 #include "CityProperties.h"
 #include "Constants.h"
 #include "CycleCounter.h"
@@ -51,14 +52,13 @@ int DisasterEvent;
 int DisasterWait;
 int ScoreType;
 int ScoreWait;
-int PoweredZoneCount;
-int UnpoweredZoneCount;
 
 bool DoInitialEval = false;
 
 
 namespace
 {
+	Census census;
 	RCI rci;
 
     constexpr auto CensusRate = 4;
@@ -724,7 +724,7 @@ void MapScan(int x1, int x2, const CityProperties& properties)
 
                     if (CurrentTile & ZonedBit) // process Zones
                     {
-                        updateZone({ x, y }, properties);
+                        updateZone({ x, y }, properties, census);
                         continue;
                     }
 
@@ -894,8 +894,6 @@ void resetScanState()
 
 void ClearCensus()
 {
-    PoweredZoneCount = 0;
-    UnpoweredZoneCount = 0;
     BurningTileCount = 0;
     RoadCount = 0;
     RailCount = 0;
@@ -1220,7 +1218,7 @@ namespace
         if (DoInitialEval)
         {
             DoInitialEval = false;
-            CityEvaluation(budget);
+            CityEvaluation(budget, census);
         }
 
         CityTime++;
@@ -1257,7 +1255,7 @@ namespace
         if (!(CityTime % TaxFrequency))
         {
             CollectTax(properties, budget);
-            CityEvaluation(budget);
+            CityEvaluation(budget, census);
         }
     }
 
@@ -1270,7 +1268,7 @@ namespace
         }
 
         DecTrafficMem();
-        SendMessages(budget);
+        SendMessages(budget, census);
     }
 
 

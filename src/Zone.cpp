@@ -15,6 +15,7 @@
 
 #include "Util.h"
 
+#include "Census.h"
 #include "CityProperties.h"
 #include "Map.h"
 #include "Power.h"
@@ -754,11 +755,11 @@ void updateResidential(const Point<int>& location, bool zonePowered)
 }
 
 
-void updateZone(const Point<int>& location, const CityProperties& properties)
+void updateZone(const Point<int>& location, const CityProperties& properties, Census& census)
 {
     bool zonePowered{ setZonePower(location) };	
 
-    zonePowered ? PoweredZoneCount++ : UnpoweredZoneCount++;
+    zonePowered ? census.PoweredZoneCount++ : census.UnpoweredZoneCount++;
 
     if (CurrentTileMasked > PortBase) 
     {

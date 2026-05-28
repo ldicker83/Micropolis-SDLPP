@@ -14,9 +14,11 @@
 
 class CityProperties;
 
+struct Census;
+
 int housePopulation();
 int residentialZonePopulation(int tile);
 int commercialZonePopulation(int tile);
 int industrialZonePopulation(int tile);
 bool setZonePower(const Point<int>& location);
-void updateZone(const Point<int>& location, const CityProperties&);
+void updateZone(const Point<int>& location, const CityProperties&, Census&);

@@ -14,15 +14,18 @@
 
 #include "Math/Point.h"
 
+#include <memory>
+
 class Budget;
 class InterfaceManager;
 
-#include <memory>
+struct Census;
+
 
 void shareInterfaceManager(std::weak_ptr<InterfaceManager> manager);
 
 void SendMes(NotificationId);
-void SendMessages(const Budget&);
+void SendMessages(const Budget&, const Census&);
 void ClearMes();
 void SendMesAt(NotificationId, int x, int y);
 void doMessage();

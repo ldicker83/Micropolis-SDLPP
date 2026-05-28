@@ -16,6 +16,8 @@
 class Budget;
 class CityProperties;
 
+struct Census;
+
 
 struct Evaluation
 {
@@ -61,7 +63,7 @@ int cityAssessedValue();
 CityClass cityClass();
 void cityClass(const CityClass value);
 
-void CityEvaluation(const Budget& budget);
+void CityEvaluation(const Budget& budget, const Census& census);
 
 int cityPopulation();
 void cityPopulation(const int val);

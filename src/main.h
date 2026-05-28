@@ -43,8 +43,6 @@ extern int DisasterEvent;
 extern int DisasterWait;
 
 extern int ResCap, ComCap, IndCap;
-extern int PoweredZoneCount;
-extern int UnpoweredZoneCount;
 
 extern int ScoreType;
 extern int ScoreWait;

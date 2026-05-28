@@ -11,6 +11,7 @@
 #include "s_msg.h"
 
 #include "Budget.h"
+#include "Census.h"
 #include "Evaluation.h"
 #include "main.h"
 #include "s_sim.h"
@@ -323,7 +324,7 @@ void CheckGrowth()
 }
 
 
-void SendMessages(const Budget& budget)
+void SendMessages(const Budget& budget, const Census& census)
 {
     if ((ScenarioID) && (ScoreType) && (ScoreWait))
     {
@@ -416,11 +417,11 @@ void SendMessages(const Budget& budget)
 
     case 32: /* dec score for unpowered zones */
     {
-        float TM = static_cast<float>(UnpoweredZoneCount + PoweredZoneCount);
+        float TM = static_cast<float>(census.UnpoweredZoneCount + census.PoweredZoneCount);
 
         if (TM)
         {
-            if ((PoweredZoneCount / TM) < .7)
+            if ((census.PoweredZoneCount / TM) < .7)
             {
                 SendMes(NotificationId::BlackoutsReported);
             }

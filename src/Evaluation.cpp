@@ -11,6 +11,7 @@
 #include "Evaluation.h"
 
 #include "Budget.h"
+#include "Census.h"
 #include "CityProperties.h"
 #include "Map.h"
 
@@ -331,7 +332,7 @@ int GetFire()
 }
 
 
-void GetScore(const Budget& budget)
+void GetScore(const Budget& budget, const Census& census)
 {
     int x, z;
     int OldCityScore;
@@ -394,8 +395,8 @@ void GetScore(const Budget& budget)
     z = z - GetFire();		/* dec score for fires */
     z = z - (budget.TaxRate());
 
-    TM = static_cast<float>(UnpoweredZoneCount + PoweredZoneCount);	/* dec score for unpowered zones */
-    if (TM) { SM = PoweredZoneCount / TM; }
+    TM = static_cast<float>(census.UnpoweredZoneCount + census.PoweredZoneCount);	/* dec score for unpowered zones */
+    if (TM) { SM = static_cast<float>(census.PoweredZoneCount) / TM; }
     else { SM = 1.0; }
     z = static_cast<int>(z * SM);
 
@@ -445,14 +446,14 @@ void DoProblems(const Budget& budget)
 }
 
 
-void CityEvaluation(const Budget& budget)
+void CityEvaluation(const Budget& budget, const Census& census)
 {
     if (PopulationTotal)
     {
         GetAssessedValue();
         DoPopNum();
         DoProblems(budget);
-        GetScore(budget);
+        GetScore(budget, census);
         DoVotes();
         ChangeEval();
     }
